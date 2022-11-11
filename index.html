@@ -4,98 +4,68 @@
   <head>
     <title>Testing</title>
     <link rel="stylesheet" href="styles/stylehomepage.css">
-  
-  </head>
-  <body>
-    <header class="header">
-    <p>FOR TESTING -- NOV_10_2022_By_Mingyao</p>
+    
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    <link rel="stylesheet" type="text/css" href="styles/slick.css">
 
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+     <script type="text/javascript" src="dist/slick.js"></script>
+     <script type="text/javascript" src="dist/jquery.scrollUp.js"></script>
+    <script type="text/javascript" src="dist/smoothScroll.js"></script> 
+    <script type="text/javascript" src="dist/jquery.scrollify.js"></script>
+
+    <script type="text/javascript" src="dist/demo.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+  </head>
+  <body style="font-family:'Times New Roman', Times, serif;">
+    <header class="header">
+    <!--<p>FOR TESTING -- NOV_10_2022_By_Mingyao</p>--->
+
+    <header id="home" class="tm-head scroll">
+      <div class="tm-header ">
+          <div class="tm-s">
+            <img class="tm-logo" src="images/devoe_photography.png" alt="DeVoe Photography">
+            
+      <nav class="tm-nav" >
+     <div>
+          <ul>
+              <li class="tm-list"><a href="#home"><div id="line"></div>Home</a></li>
+              <li class="tm-list"><a href="#album"><div id="line"></div>Gallery </a></li>
+              <!--<li class="tm-list"><a href="#contact"><div id="line"></div>Contact Us</a></li> -->
+          
+          </ul>    
+          </div>
+              </nav></div>
+          </div>
+      <div class="tm-bg slider single"> <div class="tm-bgimg"><img  src="images/rcaf1.jpg">
+          <div class="tm-text"><p class="bold">Blanc</p><p class="simple">Blanc</p><p class="simple">Blanc </p></div></div>
+      
+     
+          <div class="tm-bgimg"><img  src="images/EVA1.jpg">
+          <div class="tm-text"><p class="bold">Blanc</p><p class="simple">Blanc</p><p class="simple">Blanc </p></div></div>
+          
+          
+          <div class="tm-bgimg"><img  src="images/SPA1.jpg">
+          <div class="tm-text"><p class="bold">Blanc</p><p class="simple">Blanc</p><p class="simple">Blanc </p></div></div>
+
+          <div class="tm-bgimg"><img  src="images/HB-JMG-1.jpg">
+            <div class="tm-text"><p class="bold">Blanc</p><p class="simple">Blanc</p><p class="simple">Blanc  </p></div></div>
+          
+            <div class="tm-bgimg"><img  src="images/F-WMIL_4.jpg">
+              <div class="tm-text"><p class="bold">Blanc</p><p class="simple">Blanc</p><p class="simple">Blanc </p></div></div>
+            
+      </div>
+        <img src="images/back.png" class="left">
+        <img src="images/next.png" class="right">
+      
+  </header>
 
   <!-- Slideshow container -->
-<div class="slideshow-container">
-
-  <!-- Full-width images with number and caption text -->
-  <div class="slideImage">
-  <div class="mySlides fade">
-    <div class="numbertext">1 / 3</div>
-    <img src="images/rcaf1.jpg" style="width:100%">
-    <div class="text">Caption Text</div>
-  </div>
-
-  <div class="mySlides fade">
-    <div class="numbertext">2 / 3</div>
-    <img src="images/SPA1.jpg" style="width:100%">
-    <div class="text">Caption Two</div>
-  </div>
-
-  <div class="mySlides fade">
-    <div class="numbertext">3 / 3</div>
-    <img src="images/EVA1.jpg" style="width:100%">
-    <div class="text">Caption Three</div>
-  </div>
-</div>
-
-  <!-- Next and previous buttons -->
-  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-  <a class="next" onclick="plusSlides(1)">&#10095;</a>
-</div>
-<br>
-
-<!-- The dots/circles -->
-<div style="text-align:center">
-  <span class="dot" onclick="currentSlide(1)"></span>
-  <span class="dot" onclick="currentSlide(2)"></span>
-  <span class="dot" onclick="currentSlide(3)"></span>
-</div>
-
-<script>
-  let slideIndex = 1;
-  showSlides(slideIndex);
+<!----
+  ---->
   
-  function plusSlides(n) {
-    showSlides(slideIndex += n);
-  }
-  
-  function currentSlide(n) {
-    showSlides(slideIndex = n);
-  }
-  
-  function showSlides(n) {
-    let i;
-    let slides = document.getElementsByClassName("mySlides");
-    let dots = document.getElementsByClassName("dot");
-    if (n > slides.length) {slideIndex = 1}    
-    if (n < 1) {slideIndex = slides.length}
-    for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";  
-    }
-    for (i = 0; i < dots.length; i++) {
-      dots[i].className = dots[i].className.replace(" active", "");
-    }
-    slides[slideIndex-1].style.display = "block";  
-    dots[slideIndex-1].className += " active";
-    
-    
-  }
-
-  function showSlides() {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("dot");
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";  
-  }
-  slideIndex++;
-  if (slideIndex > slides.length) {slideIndex = 1}    
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";  
-  dots[slideIndex-1].className += " active";
-  setTimeout(showSlides, 2000); // Change image every 2 seconds
-}
-
-  </script>
 
 <!-------------------------
 
@@ -112,6 +82,68 @@
     <p><img src="images/F22_A.jpg"alt="test image" width="200"></p>
     -------------------------------->
     
+
+
+
+
+    <section id="album" class="tm-album scroll">
+      <div class="slider album">
+         <div class="tm-albumimg">  <img  src="images/LH_343_UP-1.png"> <p>Blanc</p></div>
+           <div class="tm-albumimg">  <img  src="images/USAF_TB-1.jpg"> <p>SBlanc</p> </div>
+           <div class="tm-albumimg">   <img  src="images/94-0047-DeNoiseAI-standard.jpg"><p>Blanc</p></div>
+           <div class="tm-albumimg">   <img  src="images/81-0041.jpg"><p>Blanc</p></div>
+          
+          
+            <div class="tm-albumimg">  <img  src="images/130604.jpg"><p>Blanc</p></div>
+           <div class="tm-albumimg">   <img  src="images/AC_GHLM_CPW.jpg"><p>Blanc</p></div>
+         
+          
+          
+           <div class="tm-albumimg"> <img  src="images/AA_ERJ_PLT.jpg"><p>Blanc</p></div>
+             <div class="tm-albumimg"> <img  src="images/BAS_VTG.jpg"><p>Blanc</p></div>
+          
+           <div class="tm-albumimg">  <img  src="images/2022pp-1.jpg"><p>Blanc</p></div>
+           <div class="tm-albumimg">  <img  src="images/BBVTG.jpg"><p>Blanc</p></div>
+        
+          
+          
+             
+          <div class="tm-albumimg"> <img  src="images/BC_Starit_of_Georgia_380_R.jpg"><p>Blanc</p></div>
+           
+          
+           <div class="tm-albumimg">  <img  src="images/crossmoon.jpg"><p>Blanc</p></div>
+          
+           
+                
+          <div class="tm-albumimg">  <img  src="images/C-FEJL_SG_1080P.jpg"><p>Blanc</p></div>  
+           <div class="tm-albumimg">  <img  src="images/Fly_Further.jpg"><p>Blanc</p> </div>
+              <div class="tm-albumimg">  <img  src="images/TSetLX.jpg"><p>Blanc</p></div>
+        
+              
+               
+            
+         
+          </div>
+      
+          
+  
+      </section>
+
+
+
+
+
+
+
+
+
+
   </body>
+
+  <footer>
+    <p>
+      Tous Droits Réservés
+    </p>
+  </footer>
 
 </html>
