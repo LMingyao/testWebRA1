@@ -14,7 +14,7 @@ body{
 .tm-header{
     
     display: block;
-   z-index: 5000;
+    z-index: 5000;
     position: absolute;
     width: 100%;
 }
@@ -219,7 +219,7 @@ opacity: 1;
 
 
 .album{
-    margin-top: 10%;
+    margin-top: 2%;
 }
 
 
