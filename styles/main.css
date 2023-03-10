@@ -5,11 +5,21 @@
 }
 
 body{
-    background: #100b3a;
+    background: black;
+    background-color: black;
 }
 .tm-head{
     position: relative;
 }
+
+.footer{
+    
+    display: block;
+    z-index: 5000;
+    position: absolute;
+    width: 100%;
+}
+
 
 .tm-header{
     
@@ -29,7 +39,7 @@ body{
 }
 
 .tm-s{
-        background: rgba(35, 51, 111, 0.33);
+        background: black;
     border: 1px solid #fff;
     margin: 1% 4%;
     
@@ -151,6 +161,14 @@ body{
     right: 11%;
     color: #fff;
 }
+
+.p{
+    position: absolute;  
+top: 58%;
+right: 11%;
+color: #fff;
+}
+
 
 .tm-text .bold{
     font-size: 3vw;
@@ -281,7 +299,7 @@ input[type=text],input[type=email],textarea{
     margin: 5%;
     padding: 1% 3%;
     width: 80%;
-     background: rgba(6, 24, 63,0.5); 
+     background: black; 
     border: none;
    
 }
@@ -301,7 +319,7 @@ input[type=submit]{
     display: block;
     background: rgba(255, 255, 255,0.7);
     padding: 1% 3%;
-     color: rgba(6, 24, 63,0.7); 
+     color: black; 
     border: none;
     margin-left: 71%;
     font-weight: 700;
@@ -309,7 +327,7 @@ input[type=submit]{
 
 }
 input[type=submit]:hover{
-    color: rgba(6, 24, 63,1); 
+    color:black; 
     background: rgba(255, 255, 255,1);
 }
 
