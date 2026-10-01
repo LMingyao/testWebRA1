@@ -18,6 +18,19 @@ export const galleryPhotos = (data, category = "all") =>
       photo.placement !== "hero" &&
       (category === "all" || photo.category === category),
   );
+// One navigation choice controls the opening panoramas and the photo sequence.
+export function workPhotos(data, category = "all") {
+  const photos = data.photos.filter(
+    (photo) =>
+      photo.published && (category === "all" || photo.category === category),
+  );
+  return [
+    ...photos
+      .filter((photo) => photo.placement === "hero")
+      .sort((a, b) => Number(b.featured) - Number(a.featured)),
+    ...photos.filter((photo) => photo.placement !== "hero"),
+  ];
+}
 export function movePhotoWithinPlacement(data, id, direction) {
   const index = data.photos.findIndex((photo) => photo.id === id);
   if (index < 0 || ![-1, 1].includes(direction)) return false;

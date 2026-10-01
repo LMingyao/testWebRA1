@@ -95,7 +95,7 @@ function field(name, label, type = "input") {
 }
 function renderSettings() {
   $("#editor").innerHTML =
-    `<section class="panel"><form class="settings-form" id="settings-form"><h2>网站内容</h2><div class="form-grid">${field("name", "摄影师名称")}${field("tagline", "品牌副标题")}${field("location", "所在城市")}${field("email", "联系邮箱")}</div>${field("intro", "首页标题")}${field("description", "首页介绍", "textarea")}${field("aboutTitle", "关于页面标题")}${field("about", "个人介绍", "textarea")}${field("aboutImage", "关于页面图片路径")}${field("gear", "摄影器材", "textarea")}<h2>社交链接</h2><div class="social-list">${data.site.socials.map((s, i) => `<div class="social-row"><input name="social-label-${i}" value="${e(s.label)}" aria-label="社交平台 ${i + 1}" required><input name="social-url-${i}" type="url" value="${e(s.url)}" aria-label="社交链接 ${i + 1}" required><button type="button" data-remove-social="${i}" aria-label="移除社交链接 ${i + 1}">×</button></div>`).join("")}</div><button type="button" class="secondary" id="add-social">＋ 添加链接</button><button type="submit" class="primary">应用网站内容</button><p class="hint">应用后，点击右上角“保存更改”写入网站。</p></form></section>`;
+    `<section class="panel"><form class="settings-form" id="settings-form"><h2>网站内容</h2><div class="form-grid">${field("name", "摄影师名称")}${field("tagline", "品牌无障碍描述")}${field("location", "所在城市")}${field("email", "联系邮箱")}</div>${field("description", "搜索引擎简介", "textarea")}${field("aboutTitle", "关于页面标题")}${field("about", "个人介绍", "textarea")}${field("aboutImage", "关于页面图片路径")}${field("gear", "摄影器材", "textarea")}<h2>社交链接</h2><div class="social-list">${data.site.socials.map((s, i) => `<div class="social-row"><input name="social-label-${i}" value="${e(s.label)}" aria-label="社交平台 ${i + 1}" required><input name="social-url-${i}" type="url" value="${e(s.url)}" aria-label="社交链接 ${i + 1}" required><button type="button" data-remove-social="${i}" aria-label="移除社交链接 ${i + 1}">×</button></div>`).join("")}</div><button type="button" class="secondary" id="add-social">＋ 添加链接</button><button type="submit" class="primary">应用网站内容</button><p class="hint">应用后，点击右上角“保存更改”写入网站。</p></form></section>`;
 }
 function render() {
   if (!data) return;
@@ -161,7 +161,6 @@ function syncSettings() {
     "tagline",
     "location",
     "email",
-    "intro",
     "description",
     "aboutTitle",
     "about",

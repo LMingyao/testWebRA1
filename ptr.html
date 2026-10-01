@@ -32,9 +32,17 @@
         <span class="menu-icon" aria-hidden="true"></span>
       </button>
       <nav id="navigation" aria-label="Main navigation">
-        <a href="index.html" data-nav="portfolio">PORTFOLIO</a
-        ><a href="ptr.html" data-nav="portrait">PORTRAIT</a
-        ><a href="about_me.html" data-nav="about">ABOUT ME</a
+        <div class="work-navigation">
+          <button
+            class="work-toggle"
+            aria-expanded="false"
+            aria-controls="work-menu"
+          >
+            WORK <span aria-hidden="true">＋</span>
+          </button>
+          <div id="work-menu" hidden></div>
+        </div>
+        <a href="about_me.html" data-nav="about">ABOUT</a
         ><a href="contact.html" data-nav="contact">CONTACT</a>
       </nav>
     </header>
@@ -49,10 +57,6 @@
     </footer>
     <dialog class="lightbox" aria-label="Photograph viewer">
       <header class="viewer-header">
-        <div>
-          <h2 class="lightbox-title"></h2>
-          <p class="lightbox-category"></p>
-        </div>
         <button class="lightbox-close" aria-label="Close photograph">
           Close <span aria-hidden="true">✕</span>
         </button>
@@ -62,7 +66,6 @@
         <div class="viewer-navigation">
           <button class="lightbox-prev" aria-label="Previous photograph">
             ←</button
-          ><span class="lightbox-count" role="status" aria-live="polite"></span
           ><button class="lightbox-next" aria-label="Next photograph">→</button>
         </div>
         <a class="lightbox-original" target="_blank" rel="noopener noreferrer"
