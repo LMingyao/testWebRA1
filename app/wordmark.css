@@ -25,7 +25,8 @@
   content: "";
   position: absolute;
   z-index: -1;
-  bottom: -5px;
+  /* Start at the text baseline so the g/p descenders overlap the stripe. */
+  bottom: 4px;
   left: 0;
   right: -3px;
   height: 7px;
