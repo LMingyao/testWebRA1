@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data: https://raw.githubusercontent.com; connect-src 'self' https://api.github.com; object-src 'none'; base-uri 'self'; form-action 'self'"
+    />
+    <title>内容管理 · Mingyao Photography</title>
+    <link rel="icon" href="../assets/favicon.svg" />
+    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="brand.css" />
+    <link rel="stylesheet" href="../app/wordmark.css" />
+    <script type="module" src="admin.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a
+        class="admin-brand"
+        href="../index.html"
+        aria-label="Mingyao Photography home"
+        ><span class="logo-year" data-logo-year aria-hidden="true"></span
+        ><span class="logo-wordmark" aria-hidden="true"
+          ><span class="logo-name">MINGYAO</span
+          ><span class="logo-title">Photography</span></span
+        ></a
+      >
+      <nav aria-label="管理页面">
+        <button data-view="photos" aria-current="page">▧ 照片库</button
+        ><button data-view="categories">◫ 分类管理</button
+        ><button data-view="settings">↗ 网站内容</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="../index.html" target="_blank" rel="noopener">查看网站 ↗</a>
+        <p id="connection">正在连接…</p>
+        <button id="disconnect" hidden>断开连接</button>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="toolbar">
+        <div>
+          <span class="eyebrow">PHOTOGRAPHY / STUDIO</span>
+          <h1 id="view-title">照片库</h1>
+        </div>
+        <div class="toolbar-actions">
+          <span id="dirty-state">已保存</span
+          ><button id="export" class="secondary">导出备份</button
+          ><button id="save" class="primary" disabled>保存更改</button>
+        </div>
+      </header>
+      <div id="notification" role="status" aria-live="polite"></div>
+      <main id="editor"><p class="empty">正在打开内容管理…</p></main>
+    </div>
+    <dialog id="photo-dialog">
+      <form id="photo-form">
+        <header>
+          <h2>编辑照片</h2>
+          <button type="button" data-close aria-label="关闭">×</button>
+        </header>
+        <img id="edit-preview" alt="照片预览" /><label
+          >标题<input name="title" required maxlength="180" /></label
+        ><label
+          >图片描述（无障碍）<textarea
+            name="alt"
+            required
+            maxlength="1000"
+            rows="2"
+          ></textarea></label
+        ><label>分类<select name="category"></select></label>
+        <div class="check-row">
+          <label><input type="checkbox" name="published" />在网站展示</label
+          ><label><input type="checkbox" name="featured" />首页封面</label>
+        </div>
+        <footer>
+          <button type="button" id="delete-photo" class="danger">
+            从收藏移除</button
+          ><button type="submit" class="primary">应用编辑</button>
+        </footer>
+        <p class="hint">移除照片只会移除展示记录，原始文件会保留。</p>
+      </form>
+    </dialog>
+    <dialog id="login-dialog">
+      <form id="login-form">
+        <header><h2>连接 GitHub 内容管理</h2></header>
+        <p class="hint">
+          线上编辑使用此仓库的 GitHub
+          权限。令牌只保留在当前页面内存中，刷新或断开后清除。
+        </p>
+        <label
+          >仓库<input name="repo" value="LMingyao/testWebRA1" readonly /></label
+        ><label>编辑分支<input name="branch" value="main" required /></label
+        ><label
+          >Fine-grained access token<input
+            name="token"
+            type="password"
+            required
+            autocomplete="off"
+            spellcheck="false"
+        /></label>
+        <p class="hint">
+          选择 testWebRA1 仓库，仅授予 Contents 读写权限。<a
+            href="https://github.com/settings/personal-access-tokens/new"
+            target="_blank"
+            rel="noopener noreferrer"
+            >创建令牌 ↗</a
+          ><br />本机管理：在项目目录运行 npm
+          start，然后打开本机后台，无需令牌。
+        </p>
+        <p id="login-error" role="alert"></p>
+        <footer><button type="submit" class="primary">连接仓库</button></footer>
+      </form>
+    </dialog>
+    <input
+      id="upload-input"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      multiple
+      hidden
+    />
+  </body>
+</html>

@@ -8,7 +8,7 @@
       content="Aviation, landscapes, portraits and wildlife by Montréal photographer Mingyao Li."
     />
     <meta name="theme-color" content="#ffffff" />
-    <title>Portraits · Mingyao Li Photography</title>
+    <title>{{title}} · Mingyao Li Photography</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="app/site.css" />
     <link rel="stylesheet" href="app/brand.css" />
@@ -16,12 +16,12 @@
     <link rel="stylesheet" href="app/typography.css" />
     <script type="module" src="app/site.js"></script>
   </head>
-  <body data-page="portrait">
+  <body data-page="{{page}}">
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <a class="brand" href="index.html" aria-label="Mingyao Photography home"
         ><span class="logo-year" data-logo-year aria-hidden="true"
-          ></span
+          >{{year}}</span
         ><span class="logo-wordmark" aria-hidden="true"
           ><span class="logo-name">MINGYAO</span
           ><span class="logo-title">Photography</span></span
