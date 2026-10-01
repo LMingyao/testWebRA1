@@ -21,15 +21,19 @@
   gap: 5px;
   padding-bottom: 4px;
 }
-.logo-wordmark:after {
+.brand .logo-title:after,
+.admin-brand .logo-title:after {
   content: "";
-  position: absolute;
+  display: inline-block;
+  position: relative;
   z-index: -1;
-  /* Keep the letter bodies clear while g/p descenders overlap the stripe. */
-  bottom: 3px;
-  left: 0;
-  right: -3px;
+  width: 100%;
+  margin-left: -100%;
   height: 7px;
+  /* The inline box ends at the font baseline; move its top to that baseline. */
+  vertical-align: baseline;
+  /* Inset the stripe to match the Arial P's visible left edge. */
+  transform: translate(0.085em, 100%);
   background: var(--brand-gradient);
 }
 .brand .logo-name,
@@ -64,7 +68,8 @@
   .brand .logo-name {
     font-size: 10px;
   }
-  .logo-wordmark:after {
+  .brand .logo-title:after,
+  .admin-brand .logo-title:after {
     height: 6px;
   }
 }
