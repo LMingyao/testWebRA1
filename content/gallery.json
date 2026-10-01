@@ -174,50 +174,6 @@
       "placement": "gallery"
     },
     {
-      "id": "photo-25a89ecf-1918-4c36-be1f-3a02ccd9a031",
-      "title": "Woodpecker in spring",
-      "alt": "A woodpecker perched on a slender tree branch against softly blurred spring foliage.",
-      "category": "wildlife",
-      "image": "media/photo-25a89ecf-1918-4c36-be1f-3a02ccd9a031-1920.webp",
-      "thumbnail": "media/photo-25a89ecf-1918-4c36-be1f-3a02ccd9a031-640.webp",
-      "display": "media/photo-25a89ecf-1918-4c36-be1f-3a02ccd9a031-1280.webp",
-      "large": "media/photo-25a89ecf-1918-4c36-be1f-3a02ccd9a031-1920.webp",
-      "width": 5568,
-      "height": 3712,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "source": {
-        "provider": "lightroom",
-        "assetId": "3ad745cfe16b458e94251fed9ffc41ac",
-        "filename": "DSC_7955-DxO_DeepPRIME XD3.dng",
-        "importedAt": "2026-10-01",
-        "render": "embedded-jpeg-preview"
-      }
-    },
-    {
-      "id": "photo-b857d9ab-2b80-47f6-9d98-9c7fbd92b9ed",
-      "title": "Yellow bird in soft light",
-      "alt": "A small yellow and black bird standing among dry leaves in soft sunlight, with a gently blurred woodland background.",
-      "category": "wildlife",
-      "image": "media/photo-b857d9ab-2b80-47f6-9d98-9c7fbd92b9ed-1920.webp",
-      "thumbnail": "media/photo-b857d9ab-2b80-47f6-9d98-9c7fbd92b9ed-640.webp",
-      "display": "media/photo-b857d9ab-2b80-47f6-9d98-9c7fbd92b9ed-1280.webp",
-      "large": "media/photo-b857d9ab-2b80-47f6-9d98-9c7fbd92b9ed-1920.webp",
-      "width": 5568,
-      "height": 3712,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "source": {
-        "provider": "lightroom",
-        "assetId": "bb9e45871112460e9e72696dd0da4ff3",
-        "filename": "DSC_3593-DxO_DeepPRIME XD3.dng",
-        "importedAt": "2026-10-01",
-        "render": "embedded-jpeg-preview"
-      }
-    },
-    {
       "id": "sa777",
       "title": "Blue skies ahead",
       "alt": "A Saudia airliner ascending across a blue sky.",
@@ -546,28 +502,6 @@
       "published": true,
       "featured": false,
       "placement": "gallery"
-    },
-    {
-      "id": "photo-88abe8be-d684-4009-9a17-a41306923d07",
-      "title": "Studio portrait in grey",
-      "alt": "A standing portrait of a man in a grey blazer and black shirt, lit softly against a neutral paneled wall.",
-      "category": "portrait",
-      "image": "media/photo-88abe8be-d684-4009-9a17-a41306923d07-1920.webp",
-      "thumbnail": "media/photo-88abe8be-d684-4009-9a17-a41306923d07-640.webp",
-      "display": "media/photo-88abe8be-d684-4009-9a17-a41306923d07-1280.webp",
-      "large": "media/photo-88abe8be-d684-4009-9a17-a41306923d07-1920.webp",
-      "width": 2918,
-      "height": 3888,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "source": {
-        "provider": "lightroom",
-        "assetId": "2f977dfda78b4f0fb17c508c8e5399cd",
-        "filename": "B0005529.3FR",
-        "importedAt": "2026-10-01",
-        "render": "embedded-jpeg-preview"
-      }
     },
     {
       "id": "xfemgjn75348",
