@@ -1,7 +1,7 @@
 import { escapeHTML as e, workPhotos } from "./shared.js";
 import { photoRows } from "./layout.js";
 
-export function photoImage(photo, eager = false, full = false) {
+export function photoImage(photo, eager = false, full = false, renderedSize) {
   const width = (size) =>
     Math.round(
       photo.width * Math.min(1, size / Math.max(photo.width, photo.height)),
@@ -14,9 +14,9 @@ export function photoImage(photo, eager = false, full = false) {
     ([file, size], index, array) =>
       file && (index === 0 || width(size) !== width(array[index - 1][1])),
   );
-  const sizes = full
+  const sizes = renderedSize || (full
     ? "(max-width: 700px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))"
-    : "(max-width: 700px) calc(100vw - 40px), 40vw";
+    : "(max-width: 700px) calc(100vw - 40px), 40vw");
   const srcset = candidates.length
     ? `srcset="${candidates.map(([file, size]) => `${e(file)} ${width(size)}w`).join(", ")}" sizes="${sizes}"`
     : "";
@@ -135,13 +135,13 @@ export function renderGallery(main, content, category = "all") {
     const focused = sheet.contains(document.activeElement)
       ? document.activeElement.closest("[data-photo]")?.dataset.photo : undefined;
     const gap = parseFloat(getComputedStyle(sheet).rowGap);
-    const targetHeight = category === "portrait" ? 400 : 280;
+    const targetHeight = category === "portrait" ? 440 : 350;
     let index = 0;
     sheet.innerHTML = photoRows(photographs, { width, gap, targetHeight }).map(row => {
       const ratioSum = row.photos.reduce((sum, photo) => sum + photo.width / photo.height, 0);
       return `<div class="photo-row" style="grid-template-columns:${row.photos.map(photo => `${photo.width / photo.height / ratioSum * 100}fr`).join(" ")};width:${Math.min(100, row.width / width * 100)}%">${row.photos.map(photo => {
         const i = index++;
-        return `<figure class="photo-card"><button data-photo="${panoramas.length + i}" aria-label="View ${e(photo.alt)}">${photoImage(photo, i < 2 && !panoramas.length, row.photos.length === 1)}</button></figure>`;
+        return `<figure class="photo-card"><button data-photo="${panoramas.length + i}" aria-label="View ${e(photo.alt)}">${photoImage(photo, i < 2 && !panoramas.length, row.photos.length === 1, `${Math.ceil(row.height * photo.width / photo.height)}px`)}</button></figure>`;
       }).join("")}</div>`;
     }).join("");
     if (focused !== undefined)

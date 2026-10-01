@@ -43,11 +43,11 @@ matchMedia("(max-width: 900px)").addEventListener("change", () => {
 
 function aboutPage(content) {
   const s = content.site;
-  main.innerHTML = `<section class="editorial"><p class="eyebrow">BEHIND THE LENS</p><div class="about-grid"><img class="about-photo" src="${e(s.aboutImage)}" alt="${e(s.name)}" width="1000" height="1250"><div class="about-copy"><p class="eyebrow">${e(s.location)}</p><h1>${e(s.aboutTitle)}</h1><p class="body-copy">${e(s.about)}</p><div class="gear"><h2>In my camera bag</h2><p>${e(s.gear)}</p></div><a class="text-link" href="contact.html">Let’s connect ↗</a></div></div></section>`;
+  main.innerHTML = `<section class="editorial"><p class="eyebrow">ABOUT</p><div class="about-grid"><img class="about-photo" src="${e(s.aboutImage)}" alt="${e(s.name)}"><div class="about-copy"><p class="eyebrow">${e(s.location)}</p><h1>${e(s.aboutTitle)}</h1><p class="body-copy">${e(s.about)}</p><details class="gear"><summary>Camera &amp; lenses</summary><p>${e(s.gear)}</p></details><a class="text-link" href="contact.html">Photography enquiries ↗</a></div></div></section>`;
 }
 function contactPage(content) {
   const s = content.site;
-  main.innerHTML = `<section class="contact-page"><p class="eyebrow">GET IN TOUCH</p><h1>Let’s start<br>a conversation.</h1><div class="contact-details"><p>For photography enquiries, collaborations,<br>or simply to say hello.</p><a class="email-link" href="mailto:${e(s.email)}">${e(s.email)} <span>↗</span></a></div><p class="contact-location">${e(s.location)}</p></section>`;
+  main.innerHTML = `<section class="contact-page"><p class="eyebrow">CONTACT</p><h1>Photography enquiries</h1><div class="contact-details"><p>For photography enquiries and collaborations.</p><a class="email-link" href="mailto:${e(s.email)}">${e(s.email)} <span aria-hidden="true">↗</span></a></div><p class="contact-location">${e(s.name)} · ${e(s.location)}</p></section>`;
 }
 try {
   const response = await fetch("content/gallery.json");
@@ -100,7 +100,7 @@ try {
     workToggle.classList.add("is-current");
     const label =
       categories.find((c) => c.id === selected)?.label || "Portraits";
-    workToggle.innerHTML = `${selected === "all" ? "WORK" : e(label.toUpperCase())} <span aria-hidden="true">＋</span>`;
+    workToggle.innerHTML = `${selected === "all" ? "WORK" : e(label.toUpperCase())} <span class="nav-chevron" aria-hidden="true"></span>`;
     workMenu.querySelectorAll("a").forEach((a) => {
       if (a.dataset.work === selected) a.setAttribute("aria-current", "page");
       else a.removeAttribute("aria-current");
