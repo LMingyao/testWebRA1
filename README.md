@@ -1,6 +1,6 @@
 # Mingyao Photography
 
-摄影作品展示站与中文内容管理后台。延续 [现有站点](https://mingyaophoto.com/) 的 Logo 设计、Lucida Sans 导航字体、白底黑字和粉色品牌细节，网站继续使用 GitHub Pages。Logo 使用 HTML/CSS 重构为文字，年份按照多伦多时区自动更新，无需每年更换图片。
+摄影作品展示站与中文内容管理后台。延续 [现有站点](https://mingyaophoto.com/) 的 Logo 设计、Lucida Sans 导航字体、白底黑字和粉色品牌细节，网站继续使用 GitHub Pages。Logo 使用 HTML/CSS 重构为文字，去掉年份，保留 MINGYAO / Photography 排列与粉色渐变。
 
 ## 本机使用
 
@@ -19,9 +19,11 @@ npm start
 
 ## 后台操作
 
-照片库支持批量上传、编辑标题与图片描述、分类、隐藏/展示、设置首页封面、顺序调整和搜索。上传会在浏览器生成 640 / 1280 / 1920 像素 WebP 浏览版本；新上传的照片默认隐藏，确认后再开启展示并保存。每批最多 20 张，每次保存的编码上传数据不超过 28 MB；超过限制可先移除部分未保存记录，分批添加。
+照片库支持批量上传、编辑标题与图片描述、分类、隐藏/展示、展示位置、轮播首图、顺序调整和搜索。上传会在浏览器生成 640 / 1280 / 1920 像素 WebP 浏览版本；新上传的照片默认隐藏，确认后再开启展示并保存。每批最多 20 张，每次保存的编码上传数据不超过 28 MB；超过限制可先移除部分未保存记录，分批添加。
 
-网站内容可编辑首页标题、介绍、摄影师名称、城市、邮箱、个人介绍、器材和社交链接。分类名称可修改；分类 ID 保持稳定，有照片的分类需先转移照片再删除。照片记录按数组顺序展示；瀑布流在桌面按列排列。隐藏代表不在画廊展示，文件和数据仍在公开仓库中。
+每张照片的“展示位置”可选“作品画廊”或“顶部轮播”。原站 6 张细长横幅设为顶部轮播，下方只显示其余 31 张作品；轮播照片不会出现在分类或大图预览序列中。后台可分别筛选这两个区域，排序仅调整同一区域的照片；“轮播首图”优先显示在轮播开头。从某个区域上传时，新照片默认使用该区域。
+
+网站内容可编辑首页标题、介绍、摄影师名称、城市、邮箱、个人介绍、器材和社交链接。分类名称可修改；分类 ID 保持稳定，有照片的分类需先转移照片再删除。作品画廊在桌面使用两列网格，按行从左到右展示，手机为单列；固定预览画框完整展示照片，不裁切作品。点击进入白底全屏预览，支持方向键、Escape 和触屏滑动。隐藏代表不在前台展示，文件和数据仍在公开仓库中。
 
 “导出备份”下载当前内容 JSON，不包含照片文件。GitHub 提交历史保留完整修改记录，可回退整个内容提交；从收藏移除照片不会删除原图文件。
 
@@ -38,23 +40,23 @@ npm start
 
 ## 代码结构
 
-| 位置                                  | 用途                                           |
-| ------------------------------------- | ---------------------------------------------- |
-| `content/gallery.json`                | 网站内容、分类与照片的唯一数据来源             |
-| `app/site.js`                         | 前台渲染、分类、全屏查看、键盘和触屏交互       |
-| `app/site.css`                        | 响应式布局                                     |
-| `app/brand.css`、`app/typography.css` | 品牌布局、颜色与字体规则                       |
-| `app/wordmark.css`                    | 文字 Logo 与粉色渐变，年份由公共代码自动更新   |
-| `app/shared.js`                       | 前后台共用内容校验和安全转义                   |
-| `admin/`                              | 中文管理界面、本机/GitHub 存储适配器和图片处理 |
-| `tools/server.mjs`                    | 仅监听本机的文件管理 API 与预览服务器          |
-| `tools/page.html`                     | 公共页面模板，生成现有 HTML 地址               |
-| `assets/`                             | 保留原始照片与原版 Logo                        |
-| `media/`                              | 响应式 WebP 浏览版本                           |
-| `tests/`                              | 数据、保存冲突、访问边界与 GitHub 提交测试     |
+| 位置                   | 用途                                           |
+| ---------------------- | ---------------------------------------------- |
+| `content/gallery.json` | 网站内容、分类与照片的唯一数据来源             |
+| `app/site.js`          | 公共导航、页脚、个人介绍与联系页面             |
+| `app/gallery.js`       | 独立轮播、作品筛选、全屏查看与键盘/触屏交互    |
+| `app/site.css`         | 响应式布局                                     |
+| `app/wordmark.css`     | 无年份文字 Logo 与粉色渐变                     |
+| `app/shared.js`        | 前后台共用内容校验和安全转义                   |
+| `admin/`               | 中文管理界面、本机/GitHub 存储适配器和图片处理 |
+| `tools/server.mjs`     | 仅监听本机的文件管理 API 与预览服务器          |
+| `tools/page.html`      | 公共页面模板，生成现有 HTML 地址               |
+| `assets/`              | 保留原始照片与原版 Logo                        |
+| `media/`               | 响应式 WebP 浏览版本                           |
+| `tests/`               | 数据、保存冲突、访问边界与 GitHub 提交测试     |
 
 现有 `ptr.html`、`about_me.html` 和 `contact.html` 地址继续有效。原来已停用的 `BW.html` 和 `indexFR.html` 导向首页。
 
-`tools/migrate.py` 与 `tools/curate.mjs` 是已完成的一次性迁移工具；日常管理不要重新运行，它们会覆盖当前内容。迁移图片处理使用 Pillow，不是运行网站的依赖。
+`tools/migrate.py` 与 `tools/curate.mjs` 是已完成的一次性迁移工具，已阻止重复运行；日常使用后台管理内容。迁移图片处理使用 Pillow，不是运行网站的依赖。
 
 相关平台文档：[GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)、[Git database API](https://docs.github.com/en/rest/git)、[细粒度访问令牌](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)。

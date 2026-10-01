@@ -19,10 +19,7 @@ for (const [file, page, title] of [
 ]) {
   await writeFile(
     path.join(root, file),
-    template
-      .replaceAll("{{page}}", page)
-      .replaceAll("{{title}}", title)
-      .replaceAll("{{year}}", ""),
+    template.replaceAll("{{page}}", page).replaceAll("{{title}}", title),
   );
 }
 for (const file of ["BW.html", "indexFR.html"])

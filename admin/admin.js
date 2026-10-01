@@ -1,7 +1,7 @@
 import {
   escapeHTML as e,
   validateContent,
-  currentYear,
+  movePhotoWithinPlacement,
 } from "../app/shared.js";
 import { getLocalStore, GitHubStore } from "./store.js";
 import { preparePhoto } from "./images.js";
@@ -12,14 +12,12 @@ let store,
   view = "photos",
   search = "",
   filter = "all",
+  placementFilter = "all",
   editing,
   busy = false;
 let uploads = [],
   previews = new Map();
 const $ = (selector) => document.querySelector(selector);
-document
-  .querySelectorAll("[data-logo-year]")
-  .forEach((el) => (el.textContent = currentYear()));
 function notice(message, error = false) {
   $("#notification").textContent = message;
   $("#notification").classList.toggle("error", error);
@@ -39,13 +37,18 @@ function categoryName(id) {
   return data.categories.find((c) => c.id === id)?.label || id;
 }
 function card(photo) {
-  const index = data.photos.findIndex((p) => p.id === photo.id);
-  return `<article class="admin-card"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.featured ? "★" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))}</span><span class="badge ${photo.published ? "" : "draft"}">${photo.published ? "展示中" : "已隐藏"}</span></div></div><div class="card-actions"><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${index === 0 ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${index === data.photos.length - 1 ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
+  const members = data.photos.filter(
+    (p) => (p.placement || "gallery") === (photo.placement || "gallery"),
+  );
+  const index = members.findIndex((p) => p.id === photo.id);
+  return `<article class="admin-card"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.featured ? "★" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "顶部轮播" : "作品画廊"}</span><span class="badge ${photo.published ? "" : "draft"}">${photo.published ? "展示中" : "已隐藏"}</span></div></div><div class="card-actions"><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${index === 0 ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${index === members.length - 1 ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
 }
 function renderCards() {
   const photos = data.photos.filter(
     (p) =>
       (filter === "all" || p.category === filter) &&
+      (placementFilter === "all" ||
+        (p.placement || "gallery") === placementFilter) &&
       `${p.title} ${p.alt}`.toLowerCase().includes(search.toLowerCase()),
   );
   $("#photo-list").innerHTML = photos.length
@@ -54,7 +57,33 @@ function renderCards() {
 }
 function renderPhotos() {
   $("#editor").innerHTML =
-    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><input id="search" type="search" placeholder="搜索照片…" aria-label="搜索照片" value="${e(search)}"><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>＋ 上传照片</button></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">上传后默认隐藏。编辑描述并开启展示，再保存更改。↑ ↓ 调整网站中的顺序。</p>`;
+    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><input id="search" type="search" placeholder="搜索照片…" aria-label="搜索照片" value="${e(search)}"><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>＋ 上传照片</button></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">在编辑中选择作品画廊或顶部轮播。轮播照片不会出现在下方图库。上传后默认隐藏，↑ ↓ 调整所在区域的顺序。</p>`;
+  $(".stats").insertAdjacentHTML(
+    "afterend",
+    '<div class="library-areas">' +
+      [
+        { id: "all", label: "全部照片" },
+        { id: "gallery", label: "作品画廊" },
+        { id: "hero", label: "顶部轮播" },
+      ]
+        .map(
+          (area) =>
+            '<button data-placement-filter="' +
+            area.id +
+            '" aria-pressed="' +
+            (placementFilter === area.id) +
+            '">' +
+            area.label +
+            " <small>" +
+            data.photos.filter(
+              (p) =>
+                area.id === "all" || (p.placement || "gallery") === area.id,
+            ).length +
+            "</small></button>",
+        )
+        .join("") +
+      "</div>",
+  );
   renderCards();
 }
 function renderCategories() {
@@ -113,7 +142,13 @@ function editPhoto(id) {
     .join("");
   form.elements.category.value = p.category;
   form.elements.published.checked = p.published;
+  form.elements.placement.value = p.placement || "gallery";
   form.elements.featured.checked = p.featured;
+  form.elements.featured.disabled = form.elements.placement.value !== "hero";
+  form.elements.placement.onchange = () => {
+    form.elements.featured.disabled = form.elements.placement.value !== "hero";
+    if (form.elements.featured.disabled) form.elements.featured.checked = false;
+  };
   $("#edit-preview").src = image(p);
   $("#photo-dialog").showModal();
 }
@@ -170,6 +205,10 @@ $("#editor").addEventListener("click", (event) => {
   if (busy || !data) return;
   const button = event.target.closest("button");
   if (!button) return;
+  if (button.dataset.placementFilter) {
+    placementFilter = button.dataset.placementFilter;
+    render();
+  }
   if (button.dataset.edit) editPhoto(button.dataset.edit);
   if (button.dataset.toggle) {
     const photo = data.photos.find((p) => p.id === button.dataset.toggle);
@@ -177,15 +216,14 @@ $("#editor").addEventListener("click", (event) => {
     render();
   }
   if (button.dataset.move) {
-    const index = data.photos.findIndex((p) => p.id === button.dataset.move);
-    const next = index + Number(button.dataset.direction);
-    if (next >= 0 && next < data.photos.length) {
-      [data.photos[index], data.photos[next]] = [
-        data.photos[next],
-        data.photos[index],
-      ];
+    if (
+      movePhotoWithinPlacement(
+        data,
+        button.dataset.move,
+        Number(button.dataset.direction),
+      )
+    )
       render();
-    }
   }
   if (button.id === "upload") $("#upload-input").click();
   if (button.dataset.deleteCategory) {
@@ -243,7 +281,10 @@ $("#photo-form").onsubmit = (event) => {
     alt,
     category: form.elements.category.value,
     published: form.elements.published.checked,
-    featured: form.elements.featured.checked,
+    placement: form.elements.placement.value,
+    featured:
+      form.elements.placement.value === "hero" &&
+      form.elements.featured.checked,
   });
   if (photo.featured) {
     photo.published = true;
@@ -290,6 +331,8 @@ $("#upload-input").onchange = async (event) => {
         file,
         filter === "all" ? data.categories[0].id : filter,
       );
+      prepared.photo.placement =
+        placementFilter === "hero" ? "hero" : "gallery";
       data.photos.push(prepared.photo);
       uploads.push(...prepared.uploads);
       previews.set(prepared.photo.id, prepared.preview);

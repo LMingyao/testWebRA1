@@ -11,17 +11,13 @@
     <title>Selected work · Mingyao Li Photography</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="app/site.css" />
-    <link rel="stylesheet" href="app/brand.css" />
     <link rel="stylesheet" href="app/wordmark.css" />
-    <link rel="stylesheet" href="app/typography.css" />
     <script type="module" src="app/site.js"></script>
   </head>
   <body data-page="portfolio">
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <a class="brand" href="index.html" aria-label="Mingyao Photography home"
-        ><span class="logo-year" data-logo-year aria-hidden="true"
-          ></span
         ><span class="logo-wordmark" aria-hidden="true"
           ><span class="logo-name">MINGYAO</span
           ><span class="logo-title">Photography</span></span
@@ -33,7 +29,7 @@
         aria-controls="navigation"
         aria-expanded="false"
       >
-        Menu <span>＋</span>
+        <span class="menu-icon" aria-hidden="true"></span>
       </button>
       <nav id="navigation" aria-label="Main navigation">
         <a href="index.html" data-nav="portfolio">PORTFOLIO</a
@@ -46,25 +42,33 @@
       <p class="loading" role="status">Opening the collection…</p>
     </main>
     <footer class="site-footer">
-      <div>
-        <a class="footer-name" href="index.html">Mingyao Li</a>
-        <p>Every frame, a different perspective.</p>
-      </div>
+      <a class="footer-name" href="index.html">Mingyao Li</a>
       <div id="social-links"></div>
       <small id="copyright"></small
       ><a class="back-top" href="#">Back to top ↑</a>
     </footer>
     <dialog class="lightbox" aria-label="Photograph viewer">
-      <button class="lightbox-close" aria-label="Close photograph">✕</button
-      ><button class="lightbox-prev" aria-label="Previous photograph">←</button>
-      <figure>
-        <img alt="" />
-        <figcaption>
-          <span class="lightbox-title"></span
-          ><span class="lightbox-count"></span>
-        </figcaption>
-      </figure>
-      <button class="lightbox-next" aria-label="Next photograph">→</button>
+      <header class="viewer-header">
+        <div>
+          <h2 class="lightbox-title"></h2>
+          <p class="lightbox-category"></p>
+        </div>
+        <button class="lightbox-close" aria-label="Close photograph">
+          Close <span aria-hidden="true">✕</span>
+        </button>
+      </header>
+      <div class="viewer-stage"><img alt="" /></div>
+      <footer class="viewer-footer">
+        <div class="viewer-navigation">
+          <button class="lightbox-prev" aria-label="Previous photograph">
+            ←</button
+          ><span class="lightbox-count" role="status" aria-live="polite"></span
+          ><button class="lightbox-next" aria-label="Next photograph">→</button>
+        </div>
+        <a class="lightbox-original" target="_blank" rel="noopener noreferrer"
+          >View original ↗</a
+        >
+      </footer>
     </dialog>
     <noscript
       ><p class="noscript">

@@ -22,7 +22,6 @@
         class="admin-brand"
         href="../index.html"
         aria-label="Mingyao Photography home"
-        ><span class="logo-year" data-logo-year aria-hidden="true"></span
         ><span class="logo-wordmark" aria-hidden="true"
           ><span class="logo-name">MINGYAO</span
           ><span class="logo-title">Photography</span></span
@@ -70,9 +69,15 @@
             rows="2"
           ></textarea></label
         ><label>分类<select name="category"></select></label>
+        <label
+          >展示位置<select name="placement">
+            <option value="gallery">作品画廊</option>
+            <option value="hero">顶部轮播（不在画廊显示）</option>
+          </select></label
+        >
         <div class="check-row">
           <label><input type="checkbox" name="published" />在网站展示</label
-          ><label><input type="checkbox" name="featured" />首页封面</label>
+          ><label><input type="checkbox" name="featured" />轮播首图</label>
         </div>
         <footer>
           <button type="button" id="delete-photo" class="danger">

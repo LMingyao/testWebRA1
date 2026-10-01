@@ -65,7 +65,8 @@
       "width": 3900,
       "height": 1300,
       "published": true,
-      "featured": true
+      "featured": true,
+      "placement": "hero"
     },
     {
       "id": "mtl-x",
@@ -79,7 +80,8 @@
       "width": 3000,
       "height": 1000,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "hero"
     },
     {
       "id": "ac-x",
@@ -93,7 +95,8 @@
       "width": 3000,
       "height": 1000,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "hero"
     },
     {
       "id": "jfk-x",
@@ -107,7 +110,8 @@
       "width": 3000,
       "height": 1000,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "hero"
     },
     {
       "id": "qr-x",
@@ -121,7 +125,8 @@
       "width": 3000,
       "height": 1000,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "hero"
     },
     {
       "id": "yyc-wsj787-2",
@@ -135,7 +140,8 @@
       "width": 3900,
       "height": 1300,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "hero"
     },
     {
       "id": "nf436",
@@ -149,7 +155,8 @@
       "width": 1600,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "cnt-626r",
@@ -163,7 +170,8 @@
       "width": 1440,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "sa777",
@@ -177,7 +185,8 @@
       "width": 2160,
       "height": 1215,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "c-fvlx-snow-1-2",
@@ -191,7 +200,8 @@
       "width": 2160,
       "height": 1080,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "yvr-boat",
@@ -205,7 +215,8 @@
       "width": 2160,
       "height": 1440,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "bdr-jn1-web",
@@ -219,7 +230,8 @@
       "width": 2160,
       "height": 1440,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "nf736",
@@ -233,7 +245,8 @@
       "width": 2160,
       "height": 1440,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "oaci-9917",
@@ -247,7 +260,8 @@
       "width": 2160,
       "height": 1215,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "cmp",
@@ -261,7 +275,8 @@
       "width": 2160,
       "height": 1440,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "q400-excu-pt",
@@ -275,7 +290,8 @@
       "width": 2160,
       "height": 1600,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "aa-erj-plt",
@@ -289,7 +305,8 @@
       "width": 2160,
       "height": 1620,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "sd515",
@@ -303,7 +320,8 @@
       "width": 2160,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "yqb-1",
@@ -317,7 +335,8 @@
       "width": 1620,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "bdr-jl14-8r",
@@ -331,7 +350,8 @@
       "width": 1440,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "en-nsrt-2ehc",
@@ -345,7 +365,8 @@
       "width": 1440,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "ts-fin103",
@@ -359,7 +380,8 @@
       "width": 2160,
       "height": 1440,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "thunderbirdab",
@@ -373,7 +395,8 @@
       "width": 1440,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "81-0041-wm",
@@ -387,7 +410,8 @@
       "width": 1440,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "f22r",
@@ -401,7 +425,8 @@
       "width": 2160,
       "height": 1215,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "f1rk",
@@ -415,7 +440,8 @@
       "width": 2160,
       "height": 1080,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "ospreyk",
@@ -429,7 +455,8 @@
       "width": 2160,
       "height": 1620,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "jb-jfk",
@@ -443,7 +470,8 @@
       "width": 2160,
       "height": 1620,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "yyz-dt-x",
@@ -457,7 +485,8 @@
       "width": 2160,
       "height": 1280,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "slr-ecpre",
@@ -471,7 +500,8 @@
       "width": 2160,
       "height": 1280,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "xfemgjn75348",
@@ -485,7 +515,8 @@
       "width": 1440,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "xfemgpsx",
@@ -499,7 +530,8 @@
       "width": 1440,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "ptr-sep29x",
@@ -513,7 +545,8 @@
       "width": 2160,
       "height": 1600,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "ptr-oct20-4",
@@ -527,7 +560,8 @@
       "width": 2160,
       "height": 1620,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "ptr-o5-flr-dxf",
@@ -541,7 +575,8 @@
       "width": 2160,
       "height": 1080,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "ptr-oct20-1x",
@@ -555,7 +590,8 @@
       "width": 1600,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     },
     {
       "id": "vff-ptr-sg24",
@@ -569,7 +605,8 @@
       "width": 1440,
       "height": 2160,
       "published": true,
-      "featured": false
+      "featured": false,
+      "placement": "gallery"
     }
   ]
 }

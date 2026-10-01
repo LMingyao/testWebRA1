@@ -184,6 +184,28 @@ p {
   font-weight: 500;
   margin-top: 8px;
 }
+.library-areas {
+  display: flex;
+  gap: 24px;
+  padding: 8px 0 18px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.library-areas button {
+  background: none;
+  color: var(--muted);
+  padding: 5px 0;
+  font-size: 12px;
+}
+.library-areas button[aria-pressed="true"] {
+  color: #000;
+  box-shadow: 0 2px 0 #e9a3bc;
+}
+.library-areas small {
+  font-size: 10px;
+  margin-left: 5px;
+  color: #888;
+}
 .library-tools {
   display: flex;
   gap: 12px;

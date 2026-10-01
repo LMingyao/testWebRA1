@@ -11,6 +11,29 @@ export const currentYear = () =>
     year: "numeric",
     timeZone: "America/Toronto",
   }).format(new Date());
+export const galleryPhotos = (data, category = "all") =>
+  data.photos.filter(
+    (photo) =>
+      photo.published &&
+      photo.placement !== "hero" &&
+      (category === "all" || photo.category === category),
+  );
+export function movePhotoWithinPlacement(data, id, direction) {
+  const index = data.photos.findIndex((photo) => photo.id === id);
+  if (index < 0 || ![-1, 1].includes(direction)) return false;
+  const placement = data.photos[index].placement || "gallery";
+  const positions = data.photos
+    .map((photo, position) => ({ photo, position }))
+    .filter((item) => (item.photo.placement || "gallery") === placement)
+    .map((item) => item.position);
+  const next = positions[positions.indexOf(index) + direction];
+  if (next === undefined) return false;
+  [data.photos[index], data.photos[next]] = [
+    data.photos[next],
+    data.photos[index],
+  ];
+  return true;
+}
 export function safeImage(value) {
   return (
     typeof value === "string" &&
@@ -106,6 +129,11 @@ export function validateContent(data) {
       typeof photo.featured !== "boolean"
     )
       throw new Error("Invalid photo visibility.");
+    if (
+      photo.placement !== undefined &&
+      !["gallery", "hero"].includes(photo.placement)
+    )
+      throw new Error("Photo placement must be gallery or hero.");
   }
   return data;
 }

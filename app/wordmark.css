@@ -1,110 +1,67 @@
-/* Editable wordmark inspired by the original identity. */
+/* Reconstructed original identity, without a year or image dependency. */
 .brand,
 .admin-brand {
   display: inline-flex;
-  align-items: flex-end;
-  gap: 9px;
-  color: #111;
-  white-space: nowrap;
+  align-items: center;
   line-height: 1;
-  padding-bottom: 8px;
+  padding-bottom: 7px;
+  color: #111;
   font-family: Arial, "Helvetica Neue", sans-serif;
+  white-space: nowrap;
 }
-.logo-year {
-  font:
-    italic 22px/1.1 "Segoe Print",
-    "Bradley Hand",
-    "Comic Sans MS",
-    cursive;
-  letter-spacing: -1.7px;
-  transform: rotate(-4deg);
-  padding-bottom: 1px;
-  min-width: 48px;
-  color: #333;
-}
-.logo-wordmark {
+.brand .logo-wordmark,
+.admin-brand .logo-wordmark {
   display: flex;
   flex-direction: column;
   position: relative;
   isolation: isolate;
-  padding: 0 0 5px;
-  gap: 4px;
+  gap: 5px;
+  padding-bottom: 4px;
 }
 .logo-wordmark:after {
   content: "";
   position: absolute;
   z-index: -1;
-  bottom: -8px;
+  bottom: -5px;
   left: 0;
-  right: -4px;
-  height: 16px;
+  right: -3px;
+  height: 12px;
   background: linear-gradient(90deg, #ffb5d0 0%, #ffe5ef 57%, #fff 100%);
 }
-.logo-name {
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.5px;
+.brand .logo-name,
+.admin-brand .logo-name {
+  font:
+    400 11px/1 Arial,
+    "Helvetica Neue",
+    sans-serif;
+  letter-spacing: 0.12em;
   color: #454545;
   padding-left: 1px;
 }
-.logo-title {
-  font-size: 31px;
-  font-weight: 500;
-  letter-spacing: -1.1px;
+.brand .logo-title,
+.admin-brand .logo-title {
+  font:
+    500 32px/1 Arial,
+    "Helvetica Neue",
+    sans-serif;
+  letter-spacing: -1.15px;
   color: #080808;
 }
-.admin-brand {
-  padding-bottom: 12px;
-  gap: 7px;
-}
-.admin-brand .logo-year {
-  font-size: 17px;
-  min-width: 36px;
-  font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -1.3px;
+.admin-brand .logo-title {
+  font-size: 27px;
+  letter-spacing: -0.9px;
 }
 .admin-brand .logo-name {
   font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.5px;
-}
-.admin-brand .logo-title {
-  font-size: 24px;
-  font-family: Arial, "Helvetica Neue", sans-serif;
-  font-weight: 500;
-  letter-spacing: -0.8px;
-}
-.admin-brand .logo-wordmark:after {
-  height: 12px;
-  bottom: -5px;
-}
-.admin-brand .logo-wordmark {
-  gap: 3px;
 }
 @media (max-width: 700px) {
-  .brand {
-    gap: 7px;
-  }
-  .brand .logo-year {
-    font-size: 19px;
-    min-width: 42px;
+  .brand .logo-title {
+    font-size: 28px;
   }
   .brand .logo-name {
-    font-size: 11px;
+    font-size: 10px;
   }
-  .brand .logo-title {
-    font-size: 27px;
-  }
-  .brand .logo-wordmark:after {
-    height: 14px;
-    bottom: -6px;
-  }
-  .admin-brand .logo-year {
-    font-size: 18px;
-  }
-  .admin-brand .logo-title {
-    font-size: 25px;
+  .logo-wordmark:after {
+    height: 10px;
   }
 }
