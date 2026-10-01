@@ -19,11 +19,6 @@ for (const [file, page, title] of [
     template.replaceAll("{{page}}", page).replaceAll("{{title}}", title),
   );
 }
-for (const file of ["BW.html", "indexFR.html"])
-  await writeFile(
-    path.join(root, file),
-    '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url=index.html"><title>Collection · Mingyao Li</title></head><body><a href="index.html">Continue to the photography collection</a></body></html>\n',
-  );
 console.log(
   `Validated ${content.photos.length} photographs and generated static Pages entry points.`,
 );

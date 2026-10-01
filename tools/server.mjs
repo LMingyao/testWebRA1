@@ -150,7 +150,7 @@ export function createServer(root) {
         requested.includes("..") ||
         requested.includes("\\") ||
         !(
-          /^(index|ptr|about_me|contact|BW|indexFR)\.html$/.test(requested) ||
+          /^(index|ptr|about_me|contact)\.html$/.test(requested) ||
           /^(app|admin|assets|media|content)\/[a-zA-Z0-9_./-]+$/.test(requested)
         )
       ) {

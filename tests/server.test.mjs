@@ -21,6 +21,9 @@ test("local admin persists edits, rejects stale saves and protects filesystem", 
   );
   await writeFile(path.join(root, data.photos[0].image), "fixture");
   await writeFile(path.join(root, data.site.aboutImage), "fixture");
+  // Even a leftover legacy file should not be served by the local preview.
+  await writeFile(path.join(root, "indexFR.html"), "retired");
+  await writeFile(path.join(root, "BW.html"), "retired");
   const server = createServer(root);
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const url = `http://127.0.0.1:${server.address().port}`;
@@ -83,6 +86,8 @@ test("local admin persists edits, rejects stale saves and protects filesystem", 
     );
     assert.equal((await fetch(url + "/.git/config")).status, 404);
     assert.equal((await fetch(url + "/tools/server.mjs")).status, 404);
+    assert.equal((await fetch(url + "/indexFR.html")).status, 404);
+    assert.equal((await fetch(url + "/BW.html")).status, 404);
     const newer = await (await fetch(url + "/api/content")).json();
     const bad = {
       data,

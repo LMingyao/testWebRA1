@@ -64,8 +64,8 @@ npm start
 | `media/`               | 响应式 WebP 浏览版本                           |
 | `tests/`               | 数据、保存冲突、访问边界与 GitHub 提交测试     |
 
-现有 `ptr.html`、`about_me.html` 和 `contact.html` 地址继续有效。原来已停用的 `BW.html` 和 `indexFR.html` 导向首页。
+现有 `ptr.html`、`about_me.html` 和 `contact.html` 地址继续有效。已停用的 `BW.html` 和 `indexFR.html` 已删除，不再生成。
 
-一次性迁移工具已清理；日常使用后台管理内容。图库仅在作品页面加载，排版与大图查看分别维护。后台配色合并在 `admin/admin.css`，品牌文字统一使用 `app/wordmark.css`，避免旧样式叠加覆盖。构建、本机保存、GitHub 保存和上传筛选共用图片路径集合。原始照片与历史 Logo 保留，兼容入口页由构建生成。
+一次性迁移工具已清理；日常使用后台管理内容。图库仅在作品页面加载，排版与大图查看分别维护。后台配色合并在 `admin/admin.css`，品牌文字统一使用 `app/wordmark.css`，避免旧样式叠加覆盖。构建、本机保存、GitHub 保存和上传筛选共用图片路径集合。原始照片与历史 Logo 保留，四个在用入口页由构建生成。
 
 相关平台文档：[GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)、[Git database API](https://docs.github.com/en/rest/git)、[细粒度访问令牌](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)。

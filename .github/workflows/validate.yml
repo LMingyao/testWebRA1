@@ -19,4 +19,4 @@ jobs:
       - run: npm test
       - run: npm run build
       - name: Check generated pages match the template
-        run: git diff --exit-code -- index.html ptr.html about_me.html contact.html BW.html indexFR.html
+        run: git diff --exit-code -- index.html ptr.html about_me.html contact.html
