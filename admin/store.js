@@ -1,4 +1,4 @@
-import { validateContent } from "../app/shared.js";
+import { validateContent, contentImagePaths } from "../app/shared.js";
 const API = "https://api.github.com";
 export class LocalStore {
   constructor(token) {
@@ -103,15 +103,9 @@ export class GitHubStore {
       uploads.some((u) => existing.has(u.path))
     )
       throw new Error("上传文件路径重复，请重新导入照片。");
-    for (const p of data.photos)
-      for (const key of ["image", "thumbnail", "display", "large"])
-        if (p[key] && !existing.has(p[key]) && !uploaded.has(p[key]))
-          throw new Error(`图片不存在：${p[key]}`);
-    if (
-      !existing.has(data.site.aboutImage) &&
-      !uploaded.has(data.site.aboutImage)
-    )
-      throw new Error("个人介绍图片不存在。");
+    for (const file of contentImagePaths(data))
+      if (!existing.has(file) && !uploaded.has(file))
+        throw new Error(`图片不存在：${file}`);
     const tree = [];
     for (const upload of uploads) {
       const blob = await this.request("git/blobs", "POST", {

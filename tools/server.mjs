@@ -3,9 +3,9 @@ import { readFile, writeFile, mkdir, rename, realpath } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash, randomBytes } from "node:crypto";
-import { validateContent, safeImage } from "../app/shared.js";
+import { validateContent, safeImage, contentImagePaths } from "../app/shared.js";
 
-export const revision = (buffer) =>
+const revision = (buffer) =>
   createHash("sha256").update(buffer).digest("hex");
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -35,7 +35,7 @@ async function body(req) {
   }
   return JSON.parse(Buffer.concat(parts).toString("utf8"));
 }
-export function validUpload(upload) {
+function validUpload(upload) {
   if (
     !safeImage(upload.path) ||
     !upload.path.startsWith("media/") ||
@@ -112,12 +112,8 @@ export function createServer(root) {
           const incoming = new Map(
             uploads.map((u) => [u.path, validUpload(u)]),
           );
-          for (const p of payload.data.photos)
-            for (const key of ["image", "thumbnail", "display", "large"])
-              if (p[key] && !incoming.has(p[key]))
-                await readFile(path.join(root, p[key]));
-          if (!incoming.has(payload.data.site.aboutImage))
-            await readFile(path.join(root, payload.data.site.aboutImage));
+          for (const file of contentImagePaths(payload.data))
+            if (!incoming.has(file)) await readFile(path.join(root, file));
           for (const [file, buffer] of incoming) {
             const dest = path.join(root, file);
             try {

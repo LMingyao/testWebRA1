@@ -577,14 +577,11 @@ main,
     margin-bottom: 20px;
   }
   .contact-details {
-    flex-direction: column;
-    align-items: flex-start;
     gap: 30px;
   }
 }
 @media (max-width: 900px) {
   .site-header {
-    min-height: 132px;
     padding-bottom: 36px;
   }
   #layout-controls {
@@ -690,10 +687,6 @@ main,
   }
   .view-controls {
     gap: 22px;
-    margin-bottom: 0;
-  }
-  .view-controls button {
-    font-size: 12px;
   }
   .single-stage {
     height: max(320px, calc(100svh - 280px));
@@ -704,9 +697,6 @@ main,
   }
   .work-opening {
     margin-bottom: 16px;
-  }
-  .opening-image img {
-    aspect-ratio: 3/1;
   }
   .opening-previous,
   .opening-next {

@@ -52,6 +52,8 @@ npm start
 | `app/site.js`          | 公共导航、页脚、个人介绍与联系页面             |
 | `app/gallery.js`       | 统一作品序列、手动横幅浏览与全屏查看           |
 | `app/layout.js`        | 保留原比例与顺序的自动分行算法                 |
+| `app/images.js`        | 响应式图片标记与加载策略                       |
+| `app/viewer.js`        | 大图查看、键盘操作与滑动手势                   |
 | `app/site.css`         | 响应式布局                                     |
 | `app/wordmark.css`     | 无年份文字 Logo 与粉色渐变                     |
 | `app/shared.js`        | 前后台共用内容校验和安全转义                   |
@@ -64,6 +66,6 @@ npm start
 
 现有 `ptr.html`、`about_me.html` 和 `contact.html` 地址继续有效。原来已停用的 `BW.html` 和 `indexFR.html` 导向首页。
 
-`tools/migrate.py` 与 `tools/curate.mjs` 是已完成的一次性迁移工具，已阻止重复运行；日常使用后台管理内容。迁移图片处理使用 Pillow，不是运行网站的依赖。
+一次性迁移工具已清理；日常使用后台管理内容。图库仅在作品页面加载，排版与大图查看分别维护。后台配色合并在 `admin/admin.css`，品牌文字统一使用 `app/wordmark.css`，避免旧样式叠加覆盖。构建、本机保存、GitHub 保存和上传筛选共用图片路径集合。原始照片与历史 Logo 保留，兼容入口页由构建生成。
 
 相关平台文档：[GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)、[Git database API](https://docs.github.com/en/rest/git)、[细粒度访问令牌](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)。

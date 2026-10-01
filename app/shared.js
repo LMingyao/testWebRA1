@@ -11,13 +11,15 @@ export const currentYear = () =>
     year: "numeric",
     timeZone: "America/Toronto",
   }).format(new Date());
-export const galleryPhotos = (data, category = "all") =>
-  data.photos.filter(
-    (photo) =>
-      photo.published &&
-      photo.placement !== "hero" &&
-      (category === "all" ? photo.homeSelected === true : photo.category === category),
-  );
+// The same file references are checked by the build and both storage adapters.
+export function contentImagePaths(data) {
+  return new Set([
+    data.site.aboutImage,
+    ...data.photos.flatMap((photo) =>
+      [photo.image, photo.thumbnail, photo.display, photo.large].filter(Boolean),
+    ),
+  ]);
+}
 // One navigation choice controls the opening panoramas and the photo sequence.
 export function workPhotos(data, category = "all") {
   const photos = data.photos.filter(
@@ -74,7 +76,6 @@ export function validateContent(data) {
     "name",
     "tagline",
     "location",
-    "intro",
     "description",
     "email",
     "aboutTitle",

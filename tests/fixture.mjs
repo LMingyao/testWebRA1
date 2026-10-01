@@ -4,7 +4,6 @@ export const fixture = {
     name: "Photographer",
     tagline: "Photography",
     location: "Montréal",
-    intro: "Selected work.",
     description: "Photos",
     email: "photo@example.com",
     aboutTitle: "About",

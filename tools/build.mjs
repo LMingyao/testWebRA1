@@ -1,15 +1,12 @@
 import { readFile, writeFile, access } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { validateContent } from "../app/shared.js";
+import { validateContent, contentImagePaths } from "../app/shared.js";
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const content = validateContent(
   JSON.parse(await readFile(path.join(root, "content/gallery.json"), "utf8")),
 );
-for (const photo of content.photos)
-  for (const key of ["image", "thumbnail", "display", "large"])
-    if (photo[key]) await access(path.join(root, photo[key]));
-await access(path.join(root, content.site.aboutImage));
+for (const file of contentImagePaths(content)) await access(path.join(root, file));
 const template = await readFile(path.join(root, "tools/page.html"), "utf8");
 for (const [file, page, title] of [
   ["index.html", "portfolio", "Selected work"],

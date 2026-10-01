@@ -1,12 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  galleryPhotos,
   workPhotos,
   validateContent,
   movePhotoWithinPlacement,
 } from "../app/shared.js";
 import { fixture } from "./fixture.mjs";
+const galleryPhotos = (data, category) =>
+  workPhotos(data, category).filter((photo) => photo.placement !== "hero");
 test("banner photographs never duplicate in the grid", () => {
   const data = structuredClone(fixture);
   data.photos[0].placement = "hero";

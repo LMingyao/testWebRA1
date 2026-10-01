@@ -1,13 +1,12 @@
 :root {
   font:
-    14px/1.5 system-ui,
-    "Microsoft YaHei",
-    sans-serif;
-  background: #f5f6f3;
-  color: #283028;
-  --green: #435a3b;
-  --line: #e1e5dd;
-  --muted: #7b8377;
+    14px/1.5 "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, "Microsoft YaHei", sans-serif;
+  background: #fafafa;
+  color: #171717;
+  --accent: #000;
+  --line: #e6e6e6;
+  --muted: #666;
 }
 * {
   box-sizing: border-box;
@@ -34,7 +33,7 @@ button:disabled {
 }
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--green);
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
 button {
@@ -56,27 +55,6 @@ select {
   display: flex;
   flex-direction: column;
 }
-.admin-brand {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  font:
-    bold 34px Georgia,
-    serif;
-}
-.admin-brand span {
-  font:
-    600 11px system-ui,
-    sans-serif;
-  letter-spacing: 1.5px;
-}
-.admin-brand small {
-  display: block;
-  font-weight: 400;
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 7px;
-}
 .sidebar nav {
   display: grid;
   gap: 8px;
@@ -90,8 +68,8 @@ select {
   font-size: 13px;
 }
 .sidebar nav button[aria-current="page"] {
-  background: #edf1e9;
-  color: var(--green);
+  background: #fff0f5;
+  color: var(--accent);
 }
 .sidebar-bottom {
   margin-top: auto;
@@ -105,7 +83,7 @@ select {
 .sidebar-bottom button {
   background: none;
   padding: 0;
-  color: var(--green);
+  color: var(--accent);
   font-size: 11px;
 }
 .workspace {
@@ -148,9 +126,12 @@ p {
   color: var(--muted);
 }
 .primary {
-  background: var(--green);
+  background: var(--accent);
   color: white;
   padding: 11px 18px;
+}
+.primary:hover {
+  background: #333;
 }
 .secondary {
   background: #fff;
@@ -241,7 +222,7 @@ p {
 .admin-card > button {
   padding: 0;
   width: 100%;
-  background: #e7e9e3;
+  background: #f3f3f3;
   display: block;
 }
 .admin-card img {
@@ -268,8 +249,8 @@ p {
   margin-top: 8px;
 }
 .badge {
-  color: var(--green);
-  background: #eef3e9;
+  color: var(--accent);
+  background: #fff0f5;
   border-radius: 4px;
   padding: 2px 6px;
 }
@@ -287,8 +268,8 @@ p {
 .card-actions button {
   padding: 5px 9px;
   font-size: 11px;
-  background: #f4f6f1;
-  color: #636d5a;
+  background: #f6f6f6;
+  color: #444;
 }
 .card-actions button:last-child {
   margin-left: auto;
@@ -336,7 +317,7 @@ textarea {
 }
 .hint a {
   text-decoration: underline;
-  color: var(--green);
+  color: var(--accent);
 }
 .category-list {
   display: grid;
@@ -369,7 +350,7 @@ textarea {
 .category-row button {
   padding: 8px;
   font-size: 11px;
-  background: #f4f6f1;
+  background: #f6f6f6;
 }
 .new-category {
   display: flex;
@@ -383,8 +364,8 @@ textarea {
 }
 #notification:not(:empty) {
   padding: 13px 18px;
-  background: #eaf0e4;
-  border: 1px solid #cfdcc6;
+  background: #fff5f8;
+  border: 1px solid #f0dce3;
   border-radius: 6px;
   margin-bottom: 22px;
   font-size: 12px;
@@ -477,11 +458,6 @@ dialog footer {
 .settings-form .primary {
   justify-self: start;
 }
-.photo-placeholder {
-  height: 200px;
-  display: grid;
-  place-items: center;
-}
 @media (min-width: 1550px) {
   .admin-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -515,9 +491,6 @@ dialog footer {
     padding: 18px;
     border-right: 0;
     border-bottom: 1px solid var(--line);
-  }
-  .admin-brand {
-    font-size: 27px;
   }
   .sidebar nav {
     display: flex;

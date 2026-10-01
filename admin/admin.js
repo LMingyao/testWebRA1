@@ -2,6 +2,7 @@ import {
   escapeHTML as e,
   validateContent,
   movePhotoWithinPlacement,
+  contentImagePaths,
 } from "../app/shared.js";
 import { getLocalStore, GitHubStore } from "./store.js";
 import { preparePhoto } from "./images.js";
@@ -36,54 +37,45 @@ function image(photo) {
 function categoryName(id) {
   return data.categories.find((c) => c.id === id)?.label || id;
 }
-function card(photo) {
-  const members = data.photos.filter(
-    (p) => (p.placement || "gallery") === (photo.placement || "gallery"),
-  );
-  const index = members.findIndex((p) => p.id === photo.id);
-  return `<article class="admin-card"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.homeSelected ? " · 首页精选" : ""}${photo.featured ? " · 轮播首图" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "顶部轮播" : "作品画廊"}</span><span class="badge ${photo.published ? "" : "draft"}">${photo.published ? "展示中" : "已隐藏"}</span></div></div><div class="card-actions"><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${index === 0 ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${index === members.length - 1 ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
+function card(photo, boundaries) {
+  const { first, last } = boundaries.get(photo.placement || "gallery");
+  return `<article class="admin-card"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.homeSelected ? " · 首页精选" : ""}${photo.featured ? " · 轮播首图" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "顶部轮播" : "作品画廊"}</span><span class="badge ${photo.published ? "" : "draft"}">${photo.published ? "展示中" : "已隐藏"}</span></div></div><div class="card-actions"><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${photo.id === first ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${photo.id === last ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
 }
 function renderCards() {
+  const boundaries = new Map();
+  for (const photo of data.photos) {
+    const placement = photo.placement || "gallery";
+    if (!boundaries.has(placement)) boundaries.set(placement, { first: photo.id });
+    boundaries.get(placement).last = photo.id;
+  }
+  const query = search.toLowerCase();
   const photos = data.photos.filter(
     (p) =>
       (filter === "all" || p.category === filter) &&
-      (placementFilter === "all" ||
-        (placementFilter === "selected" ? p.homeSelected === true : (p.placement || "gallery") === placementFilter)) &&
-      `${p.title} ${p.alt}`.toLowerCase().includes(search.toLowerCase()),
+      matchesArea(p, placementFilter) &&
+      `${p.title} ${p.alt}`.toLowerCase().includes(query),
   );
   $("#photo-list").innerHTML = photos.length
-    ? photos.map(card).join("")
+    ? photos.map((photo) => card(photo, boundaries)).join("")
     : '<p class="empty">暂无匹配照片。</p>';
+}
+function matchesArea(photo, area) {
+  return area === "all" || (area === "selected"
+    ? photo.homeSelected === true : (photo.placement || "gallery") === area);
 }
 function renderPhotos() {
   $("#editor").innerHTML =
     `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><input id="search" type="search" placeholder="搜索照片…" aria-label="搜索照片" value="${e(search)}"><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>＋ 上传照片</button></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">首页只显示已勾选“首页精选”的展示照片，分类页显示该分类全部展示照片。轮播照片不会出现在下方图库。上传后默认隐藏且不加入精选，↑ ↓ 调整所在区域的顺序。</p>`;
   $(".stats").insertAdjacentHTML(
     "afterend",
-    '<div class="library-areas">' +
-      [
+    `<div class="library-areas">${[
         { id: "all", label: "全部照片" },
         { id: "selected", label: "首页精选" },
         { id: "gallery", label: "作品画廊" },
         { id: "hero", label: "顶部轮播" },
-      ]
-        .map(
-          (area) =>
-            '<button data-placement-filter="' +
-            area.id +
-            '" aria-pressed="' +
-            (placementFilter === area.id) +
-            '">' +
-            area.label +
-            " <small>" +
-            data.photos.filter(
-              (p) =>
-                area.id === "all" || (area.id === "selected" ? p.homeSelected === true : (p.placement || "gallery") === area.id),
-            ).length +
-            "</small></button>",
-        )
-        .join("") +
-      "</div>",
+      ].map((area) =>
+        `<button data-placement-filter="${area.id}" aria-pressed="${placementFilter === area.id}">${area.label} <small>${data.photos.filter((photo) => matchesArea(photo, area.id)).length}</small></button>`,
+      ).join("")}</div>`,
   );
   renderCards();
 }
@@ -370,10 +362,7 @@ $("#save").onclick = async () => {
   setBusy(true);
   notice("正在保存照片与内容…");
   try {
-    const paths = new Set(
-      data.photos.flatMap((p) => [p.image, p.thumbnail, p.display, p.large]),
-    );
-    paths.add(data.site.aboutImage);
+    const paths = contentImagePaths(data);
     const pending = uploads.filter((u) => paths.has(u.path));
     if (pending.reduce((sum, u) => sum + u.base64.length, 0) > 28 * 1024 * 1024)
       throw new Error("这批照片较大，请分批保存（每次不超过 28 MB）。");

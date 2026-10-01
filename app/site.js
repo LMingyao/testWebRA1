@@ -1,5 +1,4 @@
 import { escapeHTML as e, validateContent, currentYear } from "./shared.js";
-import { renderGallery } from "./gallery.js";
 
 const main = document.querySelector("main");
 const page = document.body.dataset.page;
@@ -85,6 +84,11 @@ try {
         `<a data-work="${e(c.id)}" href="${c.id === "all" ? "index.html" : c.id === "portrait" ? "ptr.html" : `index.html?category=${e(c.id)}`}">${e(c.label)}</a>`,
     )
     .join("");
+  const renderGallery = isWork
+    ? (await import("./gallery.js")).createGallery(
+        main, document.querySelector("#layout-controls"), content,
+      )
+    : undefined;
   function selectedCategory() {
     return (
       new URLSearchParams(location.search).get("category") ||
@@ -96,7 +100,7 @@ try {
       categories.some((c) => c.id === category) || category === "portrait"
         ? category
         : "all";
-    renderGallery(main, content, selected);
+    renderGallery(selected);
     workToggle.classList.add("is-current");
     const label =
       categories.find((c) => c.id === selected)?.label || "Portraits";
