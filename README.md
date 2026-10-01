@@ -59,4 +59,6 @@ npm start
 
 `tools/migrate.py` 与 `tools/curate.mjs` 是已完成的一次性迁移工具，已阻止重复运行；日常使用后台管理内容。迁移图片处理使用 Pillow，不是运行网站的依赖。
 
+2026-10-01 已加入三张 Lightroom 精选作品，保留全部原有作品。原始文件来源、排序与内嵌 JPEG 预览的版本限制见 [精选记录](docs/lightroom-selection.md)。
+
 相关平台文档：[GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)、[Git database API](https://docs.github.com/en/rest/git)、[细粒度访问令牌](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)。
