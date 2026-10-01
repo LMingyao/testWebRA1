@@ -16,13 +16,13 @@ export const galleryPhotos = (data, category = "all") =>
     (photo) =>
       photo.published &&
       photo.placement !== "hero" &&
-      (category === "all" || photo.category === category),
+      (category === "all" ? photo.homeSelected === true : photo.category === category),
   );
 // One navigation choice controls the opening panoramas and the photo sequence.
 export function workPhotos(data, category = "all") {
   const photos = data.photos.filter(
     (photo) =>
-      photo.published && (category === "all" || photo.category === category),
+      photo.published && (category === "all" ? photo.homeSelected === true : photo.category === category),
   );
   return [
     ...photos
@@ -147,6 +147,8 @@ export function validateContent(data) {
       !["gallery", "hero"].includes(photo.placement)
     )
       throw new Error("Photo placement must be gallery or hero.");
+    if (photo.homeSelected !== undefined && typeof photo.homeSelected !== "boolean")
+      throw new Error("Homepage selection must be a boolean.");
   }
   return data;
 }

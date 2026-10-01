@@ -50,6 +50,21 @@ test("old records default to gallery; invalid placement is rejected", () => {
   data.photos[0].placement = "both";
   assert.throws(() => validateContent(data), /placement/);
 });
+test("homepage shows only selected published works; categories retain the complete collection", () => {
+  const data = structuredClone(fixture);
+  data.photos[0].placement = "hero";
+  data.photos[0].homeSelected = false;
+  data.photos[1].featured = true;
+  assert.deepEqual(workPhotos(data).map(p => p.id), ["photo-two"]);
+  assert.deepEqual(workPhotos(data, "aviation").map(p => p.id), ["photo-one", "photo-two"]);
+  data.photos[1].published = false;
+  assert.deepEqual(workPhotos(data), []);
+  delete data.photos[0].homeSelected;
+  assert.equal(validateContent(data), data);
+  assert.deepEqual(workPhotos(data), []);
+  data.photos[0].homeSelected = "true";
+  assert.throws(() => validateContent(data), /Homepage selection/);
+});
 test("ordering stays within its display area even when records are interleaved", () => {
   const data = structuredClone(fixture);
   data.photos[0].placement = "hero";

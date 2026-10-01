@@ -66,7 +66,8 @@
       "height": 1300,
       "published": true,
       "featured": true,
-      "placement": "hero"
+      "placement": "hero",
+      "homeSelected": true
     },
     {
       "id": "mtl-x",
@@ -81,7 +82,8 @@
       "height": 1000,
       "published": true,
       "featured": false,
-      "placement": "hero"
+      "placement": "hero",
+      "homeSelected": true
     },
     {
       "id": "ac-x",
@@ -96,7 +98,8 @@
       "height": 1000,
       "published": true,
       "featured": false,
-      "placement": "hero"
+      "placement": "hero",
+      "homeSelected": true
     },
     {
       "id": "jfk-x",
@@ -111,7 +114,8 @@
       "height": 1000,
       "published": true,
       "featured": false,
-      "placement": "hero"
+      "placement": "hero",
+      "homeSelected": true
     },
     {
       "id": "qr-x",
@@ -126,7 +130,8 @@
       "height": 1000,
       "published": true,
       "featured": false,
-      "placement": "hero"
+      "placement": "hero",
+      "homeSelected": true
     },
     {
       "id": "yyc-wsj787-2",
@@ -141,7 +146,8 @@
       "height": 1300,
       "published": true,
       "featured": false,
-      "placement": "hero"
+      "placement": "hero",
+      "homeSelected": true
     },
     {
       "id": "nf436",
@@ -156,7 +162,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": true
     },
     {
       "id": "cnt-626r",
@@ -171,7 +178,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": true
     },
     {
       "id": "sa777",
@@ -186,7 +194,8 @@
       "height": 1215,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": true
     },
     {
       "id": "c-fvlx-snow-1-2",
@@ -201,7 +210,8 @@
       "height": 1080,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": true
     },
     {
       "id": "yvr-boat",
@@ -216,7 +226,8 @@
       "height": 1440,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": true
     },
     {
       "id": "bdr-jn1-web",
@@ -231,7 +242,8 @@
       "height": 1440,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": true
     },
     {
       "id": "nf736",
@@ -246,7 +258,8 @@
       "height": 1440,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": true
     },
     {
       "id": "oaci-9917",
@@ -261,7 +274,8 @@
       "height": 1215,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "cmp",
@@ -276,7 +290,8 @@
       "height": 1440,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "q400-excu-pt",
@@ -291,7 +306,8 @@
       "height": 1600,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "aa-erj-plt",
@@ -306,7 +322,8 @@
       "height": 1620,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "sd515",
@@ -321,7 +338,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "yqb-1",
@@ -336,7 +354,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "bdr-jl14-8r",
@@ -351,7 +370,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "en-nsrt-2ehc",
@@ -366,7 +386,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "ts-fin103",
@@ -381,7 +402,8 @@
       "height": 1440,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "thunderbirdab",
@@ -396,7 +418,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "81-0041-wm",
@@ -411,7 +434,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "f22r",
@@ -426,7 +450,8 @@
       "height": 1215,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "f1rk",
@@ -441,7 +466,8 @@
       "height": 1080,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "ospreyk",
@@ -456,7 +482,8 @@
       "height": 1620,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "jb-jfk",
@@ -471,7 +498,8 @@
       "height": 1620,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "yyz-dt-x",
@@ -486,7 +514,8 @@
       "height": 1280,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "slr-ecpre",
@@ -501,7 +530,8 @@
       "height": 1280,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "xfemgjn75348",
@@ -516,7 +546,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "xfemgpsx",
@@ -531,7 +562,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "ptr-sep29x",
@@ -546,7 +578,8 @@
       "height": 1600,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "ptr-oct20-4",
@@ -561,7 +594,8 @@
       "height": 1620,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "ptr-o5-flr-dxf",
@@ -576,7 +610,8 @@
       "height": 1080,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "ptr-oct20-1x",
@@ -591,7 +626,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     },
     {
       "id": "vff-ptr-sg24",
@@ -606,7 +642,8 @@
       "height": 2160,
       "published": true,
       "featured": false,
-      "placement": "gallery"
+      "placement": "gallery",
+      "homeSelected": false
     }
   ]
 }

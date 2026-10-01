@@ -41,14 +41,14 @@ function card(photo) {
     (p) => (p.placement || "gallery") === (photo.placement || "gallery"),
   );
   const index = members.findIndex((p) => p.id === photo.id);
-  return `<article class="admin-card"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.featured ? "★" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "顶部轮播" : "作品画廊"}</span><span class="badge ${photo.published ? "" : "draft"}">${photo.published ? "展示中" : "已隐藏"}</span></div></div><div class="card-actions"><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${index === 0 ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${index === members.length - 1 ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
+  return `<article class="admin-card"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.homeSelected ? " · 首页精选" : ""}${photo.featured ? " · 轮播首图" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "顶部轮播" : "作品画廊"}</span><span class="badge ${photo.published ? "" : "draft"}">${photo.published ? "展示中" : "已隐藏"}</span></div></div><div class="card-actions"><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${index === 0 ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${index === members.length - 1 ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
 }
 function renderCards() {
   const photos = data.photos.filter(
     (p) =>
       (filter === "all" || p.category === filter) &&
       (placementFilter === "all" ||
-        (p.placement || "gallery") === placementFilter) &&
+        (placementFilter === "selected" ? p.homeSelected === true : (p.placement || "gallery") === placementFilter)) &&
       `${p.title} ${p.alt}`.toLowerCase().includes(search.toLowerCase()),
   );
   $("#photo-list").innerHTML = photos.length
@@ -57,12 +57,13 @@ function renderCards() {
 }
 function renderPhotos() {
   $("#editor").innerHTML =
-    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><input id="search" type="search" placeholder="搜索照片…" aria-label="搜索照片" value="${e(search)}"><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>＋ 上传照片</button></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">在编辑中选择作品画廊或顶部轮播。轮播照片不会出现在下方图库。上传后默认隐藏，↑ ↓ 调整所在区域的顺序。</p>`;
+    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><input id="search" type="search" placeholder="搜索照片…" aria-label="搜索照片" value="${e(search)}"><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>＋ 上传照片</button></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">首页只显示已勾选“首页精选”的展示照片，分类页显示该分类全部展示照片。轮播照片不会出现在下方图库。上传后默认隐藏且不加入精选，↑ ↓ 调整所在区域的顺序。</p>`;
   $(".stats").insertAdjacentHTML(
     "afterend",
     '<div class="library-areas">' +
       [
         { id: "all", label: "全部照片" },
+        { id: "selected", label: "首页精选" },
         { id: "gallery", label: "作品画廊" },
         { id: "hero", label: "顶部轮播" },
       ]
@@ -77,7 +78,7 @@ function renderPhotos() {
             " <small>" +
             data.photos.filter(
               (p) =>
-                area.id === "all" || (p.placement || "gallery") === area.id,
+                area.id === "all" || (area.id === "selected" ? p.homeSelected === true : (p.placement || "gallery") === area.id),
             ).length +
             "</small></button>",
         )
@@ -142,6 +143,7 @@ function editPhoto(id) {
     .join("");
   form.elements.category.value = p.category;
   form.elements.published.checked = p.published;
+  form.elements.homeSelected.checked = p.homeSelected === true;
   form.elements.placement.value = p.placement || "gallery";
   form.elements.featured.checked = p.featured;
   form.elements.featured.disabled = form.elements.placement.value !== "hero";
@@ -280,6 +282,7 @@ $("#photo-form").onsubmit = (event) => {
     alt,
     category: form.elements.category.value,
     published: form.elements.published.checked,
+    homeSelected: form.elements.homeSelected.checked,
     placement: form.elements.placement.value,
     featured:
       form.elements.placement.value === "hero" &&

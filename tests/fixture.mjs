@@ -28,6 +28,7 @@ export const fixture = {
       height: 1000,
       published: true,
       featured: true,
+      homeSelected: true,
     },
     {
       id: "photo-two",
@@ -39,6 +40,7 @@ export const fixture = {
       height: 800,
       published: true,
       featured: false,
+      homeSelected: true,
     },
   ],
 };

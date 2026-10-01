@@ -54,6 +54,7 @@ export async function preparePhoto(file, category) {
         height: bitmap.height,
         published: false,
         featured: false,
+        homeSelected: false,
         placement: "gallery",
       },
       uploads,
