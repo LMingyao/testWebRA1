@@ -1,5 +1,17 @@
 import { escapeHTML as e } from "./shared.js";
 
+export function createPhotoPreloader() {
+  const images = [new Image(), new Image()];
+  return (photos, index) => {
+    if (photos.length < 2) return;
+    for (const [i, direction] of [-1, 1].entries()) {
+      const photo = photos[(index + direction + photos.length) % photos.length];
+      const source = photo.large || photo.display || photo.image;
+      if (images[i].getAttribute("src") !== source) images[i].src = source;
+    }
+  };
+}
+
 export function photoImage(photo, {
   eager = false,
   sizes = "(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))",

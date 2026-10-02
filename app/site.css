@@ -1,15 +1,11 @@
 :root {
   --paper: #fff;
-  --ink: #171717;
-  --muted: #777;
-  --line: #eee;
-  --pink: #e9a3bc;
-  --nav-font:
-    "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Segoe UI", Arial,
-    sans-serif;
-  --body-font:
-    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Arial, sans-serif;
+  --ink: var(--brand-ink);
+  --muted: var(--brand-muted);
+  --line: var(--brand-line);
+  --pink: var(--brand-pink);
+  --nav-font: var(--brand-ui-font);
+  --body-font: var(--brand-body-font);
   font-family: var(--body-font);
   font-synthesis: none;
   color: var(--ink);
@@ -51,7 +47,7 @@ a {
 }
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid #a74a70;
+  outline: 2px solid var(--brand-focus);
   outline-offset: 6px;
 }
 button:disabled {
@@ -70,6 +66,7 @@ figure {
 }
 .site-header,
 main,
+.collection-toolbar,
 .site-footer {
   width: min(1320px, calc(100% - 112px));
   margin-inline: auto;
@@ -79,15 +76,9 @@ main,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 132px;
+  min-height: 104px;
   position: relative;
   z-index: 3;
-}
-.header-tools {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 7px;
 }
 .site-header nav {
   display: flex;
@@ -129,9 +120,9 @@ main,
   position: absolute;
   bottom: 4px;
   left: 0;
-  width: 28px;
+  width: 20px;
   height: 2px;
-  background: var(--brand-gradient);
+  background: var(--pink);
 }
 .work-navigation {
   position: relative;
@@ -153,9 +144,10 @@ main,
   display: none;
 }
 #work-menu a {
+  position: relative;
   display: block;
-  padding: 9px 0;
-  color: #777;
+  padding: 10px 0 10px 12px;
+  color: var(--muted);
 }
 #work-menu a:hover,
 #work-menu a[aria-current="page"] {
@@ -163,22 +155,44 @@ main,
 }
 #work-menu a[aria-current="page"]:before {
   content: "";
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 12px;
   background: var(--pink);
-  margin-right: 10px;
-  vertical-align: middle;
 }
 .menu-toggle {
   display: none;
 }
 .work-gallery {
-  padding: 0 0 70px;
+  padding: 0 0 72px;
+}
+.collection-toolbar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 48px;
+  padding-bottom: 12px;
+}
+body[data-page="portfolio"] .collection-toolbar,
+body[data-page="portrait"] .collection-toolbar {
+  display: flex;
+}
+.collection-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 12px/1.6 var(--nav-font);
+  color: var(--muted);
+  letter-spacing: .015em;
 }
 .view-controls {
   display: flex;
+  flex-shrink: 0;
   justify-content: flex-end;
   gap: 20px;
   margin: 0;
@@ -186,16 +200,16 @@ main,
 .view-controls button {
   padding: 10px 0;
   min-height: 40px;
-  color: #666;
+  color: var(--muted);
   font: 12px var(--nav-font);
   border-bottom: 1px solid transparent;
 }
 .view-controls button[aria-pressed="true"] {
   color: #222;
-  background: var(--brand-gradient) left bottom / 100% 2px no-repeat;
+  border-bottom-color: #777;
 }
 .single-stage {
-  height: clamp(350px, calc(100svh - 300px), 760px);
+  height: clamp(380px, calc(100svh - 240px), 880px);
   display: flex;
   justify-content: center;
   touch-action: pan-y;
@@ -220,7 +234,6 @@ main,
 .single-controls button {
   width: 44px;
   height: 44px;
-  font-size: 23px;
 }
 .work-opening {
   position: relative;
@@ -257,7 +270,26 @@ main,
 }
 .opening-previous:hover,
 .opening-next:hover {
-  color: #a74a70;
+  color: var(--brand-focus);
+}
+.arrow-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.single-controls button,
+.viewer-navigation button {
+  display: grid;
+  place-items: center;
+}
+.single-controls button:hover,
+.viewer-navigation button:hover {
+  color: var(--brand-focus);
 }
 .photo-card {
   min-width: 0;
@@ -281,10 +313,6 @@ main,
 .photo-card img {
   width: 100%;
   height: auto;
-  transition: opacity 0.15s;
-}
-.photo-card button:hover img {
-  opacity: 0.95;
 }
 .sr-only {
   position: absolute;
@@ -308,9 +336,9 @@ main,
   flex-shrink: 0;
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 27px 20px;
+  gap: 24px 20px;
   padding: 30px 0 32px;
-  font-size: 11px;
+  font: 12px/1.6 var(--nav-font);
 }
 .site-footer:before {
   content: "";
@@ -329,11 +357,11 @@ main,
   align-items: center;
   gap: 24px;
   color: #666;
-  font-size: 11px;
+  font-size: 12px;
 }
 .site-footer small,
 .back-top {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
 }
 .back-top {
@@ -368,7 +396,7 @@ main,
   display: flex;
   align-items: center;
   gap: 19px;
-  font-size: 11px;
+  font: 12px/1.6 var(--nav-font);
   padding: 12px 0 12px 12px;
 }
 .lightbox-close span {
@@ -403,25 +431,24 @@ main,
   gap: 50px;
 }
 .viewer-navigation button {
-  font-size: 23px;
   width: 44px;
   height: 44px;
 }
 .lightbox-original {
   justify-self: end;
-  font-size: 10px;
-  color: #777;
+  font: 12px/1.6 var(--nav-font);
+  color: var(--muted);
 }
 .viewing {
   overflow: hidden;
 }
 .editorial {
   padding: 40px 0 90px;
-  width: min(1160px, 100%);
+  width: 100%;
   margin-inline: auto;
 }
 .eyebrow {
-  font: 400 9px/1.5 var(--nav-font);
+  font: 400 11px/1.6 var(--nav-font);
   letter-spacing: 0.16em;
   color: var(--muted);
   text-transform: uppercase;
@@ -478,7 +505,7 @@ main,
   transform: rotate(225deg);
 }
 .gear summary:focus-visible {
-  outline: 2px solid #a74a70;
+  outline: 2px solid var(--brand-focus);
   outline-offset: 6px;
 }
 .gear p {
@@ -493,14 +520,14 @@ main,
 .contact-page {
   padding: 55px 0 100px;
   min-height: 60vh;
-  width: min(1160px, 100%);
+  width: 100%;
   margin-inline: auto;
 }
 .contact-page h1 {
-  font-size: clamp(36px, 4vw, 58px);
+  font-size: clamp(30px, 3vw, 43px);
   font-weight: 400;
   line-height: 1.15;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.03em;
   margin-top: 28px;
 }
 .contact-details {
@@ -563,6 +590,7 @@ main,
 @media (max-width: 1100px) {
   .site-header,
   main,
+  .collection-toolbar,
   .site-footer {
     width: calc(100% - 80px);
   }
@@ -581,17 +609,6 @@ main,
   }
 }
 @media (max-width: 900px) {
-  .site-header {
-    padding-bottom: 36px;
-  }
-  #layout-controls {
-    position: absolute;
-    bottom: 15px;
-    right: 0;
-  }
-  .header-tools {
-    display: contents;
-  }
   .menu-toggle {
     display: grid;
     place-items: center;
@@ -671,11 +688,12 @@ main,
 @media (max-width: 700px) {
   .site-header,
   main,
+  .collection-toolbar,
   .site-footer {
     width: calc(100% - 40px);
   }
   .site-header {
-    min-height: 124px;
+    min-height: 96px;
   }
   .site-header nav {
     left: -20px;
@@ -689,7 +707,7 @@ main,
     gap: 22px;
   }
   .single-stage {
-    height: max(320px, calc(100svh - 280px));
+    height: max(320px, calc(100svh - 240px));
   }
   .photo-sheet,
   .photo-row {
@@ -700,9 +718,8 @@ main,
   }
   .opening-previous,
   .opening-next {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
+    width: 44px;
+    height: 44px;
   }
   .site-footer {
     grid-template-columns: 1fr;
@@ -740,7 +757,7 @@ main,
   .lightbox-original {
     justify-self: center;
     margin-top: 12px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .editorial {
     padding: 30px 0 65px;
@@ -763,7 +780,7 @@ main,
     padding: 35px 0 65px;
   }
   .contact-page h1 {
-    font-size: 36px;
+    font-size: 31px;
     margin-top: 32px;
   }
   .contact-details {

@@ -61,6 +61,7 @@ test("D1 denies unauthenticated admin and assets; public feed omits hidden works
     assert.equal((await request(path, { auth: false })).status, 401);
   assert.equal((await request("/admin/", { auth: false })).headers.get("Location"), "/admin/login");
   assert.equal((await request("/admin/login", { auth: false })).status, 200);
+  assert.equal((await request("/app/design.css", { auth: false })).status, 200);
   const publicFeed = await request("/api/content", { auth: false, origin: "https://mingyaophoto.com" });
   assert.equal(publicFeed.headers.get("Access-Control-Allow-Origin"), "https://mingyaophoto.com");
   assert.equal(publicFeed.headers.get("Cache-Control"), "no-store");
@@ -75,9 +76,15 @@ test("D1 saves atomically, rejects stale and missing media, keeps bounded histor
   const stale = revision;
   data.photos.reverse();
   data.site.location = "Toronto";
+  const published = data.photos.find(photo => photo.published);
+  published.presentation = "solo";
+  published.group = "Selected sequence";
   const saved = await request("/api/admin/content", { method: "PUT", data, revision });
   assert.equal(saved.status, 200);
   revision = (await saved.json()).revision;
+  const publicPhoto = (await (await request("/api/content", { auth: false })).json()).photos[0];
+  assert.equal(publicPhoto.presentation, "solo");
+  assert.equal(publicPhoto.group, "Selected sequence");
   assert.equal((await request("/api/admin/content", { method: "PUT", data, revision: stale })).status, 409);
   assert.equal(sqlite.prepare("SELECT count(*) AS n FROM gallery_history").get().n, 1);
   const invalid = structuredClone(data);

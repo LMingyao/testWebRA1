@@ -1,3 +1,5 @@
+import { createPhotoPreloader } from "./images.js";
+
 export function onSwipe(element, callback) {
   let start;
   element.addEventListener(
@@ -23,7 +25,8 @@ export function onSwipe(element, callback) {
   );
 }
 
-export function createPhotoViewer(dialog, onChange) {
+export function createPhotoViewer(dialog, onChange, onClose) {
+  const preload = createPhotoPreloader();
   let viewing = [],
     active = 0;
   function showPhoto() {
@@ -32,6 +35,7 @@ export function createPhotoViewer(dialog, onChange) {
     const image = dialog.querySelector("img");
     image.src = photo.large || photo.image;
     image.alt = photo.alt;
+    preload(viewing, active);
     dialog.setAttribute("aria-label", `Photograph: ${photo.alt}`);
     dialog.querySelector(".lightbox-original").href = photo.image;
     dialog
@@ -53,9 +57,10 @@ export function createPhotoViewer(dialog, onChange) {
   dialog.querySelector(".lightbox-close").onclick = () => dialog.close();
   dialog.querySelector(".lightbox-prev").onclick = () => advance(-1);
   dialog.querySelector(".lightbox-next").onclick = () => advance(1);
-  dialog.addEventListener("close", () =>
-    document.body.classList.remove("viewing"),
-  );
+  dialog.addEventListener("close", () => {
+    document.body.classList.remove("viewing");
+    onClose?.();
+  });
   dialog.addEventListener("click", (event) => {
     if (
       event.target === dialog ||

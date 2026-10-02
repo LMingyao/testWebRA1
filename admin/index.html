@@ -11,6 +11,7 @@
     />
     <title>内容管理 · Mingyao Photography</title>
     <link rel="icon" href="../assets/favicon.svg" />
+    <link rel="stylesheet" href="../app/design.css" />
     <link rel="stylesheet" href="admin.css" />
     <link rel="stylesheet" href="../app/wordmark.css" />
     <script type="module" src="admin.js"></script>
@@ -77,6 +78,11 @@
             <option value="hero">顶部轮播（不在画廊显示）</option>
           </select></label
         >
+        <div class="form-grid">
+          <label>画廊排版<select name="presentation"><option value="auto">自动组合</option><option value="solo">独立一行</option></select></label>
+          <label>编排组名（可选）<input name="group" maxlength="80" placeholder="例如：秋日人像" /></label>
+        </div>
+        <p class="hint">相邻、同组名的照片优先一起排版，每行最多三张；手机自动分行。独立一行优先于分组。顶部轮播不使用这些设置。</p>
         <div class="check-row">
           <label><input type="checkbox" name="published" />在网站展示</label
           ><label><input type="checkbox" name="featured" />轮播首图</label>

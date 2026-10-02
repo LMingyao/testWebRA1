@@ -40,3 +40,27 @@ test("mixed portrait rows remain readable and a balanced final pair fills the ro
   }
   assert.ok(Math.abs(rows.at(-1).width - 1320) < 0.001);
 });
+
+test("declared groups stay separate, solo photos stand alone and mobile keeps every photograph", () => {
+  const photos = [
+    { id: "first", width: 1500, height: 1000 },
+    { id: "pair-a", width: 1000, height: 1500, group: "Autumn" },
+    { id: "pair-b", width: 1000, height: 1500, group: "Autumn" },
+    { id: "solo", width: 1500, height: 1000, presentation: "solo" },
+    { id: "last", width: 1500, height: 1000 },
+  ];
+  const rows = photoRows(photos, { width: 1320, targetHeight: 480 });
+  assert.deepEqual(rows.flatMap(row => row.photos), photos);
+  assert.deepEqual(rows.find(row => row.photos.includes(photos[1])).photos, photos.slice(1, 3));
+  assert.deepEqual(rows.find(row => row.photos.includes(photos[3])).photos, [photos[3]]);
+  const mobile = photoRows(photos, { width: 350 });
+  assert.deepEqual(mobile.flatMap(row => row.photos), photos);
+  assert.ok(mobile.every(row => row.photos.length === 1 && row.width === 350));
+});
+
+test("long groups wrap within row limits without swallowing neighbouring works", () => {
+  const photos = Array.from({ length: 8 }, (_, id) => ({ id, width: 1000, height: 1500, group: id > 0 && id < 7 ? "Portraits" : "" }));
+  const rows = photoRows(photos, { width: 1152, targetHeight: 480 });
+  assert.deepEqual(rows.flatMap(row => row.photos), photos);
+  assert.ok(rows.every(row => row.photos.length <= 3 && new Set(row.photos.map(photo => photo.group)).size === 1));
+});

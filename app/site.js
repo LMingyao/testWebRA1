@@ -47,7 +47,7 @@ function aboutPage(content) {
 }
 function contactPage(content) {
   const s = content.site;
-  main.innerHTML = `<section class="contact-page"><p class="eyebrow">CONTACT</p><h1>Photography enquiries</h1><div class="contact-details"><p>For photography enquiries and collaborations.</p><a class="email-link" href="mailto:${e(s.email)}">${e(s.email)} <span aria-hidden="true">↗</span></a></div><p class="contact-location">${e(s.name)} · ${e(s.location)}</p></section>`;
+  main.innerHTML = `<section class="contact-page"><p class="eyebrow">CONTACT</p><h1>Get in touch.</h1><div class="contact-details"><p>Photography enquiries and collaborations.</p><a class="email-link" href="mailto:${e(s.email)}">${e(s.email)} <span aria-hidden="true">↗</span></a></div><p class="contact-location">${e(s.name)} · ${e(s.location)}</p></section>`;
 }
 try {
   const content = contentForDisplay(validateContent(await loadPublicContent()));
@@ -103,7 +103,7 @@ try {
     workToggle.classList.add("is-current");
     const label =
       categories.find((c) => c.id === selected)?.label || "Portraits";
-    workToggle.innerHTML = `${selected === "all" ? "WORK" : e(label.toUpperCase())} <span class="nav-chevron" aria-hidden="true"></span>`;
+    workToggle.setAttribute("aria-label", `Work — ${label}`);
     workMenu.querySelectorAll("a").forEach((a) => {
       if (a.dataset.work === selected) a.setAttribute("aria-current", "page");
       else a.removeAttribute("aria-current");

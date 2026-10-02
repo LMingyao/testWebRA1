@@ -1,14 +1,16 @@
 import { escapeHTML as e, workPhotos } from "./shared.js";
 import { photoRows } from "./layout.js";
-import { photoImage } from "./images.js";
+import { photoImage, createPhotoPreloader } from "./images.js";
 import { createPhotoViewer, onSwipe } from "./viewer.js";
+import { arrowIcon } from "./icons.js";
 
 export function createGallery(main, controls, content) {
-  let layoutObserver, selectedPhotoId, viewerChanged, viewMode = "multi";
+  let layoutObserver, selectedPhotoId, viewerChanged, viewerClosed, viewMode = "multi";
+  const preload = createPhotoPreloader();
   const openPhoto = createPhotoViewer(document.querySelector(".lightbox"), id => {
     selectedPhotoId = id;
     viewerChanged?.(id);
-  });
+  }, () => viewerClosed?.());
   return function renderGallery(category = "all") {
     layoutObserver?.disconnect();
     const sequence = workPhotos(content, category);
@@ -23,9 +25,9 @@ export function createGallery(main, controls, content) {
     selectedPhotoId = sequence[singleCurrent]?.id;
     const rememberedPanorama = panoramas.findIndex(photo => photo.id === selectedPhotoId);
     if (rememberedPanorama >= 0) current = rememberedPanorama;
-    const viewControls = `<div class="view-controls" role="group" aria-label="Photo layout"><button data-view="single" aria-pressed="${viewMode === "single"}">Single view</button><button data-view="multi" aria-pressed="${viewMode === "multi"}">Multi view</button></div>`;
-    const multi = `${panoramas.length ? `<div class="work-opening"><button class="opening-image" aria-label="Open panorama"></button>${panoramas.length > 1 ? '<div class="opening-controls"><button class="opening-previous" aria-label="Previous panorama">←</button><button class="opening-next" aria-label="Next panorama">→</button></div>' : ""}</div>` : ""}${photographs.length ? '<div class="photo-sheet"></div>' : ""}`;
-    const single = `<div class="single-stage"><button class="single-image" aria-label="Open photograph"></button></div><div class="single-controls"><button class="single-previous" aria-label="Previous photograph" ${sequence.length < 2 ? "disabled" : ""}>←</button><button class="single-next" aria-label="Next photograph" ${sequence.length < 2 ? "disabled" : ""}>→</button></div>`;
+    const viewControls = `<p class="collection-label">${e(label)}</p><div class="view-controls" role="group" aria-label="Photo layout"><button data-view="single" aria-pressed="${viewMode === "single"}">Single view</button><button data-view="multi" aria-pressed="${viewMode === "multi"}">Multi view</button></div>`;
+    const multi = `${panoramas.length ? `<div class="work-opening"><button class="opening-image" aria-label="Open panorama"></button>${panoramas.length > 1 ? `<div class="opening-controls"><button class="opening-previous" aria-label="Previous panorama">${arrowIcon(-1)}</button><button class="opening-next" aria-label="Next panorama">${arrowIcon(1)}</button></div>` : ""}</div>` : ""}${photographs.length ? '<div class="photo-sheet"></div>' : ""}`;
+    const single = `<div class="single-stage"><button class="single-image" aria-label="Open photograph"></button></div><div class="single-controls"><button class="single-previous" aria-label="Previous photograph" ${sequence.length < 2 ? "disabled" : ""}>${arrowIcon(-1)}</button><button class="single-next" aria-label="Next photograph" ${sequence.length < 2 ? "disabled" : ""}>${arrowIcon(1)}</button></div>`;
     controls.innerHTML = viewControls;
     main.innerHTML = `<section class="work-gallery" aria-label="${e(label)}"><h1 class="sr-only">${e(label)}</h1>${sequence.length ? viewMode === "multi" ? multi : single : '<p class="empty">New photographs will be added soon.</p>'}</section>`;
     function changeView(event) {
@@ -34,7 +36,18 @@ export function createGallery(main, controls, content) {
       viewMode = view.dataset.view;
       renderGallery(category);
       controls.querySelector(`[data-view="${viewMode}"]`).focus({ preventScroll: true });
+      if (viewMode === "multi") revealSelected();
     }
+    function revealSelected() {
+      const index = sequence.findIndex(photo => photo.id === selectedPhotoId);
+      if (index < 0) return;
+      const target = viewMode === "single" ? main.querySelector(".single-image")
+        : index < panoramas.length ? main.querySelector(".opening-image")
+        : main.querySelector(`[data-photo="${index}"]`);
+      target?.focus({ preventScroll: true });
+      target?.scrollIntoView({ block: "center", behavior: "instant" });
+    }
+    viewerClosed = revealSelected;
     controls.onclick = changeView;
     const sheet = main.querySelector(".photo-sheet");
     let layoutWidth;
@@ -45,7 +58,7 @@ export function createGallery(main, controls, content) {
       const focused = sheet.contains(document.activeElement)
         ? document.activeElement.closest("[data-photo]")?.dataset.photo : undefined;
       const gap = parseFloat(getComputedStyle(sheet).rowGap);
-      const targetHeight = category === "portrait" ? 440 : 350;
+      const targetHeight = category === "portrait" ? 480 : 380;
       let index = 0;
       sheet.innerHTML = photoRows(photographs, { width, gap, targetHeight }).map(row => {
         const ratioSum = row.photos.reduce((sum, photo) => sum + photo.width / photo.height, 0);
@@ -89,6 +102,7 @@ export function createGallery(main, controls, content) {
       button.innerHTML = photoImage(photo, { eager: true });
       button.dataset.photo = singleCurrent;
       button.setAttribute("aria-label", `View ${photo.alt}`);
+      preload(sequence, singleCurrent);
     }
     if (singleStage) {
       showSingle(singleCurrent);
@@ -96,6 +110,10 @@ export function createGallery(main, controls, content) {
     }
     viewerChanged = id => {
       if (singleStage) showSingle(sequence.findIndex(photo => photo.id === id));
+      else {
+        const panorama = panoramas.findIndex(photo => photo.id === id);
+        if (panorama >= 0) showPanorama(panorama);
+      }
     };
     main.onkeydown = event => {
       if (singleStage && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
