@@ -18,9 +18,9 @@
   }],
   "vars": {
     "SITE_ORIGIN": "https://mingyaophoto.com",
-    "MEDIA_BASE": "https://raw.githubusercontent.com/LMingyao/testWebRA1/refactor/gallery-admin/",
+    "MEDIA_BASE": "https://raw.githubusercontent.com/LMingyao/testWebRA1/main/",
     "GITHUB_REPO": "LMingyao/testWebRA1",
-    "GITHUB_BRANCH": "refactor/gallery-admin"
+    "GITHUB_BRANCH": "main"
   },
   "env": {
     "dev": {

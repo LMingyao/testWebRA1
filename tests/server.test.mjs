@@ -19,6 +19,8 @@ test("local admin persists edits, rejects stale saves and protects filesystem", 
     path.join(root, "content/gallery.json"),
     JSON.stringify(data),
   );
+  const backend = { apiBase: "https://studio.example.com", adminURL: "https://studio.example.com/admin/" };
+  await writeFile(path.join(root, "content/backend.json"), JSON.stringify(backend));
   await writeFile(path.join(root, data.photos[0].image), "fixture");
   await writeFile(path.join(root, data.site.aboutImage), "fixture");
   // Even a leftover legacy file should not be served by the local preview.
@@ -28,6 +30,8 @@ test("local admin persists edits, rejects stale saves and protects filesystem", 
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const url = `http://127.0.0.1:${server.address().port}`;
   try {
+    assert.deepEqual(await (await fetch(url + "/content/backend.json")).json(), { ...backend, apiBase: "" });
+    assert.deepEqual(JSON.parse(await readFile(path.join(root, "content/backend.json"), "utf8")), backend);
     const session = await (await fetch(url + "/api/session")).json();
     const loaded = await (await fetch(url + "/api/content")).json();
     data.site.name = "Saved photographer";

@@ -162,7 +162,13 @@ export function createServer(root) {
         json(res, 403, { error: "Not allowed." });
         return;
       }
-      const buffer = await readFile(resolved);
+      let buffer = await readFile(resolved);
+      if (requested === "content/backend.json") {
+        // The loopback editor saves local files. Keep its website preview on the
+        // same local content even when the published Pages site uses D1.
+        const config = JSON.parse(buffer);
+        buffer = Buffer.from(JSON.stringify({ ...config, apiBase: "" }));
+      }
       res.writeHead(200, {
         "Content-Type":
           types[path.extname(requested)] || "application/octet-stream",
