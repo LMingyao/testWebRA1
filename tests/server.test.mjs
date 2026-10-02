@@ -35,6 +35,8 @@ test("local admin persists edits, rejects stale saves and protects filesystem", 
     const session = await (await fetch(url + "/api/session")).json();
     const loaded = await (await fetch(url + "/api/content")).json();
     data.site.name = "Saved photographer";
+    data.photos[0].presentation = "solo";
+    data.photos[0].group = "Autumn portraits";
     const payload = { data, revision: loaded.revision, uploads: [] };
     assert.equal(
       (

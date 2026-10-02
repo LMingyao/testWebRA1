@@ -36,3 +36,18 @@ test("reject missing category, duplicate IDs and empty descriptions", () => {
   data.photos[0].alt = "";
   assert.throws(() => validateContent(data));
 });
+
+test("optional composition settings preserve old documents and reject invalid input", () => {
+  const data = structuredClone(content);
+  assert.equal(validateContent(data), data);
+  data.photos[0].presentation = "solo";
+  data.photos[1].group = "秋日人像";
+  assert.equal(validateContent(data), data);
+  data.photos[0].presentation = "crop";
+  assert.throws(() => validateContent(data));
+  data.photos[0].presentation = "auto";
+  for (const group of [null, 12, "x".repeat(81)]) {
+    data.photos[1].group = group;
+    assert.throws(() => validateContent(data));
+  }
+});

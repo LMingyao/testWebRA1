@@ -150,6 +150,10 @@ export function validateContent(data) {
       throw new Error("Photo placement must be gallery or hero.");
     if (photo.homeSelected !== undefined && typeof photo.homeSelected !== "boolean")
       throw new Error("Homepage selection must be a boolean.");
+    if (photo.presentation !== undefined && !["auto", "solo"].includes(photo.presentation))
+      throw new Error("Photo presentation must be auto or solo.");
+    if (photo.group !== undefined && (typeof photo.group !== "string" || photo.group.length > 80))
+      throw new Error("Photo group must be a name of up to 80 characters.");
   }
   return data;
 }

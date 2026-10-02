@@ -2,6 +2,7 @@ import { readFile, writeFile, access } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { validateContent, contentImagePaths } from "../app/shared.js";
+import { arrowIcon } from "../app/icons.js";
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const content = validateContent(
   JSON.parse(await readFile(path.join(root, "content/gallery.json"), "utf8")),
@@ -16,7 +17,8 @@ for (const [file, page, title] of [
 ]) {
   await writeFile(
     path.join(root, file),
-    template.replaceAll("{{page}}", page).replaceAll("{{title}}", title),
+    template.replaceAll("{{page}}", page).replaceAll("{{title}}", title)
+      .replaceAll("{{previousArrow}}", arrowIcon(-1)).replaceAll("{{nextArrow}}", arrowIcon(1)),
   );
 }
 console.log(

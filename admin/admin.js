@@ -142,12 +142,19 @@ function editPhoto(id) {
   form.elements.published.checked = p.published;
   form.elements.homeSelected.checked = p.homeSelected === true;
   form.elements.placement.value = p.placement || "gallery";
+  form.elements.presentation.value = p.presentation || "auto";
+  form.elements.group.value = p.group || "";
   form.elements.featured.checked = p.featured;
-  form.elements.featured.disabled = form.elements.placement.value !== "hero";
-  form.elements.placement.onchange = () => {
-    form.elements.featured.disabled = form.elements.placement.value !== "hero";
+  function refreshCompositionOptions() {
+    const hero = form.elements.placement.value === "hero";
+    form.elements.featured.disabled = !hero;
     if (form.elements.featured.disabled) form.elements.featured.checked = false;
-  };
+    form.elements.presentation.disabled = hero;
+    form.elements.group.disabled = hero || form.elements.presentation.value === "solo";
+  }
+  form.elements.placement.onchange = refreshCompositionOptions;
+  form.elements.presentation.onchange = refreshCompositionOptions;
+  refreshCompositionOptions();
   $("#edit-preview").src = image(p);
   $("#photo-dialog").showModal();
 }
@@ -287,6 +294,8 @@ $("#photo-form").onsubmit = (event) => {
     published: form.elements.published.checked,
     homeSelected: form.elements.homeSelected.checked,
     placement: form.elements.placement.value,
+    presentation: form.elements.presentation.value,
+    group: form.elements.group.value.trim(),
     featured:
       form.elements.placement.value === "hero" &&
       form.elements.featured.checked,

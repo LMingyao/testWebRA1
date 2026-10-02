@@ -1,7 +1,4 @@
 /* Reconstructed original identity, without a year or image dependency. */
-:root {
-  --brand-gradient: linear-gradient(90deg, #f4aac7 0%, #fbe2eb 62%, #fff 100%);
-}
 .brand,
 .admin-brand {
   display: inline-flex;
