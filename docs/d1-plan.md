@@ -6,11 +6,13 @@
 
 - 云数据库：`mingyao-gallery`，ID `650f4849-a44f-415c-ae31-b725b6277266`。已导入原有 37 张作品、149 个媒体文件记录。
 - 云后台：<https://mingyao-gallery-admin.mingyao-photography.workers.dev/admin/>。
+- 正式官网：<https://mingyaophoto.com/>，已通过合并 PR #1 发布新版，前台读取真实 D1 数据。
 - 云端实测通过：正确/错误密码、受保护会话、跨域拦截、内容读取、原样保存、旧版本冲突、退出后撤销会话和登录限速。临时测试凭据与会话已清除；所有者已设置正式密码并成功登录，云端配置已确认生效，匿名管理请求返回 401。
 - 初始云库备份在本机 `.local/cloudflare/initial-cloud-backup.sql`，不提交或部署。
-- 审阅分支的 `content/backend.json` 已准备云 API 配置；main 和现有公开站点尚未切换。当前已部署 Worker 的照片及上传目标仍为 `refactor/gallery-admin`，仓库中的生产部署配置已准备切换为 `main`，须在合并发布后部署。
-- 已配置服务端 GitHub 上传令牌，令牌有效性和目标分支读取通过；实际后台上传仍需实测。
-- 新版前台通过隔离的本机预览读取真实云端数据，首页精选、顶部横幅和完整分类导航已验证；29 项测试及静态构建通过。发布前云库备份保存于本机 `.local/cloudflare/pre-release-backup.sql`。
+- `content/backend.json` 已启用云 API；GitHub Pages 保留原有 `main /` 发布方式及域名。已部署 Worker 的照片读取与上传目标均为 `main`。
+- 已配置服务端 GitHub 上传令牌。真实云后台上传通过：640 / 1280 / 1920 WebP 文件分别为 99,348 / 338,624 / 686,076 字节，图片读取及相同文件重试成功。
+- 上传验证没有改动照片库文档或版本，所有者未保存草稿保留。临时媒体文件、三条媒体登记及受保护测试页面已撤下；最终仍为原有 37 张照片、149 条媒体记录。
+- 新版前台真实云数据、首页精选、顶部横幅和分类导航已验证，正式官网图片来自 `main`。29 项测试、静态构建及发布提交的 CI 通过。发布前云库备份保存于本机 `.local/cloudflare/pre-release-backup.sql`。
 
 ## 设置或重置密码
 
@@ -67,7 +69,7 @@ npm run deploy:d1
 
 新账号首次部署先 `wrangler login`，创建 D1，替换配置的 account ID 和 database ID；运行 `npm run prepare:d1`，确认空库后导入种子，随后部署并设置密码。
 
-所有者登录、保存和页面读取已验证；上传令牌已写入，生产照片上传仍待实测。审阅分支的 `content/backend.json` 已准备以下配置，完成上传验证后才合并发布：
+所有者登录、保存、生产照片上传和页面读取已验证。正式 `content/backend.json` 使用以下配置：
 
 ```json
 {
@@ -76,7 +78,7 @@ npm run deploy:d1
 }
 ```
 
-配置不含密钥。公开 API 只允许 `SITE_ORIGIN` 指定的精确前台 origin 通过浏览器跨域读取。先合并前台代码到 `main`，再部署准备好的 Worker 配置，将 `GITHUB_BRANCH`、`MEDIA_BASE` 同时切至 `main`。部署前 Worker 继续使用审阅分支。
+配置不含密钥。公开 API 只允许 `SITE_ORIGIN` 指定的精确前台 origin 通过浏览器跨域读取。本次发布已先合并前台代码到 `main`，再部署 Worker 配置，将 `GITHUB_BRANCH`、`MEDIA_BASE` 同时切至 `main`。后续照片上传直接写入 `main`，D1 内容修改保存后即可由官网读取。
 
 `npm start` 的 loopback 服务器为本机预览返回静态读取配置，且不修改存储的 `content/backend.json`；本机编辑与预览始终读取本机内容。真实云数据已通过隔离的本机代理验证。
 
