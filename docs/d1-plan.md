@@ -10,6 +10,7 @@
 - 初始云库备份在本机 `.local/cloudflare/initial-cloud-backup.sql`，不提交或部署。
 - `content/backend.json` 尚未启用云 API，main 和现有公开站点未切换。照片及上传目标先使用 `refactor/gallery-admin` 审阅分支。
 - 未配置服务端 GitHub 上传令牌；现有照片的内容管理可用，新增照片上传暂不可用，仍需实测。
+- 新版前台通过隔离的本机预览读取真实云端数据，首页精选、顶部横幅和完整分类导航已验证；29 项测试及静态构建通过。发布前云库备份保存于本机 `.local/cloudflare/pre-release-backup.sql`。
 
 ## 设置或重置密码
 
@@ -79,13 +80,17 @@ npm run deploy:d1
 
 ## 照片上传
 
-Worker 使用仅当前仓库 Contents 读写权限的 `GITHUB_TOKEN` secret：
+Worker 使用仅当前仓库 Contents 读写权限的 `GITHUB_TOKEN` secret。在 GitHub 创建 fine-grained personal access token：资源所有者为 `LMingyao`，Repository access 选择 **Only select repositories → testWebRA1**，Repository permissions 只开启 **Contents: Read and write**（Metadata 的只读权限自动包含）。设置有效期，到期前通过同一工具更换令牌。
 
-```sh
-npx wrangler secret put GITHUB_TOKEN --config cloudflare/wrangler.jsonc
+在本机 PowerShell 运行隐藏输入工具：
+
+```powershell
+& '.\tools\set-upload-token.ps1'
 ```
 
-在交互终端输入，不发送到聊天、不写入源码或前端。每次上传单个 WebP，最多 1 MB。文件先提交目标分支，再登记 D1，全部成功后才保存内容。路径不可覆盖，相同文件可重试；每个文件一个提交。失败可能留下未引用文件，GitHub 和 D1 不是同一个事务。
+工具先检查 Wrangler 授权，再隐藏读取令牌，经 GitHub 验证有效性及目标分支读取后，通过 stdin 写入 Worker secret，并检查云端 secret 名称确认配置。令牌不发送到聊天、不写入文件、命令行参数、源码或前端。读取验证不能代替 Contents 写入验证，首次上传仍需实测。
+
+每次上传单个 WebP，最多 1 MB。文件先提交目标分支，再登记 D1，全部成功后才保存内容。路径不可覆盖，相同文件可重试；每个文件一个提交。失败可能留下未引用文件，GitHub 和 D1 不是同一个事务。
 
 D1 模式从配置的 raw GitHub 地址读取照片，不必等待 Pages 重建；沿用 GitHub 免费托管及限额，不适合无限量分发。上传仍受 GitHub API、Pages 和 Workers CPU 限制，应分批并实测；受限时调整方案，不自动升级付费。
 
@@ -99,4 +104,4 @@ npx wrangler d1 export mingyao-gallery --remote --config cloudflare/wrangler.jso
 
 切回静态模式前，从云后台导出最新 JSON、还原至 `content/gallery.json` 并构建，再清空 `apiBase` / `adminURL`，避免回退陈旧内容。
 
-官方资料：[D1 价格](https://developers.cloudflare.com/d1/platform/pricing/)、[D1 限制](https://developers.cloudflare.com/d1/platform/limits/)、[Workers 价格](https://developers.cloudflare.com/workers/platform/pricing/)、[OWASP 密码存储](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)。
+官方资料：[D1 价格](https://developers.cloudflare.com/d1/platform/pricing/)、[D1 限制](https://developers.cloudflare.com/d1/platform/limits/)、[Workers 价格](https://developers.cloudflare.com/workers/platform/pricing/)、[GitHub 专用令牌](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)、[OWASP 密码存储](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)。

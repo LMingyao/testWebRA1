@@ -55,6 +55,7 @@ GitHub 存储模式使用仓库令牌，本机管理不需要令牌。D1 模式�
 | `cloudflare/`          | D1 迁移、Workers API、密码会话与上传代理 |
 | `tools/prepare-d1.mjs` | 生成空库种子、媒体登记与后台部署资源 |
 | `tools/set-admin-password.ps1` | 隐藏输入，设置或重置云后台密码 |
+| `tools/set-upload-token.ps1` | 隐藏输入，将照片上传专用令牌写入云端 |
 | `app/site.js`          | 公共导航、页脚、个人介绍与联系页面             |
 | `app/gallery.js`       | 统一作品序列、手动横幅浏览与全屏查看           |
 | `app/layout.js`        | 保留原比例与顺序的自动分行算法                 |
