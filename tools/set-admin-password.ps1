@@ -1,6 +1,6 @@
 ﻿# Keep this localized script in UTF-8 with BOM for Windows PowerShell 5.1.
 $ErrorActionPreference = 'Stop'
-$taskPassword = Read-Host '设置管理员密码（16–128 个字符，输入隐藏）' -AsSecureString
+$taskPassword = Read-Host '设置管理员密码（8–128 个字符，输入隐藏）' -AsSecureString
 $taskConfirmation = Read-Host '再次输入管理员密码（输入隐藏）' -AsSecureString
 $taskPasswordPtr = [IntPtr]::Zero
 $taskConfirmationPtr = [IntPtr]::Zero

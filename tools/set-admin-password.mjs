@@ -16,8 +16,8 @@ try {
   input = "";
   if (typeof values.password !== "string" || values.password !== values.confirmation)
     throw new Error("两次密码不一致，未更新云端密码。");
-  if ([...values.password].length < 16 || [...values.password].length > 128)
-    throw new Error("请使用 16–128 个字符的密码或长口令，未更新云端密码。");
+  if ([...values.password].length < 8 || [...values.password].length > 128)
+    throw new Error("请使用 8–128 个字符的密码或长口令，未更新云端密码。");
   const salt = randomBytes(16).toString("base64url");
   const pepper = randomBytes(32).toString("base64url");
   const proof = await derivePassword(values.password, salt);
