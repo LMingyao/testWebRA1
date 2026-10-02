@@ -13,7 +13,8 @@ export class LocalStore {
   image(path) {
     return "../" + path;
   }
-  async save(data, revision, uploads) {
+  async save(data, revision, uploads, onProgress = () => {}) {
+    onProgress({ stage: "save" });
     const res = await fetch("/api/content", {
       method: "PUT",
       headers: {
@@ -24,6 +25,7 @@ export class LocalStore {
     });
     const result = await res.json();
     if (!res.ok) throw new Error(result.error);
+    onProgress({ stage: "done" });
     return result;
   }
 }
@@ -77,8 +79,9 @@ export class GitHubStore {
   image(path) {
     return `https://raw.githubusercontent.com/${this.repo}/${encodeURIComponent(this.branch)}/${path}`;
   }
-  async save(data, revision, uploads) {
+  async save(data, revision, uploads, onProgress = () => {}) {
     validateContent(data);
+    onProgress({ stage: "save" });
     const ref = await this.request(
       `git/ref/heads/${encodeURIComponent(this.branch)}`,
     );
@@ -107,6 +110,8 @@ export class GitHubStore {
       if (!existing.has(file) && !uploaded.has(file))
         throw new Error(`图片不存在：${file}`);
     const tree = [];
+    let completed = 0;
+    if (uploads.length) onProgress({ stage: "upload", completed, total: uploads.length });
     for (const upload of uploads) {
       const blob = await this.request("git/blobs", "POST", {
         content: upload.base64,
@@ -118,7 +123,9 @@ export class GitHubStore {
         type: "blob",
         sha: blob.sha,
       });
+      onProgress({ stage: "upload", completed: ++completed, total: uploads.length });
     }
+    onProgress({ stage: "save" });
     const blob = await this.request("git/blobs", "POST", {
       content: JSON.stringify(data, null, 2) + "\n",
       encoding: "utf-8",
@@ -144,6 +151,7 @@ export class GitHubStore {
       "PATCH",
       { sha: commit.sha, force: false },
     );
+    onProgress({ stage: "done" });
     return { revision: blob.sha, url: commit.html_url };
   }
   disconnect() {

@@ -32,7 +32,9 @@ export async function prepareD1(root) {
   const files = ["admin/index.html", "admin/admin.js", "admin/admin.css", "admin/store.js",
     "admin/d1-store.js", "admin/images.js", "app/shared.js", "app/backend.js", "app/design.css", "app/wordmark.css",
     "assets/favicon.svg", "content/backend.json", "admin/login.html", "admin/login.js",
-    "admin/login.css", "app/password.js"];
+    "admin/login.css", "app/password.js", "admin/preview.html", "admin/preview.js", "admin/preview-data.js", "admin/ordering.js",
+    "app/gallery.js", "app/layout.js", "app/images.js", "app/viewer.js", "app/photo-stage.js",
+    "app/icons.js", "app/editorial.js", "app/site.css", "app/navigation.js", "app/metadata.js"];
   for (const file of files) {
     const target = path.join(destination, "assets", file);
     await mkdir(path.dirname(target), { recursive: true });

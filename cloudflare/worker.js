@@ -86,7 +86,9 @@ export function createWorker({ fetcher = fetch, authenticate = administrator } =
       headers.set("Cache-Control", "no-store");
       headers.set("X-Content-Type-Options", "nosniff");
       headers.set("Referrer-Policy", "same-origin");
-      headers.set("X-Frame-Options", "DENY");
+      const preview = url.pathname === "/admin/preview.html";
+      headers.set("X-Frame-Options", preview ? "SAMEORIGIN" : "DENY");
+      if (preview) headers.set("Content-Security-Policy", "frame-ancestors 'self'");
       return new Response(asset.body, { status: asset.status, headers });
     } catch (error) {
       return response(error instanceof HTTPError ? error.status : 503,
