@@ -33,6 +33,8 @@ try {
   input = "";
   token = typeof values.token === "string" ? values.token.trim() : "";
   values.token = "";
+  if (token.length < 40)
+    throw new Error("未收到完整令牌。Windows PowerShell 请用右键或 Shift+Insert 粘贴完整内容，再按 Enter；未更新上传配置。");
   if (!/^github_pat_[A-Za-z0-9_]{40,250}$/.test(token))
     throw new Error("请使用 GitHub fine-grained personal access token，未更新上传配置。");
   const config = JSON.parse(await readFile(configPath, "utf8"));

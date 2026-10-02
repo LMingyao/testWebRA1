@@ -9,7 +9,7 @@
 - 云端实测通过：正确/错误密码、受保护会话、跨域拦截、内容读取、原样保存、旧版本冲突、退出后撤销会话和登录限速。临时测试凭据与会话已清除；所有者已设置正式密码并成功登录，云端配置已确认生效，匿名管理请求返回 401。
 - 初始云库备份在本机 `.local/cloudflare/initial-cloud-backup.sql`，不提交或部署。
 - 审阅分支的 `content/backend.json` 已准备云 API 配置；main 和现有公开站点尚未切换。当前已部署 Worker 的照片及上传目标仍为 `refactor/gallery-admin`，仓库中的生产部署配置已准备切换为 `main`，须在合并发布后部署。
-- 未配置服务端 GitHub 上传令牌；现有照片的内容管理可用，新增照片上传暂不可用，仍需实测。
+- 已配置服务端 GitHub 上传令牌，令牌有效性和目标分支读取通过；实际后台上传仍需实测。
 - 新版前台通过隔离的本机预览读取真实云端数据，首页精选、顶部横幅和完整分类导航已验证；29 项测试及静态构建通过。发布前云库备份保存于本机 `.local/cloudflare/pre-release-backup.sql`。
 
 ## 设置或重置密码
@@ -67,7 +67,7 @@ npm run deploy:d1
 
 新账号首次部署先 `wrangler login`，创建 D1，替换配置的 account ID 和 database ID；运行 `npm run prepare:d1`，确认空库后导入种子，随后部署并设置密码。
 
-所有者登录、保存和页面读取已验证；生产照片上传仍待令牌及实测。审阅分支的 `content/backend.json` 已准备以下配置，完成上传验证后才合并发布：
+所有者登录、保存和页面读取已验证；上传令牌已写入，生产照片上传仍待实测。审阅分支的 `content/backend.json` 已准备以下配置，完成上传验证后才合并发布：
 
 ```json
 {
@@ -91,6 +91,8 @@ Worker 使用仅当前仓库 Contents 读写权限的 `GITHUB_TOKEN` secret。�
 ```
 
 工具先检查 Wrangler 授权，再隐藏读取令牌，经 GitHub 验证有效性及目标分支读取后，通过 stdin 写入 Worker secret，并检查云端 secret 名称确认配置。令牌不发送到聊天、不写入文件、命令行参数、源码或前端。读取验证不能代替 Contents 写入验证，首次上传仍需实测。
+
+Windows PowerShell 的隐藏输入提示下，请用右键或 `Shift+Insert` 粘贴完整令牌后按 Enter；部分旧终端的 `Ctrl+V` 可能只输入一个控制字符。
 
 每次上传单个 WebP，最多 1 MB。文件先提交目标分支，再登记 D1，全部成功后才保存内容。路径不可覆盖，相同文件可重试；每个文件一个提交。失败可能留下未引用文件，GitHub 和 D1 不是同一个事务。
 
