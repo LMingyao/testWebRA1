@@ -1,23 +1,24 @@
+import { collections, defaultCollection, siteSettings } from "./config.js";
 export const categoryPages = {
   aviation: "aviation.html", landscape: "landscape.html", portrait: "ptr.html",
   wildlife: "wildlife.html", motorsport: "motorsport.html",
 };
-export function categoryURL(id) {
-  return id === "all" ? "index.html" : Object.hasOwn(categoryPages, id)
+export function categoryURL(id, content) {
+  return id === "all" ? (content && defaultCollection(content) !== "all" ? "index.html?category=all" : "index.html") : Object.hasOwn(categoryPages, id)
     ? categoryPages[id] : `index.html?category=${encodeURIComponent(id)}`;
 }
-export function categoryFromURL(url) {
+export function categoryFromURL(url, content) {
   return url.searchParams.get("category") ||
-    Object.entries(categoryPages).find(([, file]) => url.pathname.endsWith(`/${file}`))?.[0] || "all";
+    Object.entries(categoryPages).find(([, file]) => url.pathname.endsWith(`/${file}`))?.[0] || (content ? defaultCollection(content) : "all");
 }
 export function pageMetadata(content, page, category = "all") {
-  const site = content.site;
-  const collection = content.categories.find(item => item.id === category);
-  const label = page === "about" ? "About" : page === "contact" ? "Contact"
+  const site = siteSettings(content.site);
+  const collection = collections(content, { includeHidden: true }).find(item => item.id === category);
+  const label = page === "about" ? site.aboutLabel : page === "contact" ? site.contactLabel
     : collection?.label || "Selected work";
-  const file = page === "about" ? "about_me.html" : page === "contact" ? "contact.html" : categoryURL(category);
+  const file = page === "about" ? "about_me.html" : page === "contact" ? "contact.html" : categoryURL(category, content);
   return {
-    title: `${label} · ${site.name} Photography`,
+    title: `${label} · ${site.name} ${site.brandTitle}`,
     description: page === "about" ? site.about.replace(/\s+/g, " ").slice(0, 240)
       : page === "contact" ? `Contact ${site.name} for photography enquiries. ${site.location}.`
       : collection ? collection.description?.trim() || `${collection.label} photographs by ${site.name}, ${site.location}.`

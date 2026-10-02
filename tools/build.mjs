@@ -4,6 +4,7 @@ import path from "node:path";
 import { validateContent, contentImagePaths, escapeHTML } from "../app/shared.js";
 import { pageMetadata, categoryPages } from "../app/metadata.js";
 import { arrowIcon } from "../app/icons.js";
+import { defaultCollection } from "../app/config.js";
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const content = validateContent(
   JSON.parse(await readFile(path.join(root, "content/gallery.json"), "utf8")),
@@ -11,7 +12,7 @@ const content = validateContent(
 for (const file of contentImagePaths(content)) await access(path.join(root, file));
 const template = await readFile(path.join(root, "tools/page.html"), "utf8");
 const entries = [
-  ["index.html", "portfolio", "all"],
+  ["index.html", "portfolio", defaultCollection(content)],
   ["about_me.html", "about", "all"],
   ["contact.html", "contact", "all"],
   ...Object.entries(categoryPages).map(([id, file]) => [file, "portfolio", id]),

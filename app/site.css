@@ -853,3 +853,6 @@ body[data-page="portrait"] .collection-toolbar {
 #social-links .social-secondary { font-size: 11px; }
 #social-links a:hover { color: var(--brand-focus); }
 .back-top[hidden] { display: none; }
+#navigation [hidden] { display: none; }
+.gear-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 9px; }
+.gear-list li { margin: 0; font-size: 13px; line-height: 1.6; }

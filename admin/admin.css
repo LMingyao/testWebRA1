@@ -641,7 +641,31 @@ dialog footer {
 .admin-card.is-dragging { opacity: .55; }
 #save-progress { margin: 16px 0 24px; font-size: 13px; color: var(--muted); }
 #progress-bar { display: block; width: 100%; height: 5px; accent-color: var(--brand-pink); margin-top: 12px; }
-.category-row textarea { min-width: 0; flex: 2; font-size: 12px; }
+.collection-row { padding: 20px 0; border-bottom: 1px solid var(--line); display: grid; gap: 12px; }
+.collection-heading, .collection-footer { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.collection-heading code { color: var(--muted); font-size: 11px; }
+.collection-actions { display: flex; gap: 6px; margin-left: auto; }
+.collection-actions button, .collection-footer button, .social-actions button, .equipment-row button { min-width: 44px; min-height: 44px; background: #f6f6f6; }
+.collection-footer button { margin-left: auto; padding: 8px 12px; }
+.inline-check { display: flex; gap: 8px; align-items: center; }
+.inline-check input { width: auto; }
+.category-list + .form-grid { margin: 24px 0 12px; }
+.panel > .hint { margin-bottom: 20px; }
+.equipment-list { display: grid; gap: 10px; }
+.equipment-row { display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 10px; }
+.equipment-row input { width: 100%; min-width: 0; border: 1px solid var(--line); padding: 10px 12px; }
+.social-row { grid-template-columns: minmax(80px, .6fr) minmax(0, 1fr) auto; }
+.social-actions { display: flex; gap: 4px; }
+.about-image-editor { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; align-items: start; }
+.about-image-editor img { width: 120px; max-height: 180px; object-fit: contain; background: #fafafa; }
+.about-image-editor > div { display: grid; gap: 12px; }
+.about-image-editor select { width: 100%; min-width: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 700px) {
+  .social-row { grid-template-columns: minmax(0, 1fr); }
+  .social-actions { justify-content: flex-end; }
+  .about-image-editor { grid-template-columns: 1fr; }
+}
 @media (max-width: 1150px) {
   .studio-columns.with-preview { grid-template-columns: 1fr; }
   .draft-preview { position: static; grid-row: 1; }

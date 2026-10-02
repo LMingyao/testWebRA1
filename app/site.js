@@ -1,4 +1,6 @@
-import { escapeHTML as e, validateContent, currentYear } from "./shared.js";
+import { escapeHTML as e, validateContent } from "./shared.js";
+import { collections, resolveCollection, siteSettings } from "./config.js";
+import { applySiteChrome } from "./chrome.js";
 import { loadPublicContent, contentForDisplay } from "./backend.js";
 import { createNavigation } from "./navigation.js";
 import { renderEditorial } from "./editorial.js";
@@ -11,35 +13,15 @@ const { setMenu, setWorkMenu, workToggle, workMenu } = createNavigation();
 
 try {
   const content = contentForDisplay(validateContent(await loadPublicContent()));
-  document
-    .querySelector(".brand")
-    .setAttribute(
-      "aria-label",
-      `${content.site.name} ${content.site.tagline} home`,
-    );
-  document.querySelector(".footer-name").textContent = content.site.name;
-  applyMetadata(pageMetadata(content, page));
+  applySiteChrome(content);
   document.querySelectorAll("[data-nav]").forEach((a) => {
     if (a.dataset.nav === page) a.setAttribute("aria-current", "page");
   });
-  document.querySelector("#social-links").innerHTML = content.site.socials
-    .map(
-      (s, i) =>
-        `<a class="${i < 2 ? "social-primary" : "social-secondary"}" href="${e(s.url)}" target="_blank" rel="noopener noreferrer">${e(s.label)} ↗</a>`,
-    )
-    .join("");
-  document.querySelector("#copyright").textContent =
-    `© ${currentYear()} ${content.site.name}. All rights reserved.`;
-  const categories = [
-    { id: "all", label: "Selected work" },
-    ...content.categories.filter((c) =>
-      content.photos.some((p) => p.published && p.category === c.id),
-    ),
-  ];
+  const categories = collections(content);
   workMenu.innerHTML = categories
     .map(
       (c) =>
-        `<a data-work="${e(c.id)}" href="${e(categoryURL(c.id))}">${e(c.label)}</a>`,
+        `<a data-work="${e(c.id)}" href="${e(categoryURL(c.id, content))}">${e(c.label)}</a>`,
     )
     .join("");
   const renderGallery = isWork
@@ -47,24 +29,21 @@ try {
         main, document.querySelector("#layout-controls"), content,
       )
     : undefined;
-  function selectedCategory() { return categoryFromURL(new URL(location.href)); }
+  function selectedCategory() { return categoryFromURL(new URL(location.href), content); }
   function showWork(category) {
-    const selected =
-      categories.some((c) => c.id === category) || category === "portrait"
-        ? category
-        : "all";
+    const selected = resolveCollection(content, category);
     renderGallery(selected);
     workToggle.classList.add("is-current");
     const label =
       categories.find((c) => c.id === selected)?.label || "Portraits";
-    workToggle.setAttribute("aria-label", `Work — ${label}`);
+    workToggle.setAttribute("aria-label", `${siteSettings(content.site).workLabel} — ${label}`);
     workMenu.querySelectorAll("a").forEach((a) => {
       if (a.dataset.work === selected) a.setAttribute("aria-current", "page");
       else a.removeAttribute("aria-current");
     });
     applyMetadata(pageMetadata(content, page, selected));
   }
-  if (page === "about" || page === "contact") renderEditorial(main, content, page);
+  if (page === "about" || page === "contact") { renderEditorial(main, content, page); applyMetadata(pageMetadata(content, page)); }
   else showWork(selectedCategory());
   const backTop = document.querySelector(".back-top");
   const updateBackTop = () => { backTop.hidden = document.documentElement.scrollHeight <= innerHeight * 1.4; };
