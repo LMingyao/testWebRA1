@@ -1,4 +1,5 @@
 import { escapeHTML as e, validateContent, currentYear } from "./shared.js";
+import { loadPublicContent, contentForDisplay } from "./backend.js";
 
 const main = document.querySelector("main");
 const page = document.body.dataset.page;
@@ -49,9 +50,7 @@ function contactPage(content) {
   main.innerHTML = `<section class="contact-page"><p class="eyebrow">CONTACT</p><h1>Photography enquiries</h1><div class="contact-details"><p>For photography enquiries and collaborations.</p><a class="email-link" href="mailto:${e(s.email)}">${e(s.email)} <span aria-hidden="true">↗</span></a></div><p class="contact-location">${e(s.name)} · ${e(s.location)}</p></section>`;
 }
 try {
-  const response = await fetch("content/gallery.json");
-  if (!response.ok) throw new Error("Collection unavailable");
-  const content = validateContent(await response.json());
+  const content = contentForDisplay(validateContent(await loadPublicContent()));
   document
     .querySelector(".brand")
     .setAttribute(

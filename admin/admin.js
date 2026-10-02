@@ -5,6 +5,8 @@ import {
   contentImagePaths,
 } from "../app/shared.js";
 import { getLocalStore, GitHubStore } from "./store.js";
+import { getD1Store } from "./d1-store.js";
+import { backendConfig } from "../app/backend.js";
 import { preparePhoto } from "./images.js";
 let store,
   data,
@@ -117,12 +119,15 @@ async function connect(adapter) {
   $("#connection").textContent =
     store.mode === "local"
       ? "● 本机管理 · 更改保存到项目文件"
-      : `● GitHub · ${store.branch}`;
+      : store.mode === "d1" ? `● D1 云后台 · ${store.email}` : `● GitHub · ${store.branch}`;
   $("#disconnect").hidden = store.mode === "local";
   $("#save").textContent =
-    store.mode === "local" ? "保存更改" : `发布到 ${store.branch}`;
+    store.mode === "github" ? `发布到 ${store.branch}` : "保存更改";
+  $("#disconnect").textContent = store.mode === "d1" ? "退出登录" : "断开连接";
   $("#export").disabled = false;
   render();
+  if (store.mode === "d1" && !store.canUpload)
+    notice("已连接 D1。照片上传尚未配置，已有照片、分类和网站内容可以管理。");
 }
 function editPhoto(id) {
   editing = id;
@@ -218,7 +223,13 @@ $("#editor").addEventListener("click", (event) => {
     )
       render();
   }
-  if (button.id === "upload") $("#upload-input").click();
+  if (button.id === "upload") {
+    if (store.mode === "d1" && !store.canUpload) {
+      notice("请先配置服务端照片上传凭据。", true);
+      return;
+    }
+    $("#upload-input").click();
+  }
   if (button.dataset.deleteCategory) {
     const id = button.dataset.deleteCategory;
     if (data.photos.some((p) => p.category === id)) {
@@ -375,7 +386,9 @@ $("#save").onclick = async () => {
     notice(
       store.mode === "local"
         ? "保存成功。本机网站已更新；上线需提交并推送到 main。"
-        : "已提交到 GitHub。若保存到 main，网站将在 GitHub Pages 部署完成后更新。",
+        : store.mode === "d1"
+          ? "已保存到 D1。网站内容已更新，照片保存在 GitHub。"
+          : "已提交到 GitHub。若保存到 main，网站将在 GitHub Pages 部署完成后更新。",
     );
     render();
   } catch (error) {
@@ -400,6 +413,7 @@ $("#export").onclick = () => {
 $("#disconnect").onclick = () => {
   if (busy) return;
   if (isDirty() && !confirm("有未保存的更改，确定断开连接？")) return;
+  if (store?.mode === "d1") { base = JSON.stringify(data); store.disconnect(); return; }
   store?.disconnect();
   store = null;
   data = null;
@@ -445,10 +459,20 @@ try {
   const local = await getLocalStore();
   if (local) await connect(local);
   else {
-    $("#connection").textContent = "等待 GitHub 连接";
-    $("#editor").innerHTML =
-      '<p class="empty">连接 GitHub 以管理网站，或使用 npm start 打开本机后台。</p>';
-    $("#login-dialog").showModal();
+    const cloud = await getD1Store();
+    if (cloud) await connect(cloud);
+    else {
+      const config = await backendConfig();
+      if (config.adminURL) {
+        $("#connection").textContent = "云后台已启用";
+        $("#editor").innerHTML = `<section class="panel"><h2>管理摄影作品</h2><p>使用管理员账号登录云后台。</p><a class="text-link" href="${e(config.adminURL)}">打开后台 →</a></section>`;
+      } else {
+        $("#connection").textContent = "等待 GitHub 连接";
+        $("#editor").innerHTML =
+          '<p class="empty">连接 GitHub 以管理网站，或使用 npm start 打开本机后台。</p>';
+        $("#login-dialog").showModal();
+      }
+    }
   }
 } catch (error) {
   notice(error.message, true);

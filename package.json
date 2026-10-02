@@ -4,12 +4,17 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.13"
   },
   "scripts": {
     "start": "node tools/server.mjs",
     "build": "node tools/build.mjs",
     "test": "node --test tests/*.test.mjs",
-    "prepare:supabase": "node tools/prepare-supabase.mjs"
+    "prepare:d1": "node tools/prepare-d1.mjs",
+    "dev:d1": "wrangler dev --env dev --config cloudflare/wrangler.jsonc --port 8787 --ip 127.0.0.1",
+    "deploy:d1": "npm run prepare:d1 && wrangler deploy --config cloudflare/wrangler.jsonc"
+  },
+  "devDependencies": {
+    "wrangler": "^4.146.0"
   }
 }

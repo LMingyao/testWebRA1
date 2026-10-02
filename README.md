@@ -4,7 +4,7 @@
 
 ## 本机使用
 
-需要 Node.js 22 或更新版本，无需安装依赖。
+需要 Node.js 22.13 或更新版本，建议 Node.js 24。本机网站无需安装依赖；D1 开发与部署先运行 `npm ci` 安装 Wrangler。
 
 ```sh
 npm start
@@ -35,22 +35,25 @@ npm start
 
 ## 线上管理
 
-后续免费云后台方案与当前准备状态见 [Supabase 接入与费用方案](docs/supabase-plan.md)。`npm run prepare:supabase` 生成迁移材料，不连接或上传云服务。当前管理后台仍使用以下 GitHub/本机方式；数据库及密码登录尚未接通。
+已选定 [D1 免费云后台方案](docs/d1-plan.md)：Workers + D1 + Access 管理内容与管理员登录，照片保留 GitHub 托管。代码支持云后台读写与上传，`npm run prepare:d1` 生成初始数据和后台部署文件。尚未创建云账号或部署；当前仍使用以下 GitHub/本机方式。Access 使用邮箱验证码或身份提供商登录。
 
-合并后访问 `https://mingyaophoto.com/admin/`。GitHub Pages 是静态托管，因此管理后台通过 GitHub API 保存内容与照片，不运行数据库或账户服务器。
+未启用 D1 时，合并后访问 `https://mingyaophoto.com/admin/`，管理后台通过 GitHub API 保存内容与照片。启用 D1 后此页面提供独立云后台入口，由 Workers 验证 Access 登录并保存数据库。
 
 1. 在 GitHub 创建 fine-grained personal access token，仅选择 `LMingyao/testWebRA1`，授权 **Contents: read and write**，设置合理有效期。
 2. 在后台连接窗口输入令牌与要编辑的分支。默认是 `main`；保存到 `main` 会触发现有 Pages 更新。可输入其他已包含重构代码的分支先审阅。
 3. 令牌只保留在当前页面内存，不写入 localStorage、Cookie、项目文件或导出的内容；刷新后需重新连接。
 4. 一次保存生成一个包含图片及内容的 Git 提交。检测到其他编辑改动会拒绝覆盖，提示导出草稿并重新连接。
 
-如需真正的“点击 GitHub 登录”体验，可在之后接入自有 OAuth 认证服务或 GitHub App；当前版本提供可工作的仓库令牌连接与无令牌的本机管理，不包含尚未配置的 OAuth 按钮。
+GitHub 存储模式使用仓库令牌，本机管理不需要令牌。D1 模式通过 Cloudflare Access 登录，令牌放在 Worker secret 中；它与静态模式的 GitHub 登录表单分别使用。
 
 ## 代码结构
 
 | 位置                   | 用途                                           |
 | ---------------------- | ---------------------------------------------- |
-| `content/gallery.json` | 网站内容、分类与照片的唯一数据来源             |
+| `content/gallery.json` | 静态模式内容来源及 D1 首次导入数据 |
+| `content/backend.json` | 静态/D1 内容读取切换及云后台入口（不含密钥） |
+| `cloudflare/`          | D1 迁移、Workers API、Access 校验和上传代理 |
+| `tools/prepare-d1.mjs` | 生成空库种子、媒体登记与后台部署资源 |
 | `app/site.js`          | 公共导航、页脚、个人介绍与联系页面             |
 | `app/gallery.js`       | 统一作品序列、手动横幅浏览与全屏查看           |
 | `app/layout.js`        | 保留原比例与顺序的自动分行算法                 |
