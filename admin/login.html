@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self';">
+  <title>登录 · Mingyao Photography</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/app/wordmark.css">
+  <link rel="stylesheet" href="/admin/login.css">
+</head>
+<body>
+  <main>
+    <a class="admin-brand" href="https://mingyaophoto.com/" aria-label="Mingyao Photography 网站">
+      <span class="logo-wordmark"><span class="logo-name">MINGYAO</span><span class="logo-title">Photography</span></span>
+    </a>
+    <section aria-labelledby="login-heading">
+      <p class="eyebrow">PRIVATE STUDIO</p>
+      <h1 id="login-heading">管理你的摄影作品</h1>
+      <p class="intro">使用管理员密码继续。</p>
+      <form id="password-form">
+        <label for="password">密码</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="128">
+        <button type="submit" disabled>登录 →</button>
+        <p id="login-status" role="status" aria-live="polite">正在连接…</p>
+      </form>
+    </section>
+    <a class="back" href="https://mingyaophoto.com/">← 返回网站</a>
+  </main>
+  <script type="module" src="/admin/login.js"></script>
+</body>
+</html>

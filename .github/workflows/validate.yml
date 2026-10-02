@@ -1,0 +1,27 @@
+name: Validate photography site
+on:
+  push:
+    branches: [main, refactor/gallery-admin]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run prepare:d1
+      - name: Validate Worker bundle without deploying
+        run: npx wrangler deploy --dry-run --config cloudflare/wrangler.jsonc
+      - name: Check generated pages match the template
+        run: git diff --exit-code -- index.html ptr.html about_me.html contact.html

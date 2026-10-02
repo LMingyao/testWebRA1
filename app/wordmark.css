@@ -1,0 +1,75 @@
+/* Reconstructed original identity, without a year or image dependency. */
+:root {
+  --brand-gradient: linear-gradient(90deg, #f4aac7 0%, #fbe2eb 62%, #fff 100%);
+}
+.brand,
+.admin-brand {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  padding-bottom: 7px;
+  color: #111;
+  font-family: Arial, "Helvetica Neue", sans-serif;
+  white-space: nowrap;
+}
+.brand .logo-wordmark,
+.admin-brand .logo-wordmark {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  isolation: isolate;
+  gap: 5px;
+  padding-bottom: 4px;
+}
+.brand .logo-title:after,
+.admin-brand .logo-title:after {
+  content: "";
+  display: inline-block;
+  position: relative;
+  z-index: -1;
+  width: 100%;
+  margin-left: -100%;
+  height: 7px;
+  /* The inline box ends at the font baseline; move its top to that baseline. */
+  vertical-align: baseline;
+  /* Inset the stripe to match the Arial P's visible left edge. */
+  transform: translate(0.085em, 100%);
+  background: var(--brand-gradient);
+}
+.brand .logo-name,
+.admin-brand .logo-name {
+  font:
+    400 11px/1 Arial,
+    "Helvetica Neue",
+    sans-serif;
+  letter-spacing: 0.19em;
+  color: #454545;
+  padding-left: 1px;
+}
+.brand .logo-title,
+.admin-brand .logo-title {
+  font:
+    400 31px/1 Arial,
+    "Helvetica Neue",
+    sans-serif;
+  letter-spacing: -0.02em;
+  color: #080808;
+}
+.admin-brand .logo-title {
+  font-size: 27px;
+}
+.admin-brand .logo-name {
+  font-size: 10px;
+}
+@media (max-width: 700px) {
+  .brand .logo-title {
+    font-size: 28px;
+  }
+  .brand .logo-name {
+    font-size: 10px;
+  }
+  .brand .logo-title:after,
+  .admin-brand .logo-title:after {
+    height: 6px;
+  }
+}
