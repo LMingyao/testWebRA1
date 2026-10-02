@@ -3,9 +3,10 @@ import { photoRows } from "./layout.js";
 import { photoImage, createPhotoPreloader } from "./images.js";
 import { createPhotoViewer, onSwipe } from "./viewer.js";
 import { arrowIcon } from "./icons.js";
+import { createPhotoStage } from "./photo-stage.js";
 
 export function createGallery(main, controls, content) {
-  let layoutObserver, selectedPhotoId, viewerChanged, viewerClosed, viewMode = "multi";
+  let layoutObserver, singleFrame, selectedPhotoId, viewerChanged, viewerClosed, viewMode = "multi";
   const preload = createPhotoPreloader();
   const openPhoto = createPhotoViewer(document.querySelector(".lightbox"), id => {
     selectedPhotoId = id;
@@ -13,6 +14,9 @@ export function createGallery(main, controls, content) {
   }, () => viewerClosed?.());
   return function renderGallery(category = "all") {
     layoutObserver?.disconnect();
+    singleFrame?.destroy();
+    singleFrame = undefined;
+    preload.clear();
     const sequence = workPhotos(content, category);
     const panoramas = sequence.filter((photo) => photo.placement === "hero");
     const photographs = sequence.filter((photo) => photo.placement !== "hero");
@@ -47,9 +51,13 @@ export function createGallery(main, controls, content) {
       target?.focus({ preventScroll: true });
       target?.scrollIntoView({ block: "center", behavior: "instant" });
     }
-    viewerClosed = revealSelected;
+    viewerClosed = () => {
+      if (singleFrame) showSingle(singleCurrent);
+      revealSelected();
+    };
     controls.onclick = changeView;
     const sheet = main.querySelector(".photo-sheet");
+    const cards = new Map();
     let layoutWidth;
     function arrangePhotos() {
       const width = Math.round(sheet.clientWidth);
@@ -60,13 +68,28 @@ export function createGallery(main, controls, content) {
       const gap = parseFloat(getComputedStyle(sheet).rowGap);
       const targetHeight = category === "portrait" ? 480 : 380;
       let index = 0;
-      sheet.innerHTML = photoRows(photographs, { width, gap, targetHeight }).map(row => {
+      const fragment = document.createDocumentFragment();
+      for (const row of photoRows(photographs, { width, gap, targetHeight })) {
         const ratioSum = row.photos.reduce((sum, photo) => sum + photo.width / photo.height, 0);
-        return `<div class="photo-row" style="grid-template-columns:${row.photos.map(photo => `${photo.width / photo.height / ratioSum * 100}fr`).join(" ")};width:${Math.min(100, row.width / width * 100)}%">${row.photos.map(photo => {
+        const element = document.createElement("div");
+        element.className = "photo-row";
+        element.style.gridTemplateColumns = row.photos.map(photo => `${photo.width / photo.height / ratioSum * 100}fr`).join(" ");
+        element.style.width = `${Math.min(100, row.width / width * 100)}%`;
+        for (const photo of row.photos) {
           const i = index++;
-          return `<figure class="photo-card"><button data-photo="${panoramas.length + i}" aria-label="View ${e(photo.alt)}">${photoImage(photo, { eager: i < 2 && !panoramas.length, sizes: `${Math.ceil(row.height * photo.width / photo.height)}px` })}</button></figure>`;
-        }).join("")}</div>`;
-      }).join("");
+          const sizes = `${Math.ceil(row.height * photo.width / photo.height)}px`;
+          let card = cards.get(photo.id);
+          if (!card) {
+            card = document.createElement("figure");
+            card.className = "photo-card";
+            card.innerHTML = `<button data-photo="${panoramas.length + i}" aria-label="View ${e(photo.alt)}">${photoImage(photo, { eager: i < 2 && !panoramas.length, sizes })}</button>`;
+            cards.set(photo.id, card);
+          } else card.querySelector("img").sizes = sizes;
+          element.append(card);
+        }
+        fragment.append(element);
+      }
+      sheet.replaceChildren(fragment);
       if (focused !== undefined)
         sheet.querySelector(`[data-photo="${focused}"]`)?.focus({ preventScroll: true });
     }
@@ -94,22 +117,22 @@ export function createGallery(main, controls, content) {
       });
     }
     const singleStage = main.querySelector(".single-stage");
+    if (singleStage) singleFrame = createPhotoStage(singleStage, singleStage.querySelector(".single-image"));
     function showSingle(index) {
       singleCurrent = (index + sequence.length) % sequence.length;
       const photo = sequence[singleCurrent];
       selectedPhotoId = photo.id;
       const button = singleStage.querySelector(".single-image");
-      button.innerHTML = photoImage(photo, { eager: true });
+      singleFrame.show(photo, box => preload(sequence, singleCurrent, box));
       button.dataset.photo = singleCurrent;
       button.setAttribute("aria-label", `View ${photo.alt}`);
-      preload(sequence, singleCurrent);
     }
     if (singleStage) {
       showSingle(singleCurrent);
       onSwipe(singleStage, direction => showSingle(singleCurrent + direction));
     }
     viewerChanged = id => {
-      if (singleStage) showSingle(sequence.findIndex(photo => photo.id === id));
+      if (singleStage) singleCurrent = sequence.findIndex(photo => photo.id === id);
       else {
         const panorama = panoramas.findIndex(photo => photo.id === id);
         if (panorama >= 0) showPanorama(panorama);

@@ -9,6 +9,8 @@
     />
     <meta name="theme-color" content="#ffffff" />
     <title>{{title}} · Mingyao Li Photography</title>
+    <link rel="preconnect" href="https://mingyao-gallery-admin.mingyao-photography.workers.dev" crossorigin />
+    <link rel="preconnect" href="https://raw.githubusercontent.com" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="app/design.css" />
     <link rel="stylesheet" href="app/site.css" />
@@ -63,16 +65,13 @@
           Close <span aria-hidden="true">✕</span>
         </button>
       </header>
-      <div class="viewer-stage"><img alt="" /></div>
+      <div class="viewer-stage"><div class="viewer-image"></div></div>
       <footer class="viewer-footer">
         <div class="viewer-navigation">
           <button class="lightbox-prev" aria-label="Previous photograph">
             {{previousArrow}}</button
           ><button class="lightbox-next" aria-label="Next photograph">{{nextArrow}}</button>
         </div>
-        <a class="lightbox-original" target="_blank" rel="noopener noreferrer"
-          >View full size ↗</a
-        >
       </footer>
     </dialog>
     <noscript

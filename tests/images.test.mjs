@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { photoImage } from "../app/images.js";
+import { photoImage, photoSource, fittedPhotoWidth } from "../app/images.js";
 import { contentImagePaths } from "../app/shared.js";
 import { fixture } from "./fixture.mjs";
 
@@ -23,4 +23,16 @@ test("shared media references include the about photo, omit missing variants and
     "assets/about.jpg", "assets/one.jpg", "media/one-640.webp",
     "media/one-1280.webp", "media/one-1920.webp", "assets/two.jpg",
   ]);
+});
+
+test("stage image selection accounts for both fitted height and device pixel density", () => {
+  const portrait = { ...fixture.photos[0], width: 1000, height: 1500 };
+  assert.equal(fittedPhotoWidth(portrait, { width: 1200, height: 600 }), 400);
+  assert.equal(photoSource(portrait, { width: 1200, height: 600 }), portrait.thumbnail);
+  assert.equal(photoSource(portrait, { width: 1200, height: 600, pixelRatio: 2 }), portrait.display);
+  assert.equal(photoSource(portrait, { width: 1200, height: 600, pixelRatio: 3 }), portrait.large);
+  const landscape = fixture.photos[0];
+  assert.equal(photoSource(landscape, { width: 350, height: 700, pixelRatio: 2 }), landscape.display);
+  assert.equal(photoSource(landscape, { width: 2000, height: 1000, pixelRatio: 2 }), landscape.large);
+  assert.equal(photoSource(fixture.photos[1], { width: 350 }), fixture.photos[1].image);
 });
