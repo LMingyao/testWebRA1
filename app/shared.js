@@ -49,6 +49,19 @@ export function movePhotoWithinPlacement(data, id, direction) {
   ];
   return true;
 }
+// Reorder only matching placement slots; unrelated hero/gallery positions stay put.
+export function reorderPhoto(data, id, targetId, after = false) {
+  const source = data.photos.find(photo => photo.id === id);
+  const target = data.photos.find(photo => photo.id === targetId);
+  if (!source || !target || source === target ||
+      (source.placement || "gallery") !== (target.placement || "gallery")) return false;
+  const positions = data.photos.flatMap((photo, index) =>
+    (photo.placement || "gallery") === (source.placement || "gallery") ? [index] : []);
+  const members = positions.map(index => data.photos[index]).filter(photo => photo !== source);
+  members.splice(members.indexOf(target) + Number(after), 0, source);
+  positions.forEach((index, i) => { data.photos[index] = members[i]; });
+  return true;
+}
 export function safeImage(value) {
   return (
     typeof value === "string" &&
@@ -100,6 +113,9 @@ export function validateContent(data) {
     throw new Error("Social links must use HTTPS.");
   const categories = new Set();
   for (const category of data.categories) {
+    if (category.description !== undefined &&
+        (typeof category.description !== "string" || category.description.length > 400))
+      throw new Error("Category descriptions must be up to 400 characters.");
     if (
       !/^[a-z0-9-]+$/.test(category.id) ||
       category.id === "all" ||

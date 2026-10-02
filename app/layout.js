@@ -1,6 +1,6 @@
 // Compare complete row sequences, including changes in scale between rows.
 // Source order and original proportions are preserved, including the last row.
-export function photoRows(photos, { width = 1320, gap = 24, targetHeight = 350 } = {}) {
+export function photoRows(photos, { width = 1320, gap = 24, targetHeight = 350, maxHeight = Infinity } = {}) {
   if (!photos.length) return [];
   const ratios = photos.map(photo => photo.width / photo.height);
   if (width <= 660)
@@ -21,10 +21,11 @@ export function photoRows(photos, { width = 1320, gap = 24, targetHeight = 350 }
       if (available <= 0) break;
       const naturalHeight = available / ratio;
       const last = end === photos.length - 1;
-      const height = ratios[start] <= 0.3
+      const desiredHeight = ratios[start] <= 0.3
         ? Math.min(naturalHeight, targetHeight * 1.7)
         : last && count === 1 && naturalHeight > targetHeight * 1.2
           ? targetHeight : Math.min(naturalHeight, targetHeight * 1.55);
+      const height = Math.min(desiredHeight, maxHeight);
       const rowWidth = height * ratio + gap * (count - 1);
       const smallest = height * Math.min(...members), minimum = Math.min(300, width * 0.25);
       const sizeCost = isolated ? 0 : Math.log(height / targetHeight) ** 2;
@@ -32,7 +33,10 @@ export function photoRows(photos, { width = 1320, gap = 24, targetHeight = 350 }
       const unusedCost = ((width - rowWidth) / width) ** 2 * 0.7;
       const imbalance = Math.log(Math.max(...members) / Math.min(...members)) ** 2 * .55;
       const splitGroup = group && photos[end + 1]?.group?.trim() === group ? .65 : 0;
-      const ownCost = sizeCost + narrowCost + unusedCost + imbalance + splitGroup + .05;
+      const orphanCost = last && count === 1 && start > 0 && !isolated && !group &&
+        photo.presentation !== "solo" && !photos[start - 1].group &&
+        photos[start - 1].presentation !== "solo" ? 1.1 : 0;
+      const ownCost = sizeCost + narrowCost + unusedCost + imbalance + splitGroup + orphanCost + .05;
       let cost = ownCost, next;
       if (!last) {
         cost = Infinity;

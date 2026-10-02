@@ -46,12 +46,24 @@
         </div>
         <div class="toolbar-actions">
           <span id="dirty-state">已保存</span
+          ><button id="preview-toggle" class="secondary" aria-expanded="false" aria-controls="draft-preview" disabled>作品预览</button
           ><button id="export" class="secondary">导出备份</button
           ><button id="save" class="primary" disabled>保存更改</button>
         </div>
       </header>
       <div id="notification" role="status" aria-live="polite"></div>
-      <main id="editor"><p class="empty">正在打开内容管理…</p></main>
+      <div id="save-progress" hidden><p id="progress-label" role="status"></p><progress id="progress-bar" aria-label="处理进度"></progress></div>
+      <div class="studio-columns"><main id="editor"><p class="empty">正在打开内容管理…</p></main>
+        <aside id="draft-preview" class="draft-preview" hidden aria-label="草稿作品预览">
+          <header><h2>作品预览</h2><button id="preview-close" aria-label="关闭预览">×</button></header>
+          <p class="hint">当前草稿 · 更改即时显示，保存后才上线</p>
+          <div class="preview-tools"><select id="preview-page" aria-label="预览页面"></select>
+            <select id="preview-device" aria-label="预览设备"><option value="desktop">桌面 · 1280</option><option value="mobile">手机 · 390</option></select></div>
+          <label class="preview-hidden"><input type="checkbox" id="preview-hidden">包含隐藏照片（仅预览）</label>
+          <p id="preview-error" role="status"></p>
+          <div class="preview-canvas"><iframe id="preview-frame" title="当前草稿的网站效果" referrerpolicy="same-origin"></iframe></div>
+        </aside>
+      </div>
     </div>
     <dialog id="photo-dialog">
       <form id="photo-form">

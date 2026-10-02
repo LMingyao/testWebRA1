@@ -8,6 +8,8 @@ import { getLocalStore, GitHubStore } from "./store.js";
 import { getD1Store } from "./d1-store.js";
 import { backendConfig } from "../app/backend.js";
 import { preparePhoto } from "./images.js";
+import { bindPhotoOrdering } from "./ordering.js";
+import { previewContent } from "./preview-data.js";
 let store,
   data,
   revision,
@@ -32,6 +34,7 @@ function dirty() {
   const changed = isDirty();
   $("#dirty-state").textContent = changed ? "有未保存的更改" : "已保存";
   $("#save").disabled = !changed || busy;
+  schedulePreview();
 }
 function image(photo) {
   return previews.get(photo.id) || store.image(photo.thumbnail || photo.image);
@@ -41,7 +44,7 @@ function categoryName(id) {
 }
 function card(photo, boundaries) {
   const { first, last } = boundaries.get(photo.placement || "gallery");
-  return `<article class="admin-card"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.homeSelected ? " · 首页精选" : ""}${photo.featured ? " · 轮播首图" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "顶部轮播" : "作品画廊"}</span><span class="badge ${photo.published ? "" : "draft"}">${photo.published ? "展示中" : "已隐藏"}</span></div></div><div class="card-actions"><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${photo.id === first ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${photo.id === last ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
+  return `<article class="admin-card" data-card="${e(photo.id)}"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.homeSelected ? " · 首页精选" : ""}${photo.featured ? " · 轮播首图" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "顶部轮播" : "作品画廊"}</span><span class="badge ${photo.published ? "" : "draft"}">${photo.published ? "展示中" : "已隐藏"}</span></div></div><div class="card-actions"><button class="drag-handle" data-drag="${e(photo.id)}" aria-label="拖动排序 ${e(photo.title)}" title="拖动排序">⠿</button><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${photo.id === first ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${photo.id === last ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
 }
 function renderCards() {
   const boundaries = new Map();
@@ -67,7 +70,7 @@ function matchesArea(photo, area) {
 }
 function renderPhotos() {
   $("#editor").innerHTML =
-    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><input id="search" type="search" placeholder="搜索照片…" aria-label="搜索照片" value="${e(search)}"><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>＋ 上传照片</button></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">首页只显示已勾选“首页精选”的展示照片，分类页显示该分类全部展示照片。轮播照片不会出现在下方图库。上传后默认隐藏且不加入精选，↑ ↓ 调整所在区域的顺序。</p>`;
+    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><input id="search" type="search" placeholder="搜索照片…" aria-label="搜索照片" value="${e(search)}"><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>＋ 上传照片</button></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">首页只显示已勾选“首页精选”的展示照片，分类页显示该分类全部展示照片。轮播照片不会出现在下方图库。上传后默认隐藏且不加入精选，拖动手柄或 ↑ ↓ 调整所在区域的顺序；打开“作品预览”即可比较桌面与手机效果。</p>`;
   $(".stats").insertAdjacentHTML(
     "afterend",
     `<div class="library-areas">${[
@@ -83,14 +86,14 @@ function renderPhotos() {
 }
 function renderCategories() {
   $("#editor").innerHTML =
-    `<section class="panel"><h2>组织你的收藏</h2><p class="hint">修改分类名称会同步更新网站筛选标签。有照片的分类需先转移照片再删除。</p><div class="category-list">${data.categories.map((c) => `<div class="category-row"><code>${e(c.id)}</code><input data-category-label="${e(c.id)}" value="${e(c.label)}" aria-label="${e(c.id)} 分类名称" maxlength="80"><span>${data.photos.filter((p) => p.category === c.id).length} 张</span><button data-delete-category="${e(c.id)}">删除</button></div>`).join("")}</div><form id="new-category" class="new-category"><input name="id" placeholder="分类 ID，例如 travel" aria-label="分类 ID" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required maxlength="60"><input name="label" placeholder="展示名称" aria-label="分类名称" required maxlength="80"><button class="primary" type="submit">添加分类</button></form></section>`;
+    `<section class="panel"><h2>组织你的收藏</h2><p class="hint">修改分类名称会同步更新网站筛选标签。有照片的分类需先转移照片再删除。</p><div class="category-list">${data.categories.map((c) => `<div class="category-row"><code>${e(c.id)}</code><input data-category-label="${e(c.id)}" value="${e(c.label)}" aria-label="${e(c.id)} 分类名称" maxlength="80"><textarea data-category-description="${e(c.id)}" maxlength="400" rows="2" placeholder="分类搜索简介（可选）" aria-label="${e(c.label)} 分类搜索简介">${e(c.description || "")}</textarea><span>${data.photos.filter((p) => p.category === c.id).length} 张</span><button data-delete-category="${e(c.id)}">删除</button></div>`).join("")}</div><form id="new-category" class="new-category"><input name="id" placeholder="分类 ID，例如 travel" aria-label="分类 ID" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required maxlength="60"><input name="label" placeholder="展示名称" aria-label="分类名称" required maxlength="80"><button class="primary" type="submit">添加分类</button></form></section>`;
 }
 function field(name, label, type = "input") {
   return `<label>${label}${type === "textarea" ? `<textarea name="${name}" rows="4">${e(data.site[name])}</textarea>` : `<input name="${name}" value="${e(data.site[name])}" ${name === "email" ? 'type="email"' : ""} required>`}</label>`;
 }
 function renderSettings() {
   $("#editor").innerHTML =
-    `<section class="panel"><form class="settings-form" id="settings-form"><h2>网站内容</h2><div class="form-grid">${field("name", "摄影师名称")}${field("tagline", "品牌无障碍描述")}${field("location", "所在城市")}${field("email", "联系邮箱")}</div>${field("description", "搜索引擎简介", "textarea")}${field("aboutTitle", "关于页面标题")}${field("about", "个人介绍", "textarea")}${field("aboutImage", "关于页面图片路径")}${field("gear", "摄影器材", "textarea")}<h2>社交链接</h2><div class="social-list">${data.site.socials.map((s, i) => `<div class="social-row"><input name="social-label-${i}" value="${e(s.label)}" aria-label="社交平台 ${i + 1}" required><input name="social-url-${i}" type="url" value="${e(s.url)}" aria-label="社交链接 ${i + 1}" required><button type="button" data-remove-social="${i}" aria-label="移除社交链接 ${i + 1}">×</button></div>`).join("")}</div><button type="button" class="secondary" id="add-social">＋ 添加链接</button><button type="submit" class="primary">应用网站内容</button><p class="hint">应用后，点击右上角“保存更改”写入网站。</p></form></section>`;
+    `<section class="panel"><form class="settings-form" id="settings-form"><h2>网站内容</h2><div class="form-grid">${field("name", "摄影师名称")}${field("tagline", "品牌无障碍描述")}${field("location", "所在城市")}${field("email", "联系邮箱")}</div>${field("description", "搜索引擎简介", "textarea")}${field("aboutTitle", "关于页面标题")}${field("about", "个人介绍（空行分段）", "textarea")}${field("aboutImage", "关于页面图片路径")}${field("gear", "摄影器材", "textarea")}<h2>社交链接</h2><p class="hint">前两个链接作为主要平台显示，后续链接以较轻字号展示。</p><div class="social-list">${data.site.socials.map((s, i) => `<div class="social-row"><input name="social-label-${i}" value="${e(s.label)}" aria-label="社交平台 ${i + 1}" required><input name="social-url-${i}" type="url" value="${e(s.url)}" aria-label="社交链接 ${i + 1}" required><button type="button" data-remove-social="${i}" aria-label="移除社交链接 ${i + 1}">×</button></div>`).join("")}</div><button type="button" class="secondary" id="add-social">＋ 添加链接</button><button type="submit" class="primary">应用网站内容</button><p class="hint">应用后，点击右上角“保存更改”写入网站。</p></form></section>`;
 }
 function render() {
   if (!data) return;
@@ -125,6 +128,7 @@ async function connect(adapter) {
     store.mode === "github" ? `发布到 ${store.branch}` : "保存更改";
   $("#disconnect").textContent = store.mode === "d1" ? "退出登录" : "断开连接";
   $("#export").disabled = false;
+  $("#preview-toggle").disabled = false;
   render();
   if (store.mode === "d1" && !store.canUpload)
     notice("已连接 D1。照片上传尚未配置，已有照片、分类和网站内容可以管理。");
@@ -197,6 +201,9 @@ $("#editor").addEventListener("input", (event) => {
     data.categories.find(
       (c) => c.id === event.target.dataset.categoryLabel,
     ).label = event.target.value;
+    dirty();
+  } else if (event.target.matches("[data-category-description]")) {
+    data.categories.find(c => c.id === event.target.dataset.categoryDescription).description = event.target.value;
     dirty();
   } else if (event.target.closest("#settings-form")) syncSettings();
 });
@@ -326,6 +333,7 @@ function setBusy(value) {
   document.querySelector(".sidebar nav").inert = value;
   $("#disconnect").disabled = value;
   $("#export").disabled = value;
+  $("#preview-toggle").disabled = value;
   dirty();
 }
 $("#upload-input").onchange = async (event) => {
@@ -341,6 +349,7 @@ $("#upload-input").onchange = async (event) => {
   try {
     for (const file of files) {
       notice(`正在处理 ${count + 1} / ${files.length}：${file.name}`);
+      progress({ stage: "prepare", completed: count, total: files.length });
       const prepared = await preparePhoto(
         file,
         filter === "all" ? data.categories[0].id : filter,
@@ -351,6 +360,7 @@ $("#upload-input").onchange = async (event) => {
       uploads.push(...prepared.uploads);
       previews.set(prepared.photo.id, prepared.preview);
       count++;
+      progress({ stage: "prepare", completed: count, total: files.length });
     }
     notice(`已添加 ${count} 张照片，默认隐藏。编辑后保存即可。`);
   } catch (error) {
@@ -361,6 +371,7 @@ $("#upload-input").onchange = async (event) => {
     setBusy(false);
     render();
     event.target.value = "";
+    $("#save-progress").hidden = true;
   }
 };
 $("#save").onclick = async () => {
@@ -386,7 +397,7 @@ $("#save").onclick = async () => {
     const pending = uploads.filter((u) => paths.has(u.path));
     if (pending.reduce((sum, u) => sum + u.base64.length, 0) > 28 * 1024 * 1024)
       throw new Error("这批照片较大，请分批保存（每次不超过 28 MB）。");
-    const result = await store.save(data, revision, pending);
+    const result = await store.save(data, revision, pending, progress);
     revision = result.revision;
     base = JSON.stringify(data);
     uploads = [];
@@ -404,6 +415,7 @@ $("#save").onclick = async () => {
     notice(error.message, true);
   } finally {
     setBusy(false);
+    $("#save-progress").hidden = true;
   }
 };
 $("#export").onclick = () => {
@@ -427,6 +439,7 @@ $("#disconnect").onclick = async () => {
     catch (error) { notice(error.message, true); }
     return;
   }
+  closePreview();
   store?.disconnect();
   store = null;
   data = null;
@@ -435,6 +448,7 @@ $("#disconnect").onclick = async () => {
   previews.clear();
   $("#editor").innerHTML = '<p class="empty">连接仓库以继续管理。</p>';
   $("#save").disabled = true;
+  $("#preview-toggle").disabled = true;
   $("#disconnect").hidden = true;
   $("#connection").textContent = "未连接";
   $("#login-dialog").showModal();
@@ -467,6 +481,69 @@ window.addEventListener("beforeunload", (event) => {
     event.returnValue = "";
   }
 });
+let previewTimer;
+function progress({ stage, completed = 0, total = 0 }) {
+  $("#save-progress").hidden = false;
+  $("#progress-label").textContent = stage === "prepare" ? `正在处理照片 ${completed} / ${total}`
+    : stage === "upload" ? `正在上传图片版本 ${completed} / ${total}`
+    : stage === "done" ? "保存完成" : "正在校验并保存内容…";
+  const bar = $("#progress-bar");
+  if (total && ["prepare", "upload"].includes(stage)) { bar.max = total; bar.value = completed; }
+  else bar.removeAttribute("value");
+}
+function sizePreview() {
+  const mobile = $("#preview-device").value === "mobile", width = mobile ? 390 : 1280, height = mobile ? 844 : 800;
+  const canvas = $(".preview-canvas"), frame = $("#preview-frame");
+  const scale = Math.min(1, canvas.clientWidth / width);
+  frame.style.width = width + "px"; frame.style.height = height + "px";
+  frame.style.transform = `scale(${scale})`;
+  canvas.style.height = height * scale + "px";
+}
+function sendPreview() {
+  if ($("#draft-preview").hidden || !data || !store) return;
+  const select = $("#preview-page"), previous = select.value || "all";
+  select.innerHTML = '<option value="all">首页精选</option>' + data.categories.map(c => `<option value="${e(c.id)}">${e(c.label)}</option>`).join("") + '<option value="page:about">简介</option><option value="page:contact">联系</option>';
+  select.value = [...select.options].some(o => o.value === previous) ? previous : "all";
+  try {
+    const content = previewContent(data, path => new URL(store.image(path), location.href).href, previews);
+    if ($("#preview-hidden").checked) content.photos.forEach(photo => { photo.published = true; });
+    const page = select.value.startsWith("page:") ? select.value.slice(5) : "portfolio";
+    $("#preview-frame").contentWindow.postMessage({ type: "gallery-preview", content, page, category: select.value }, location.origin);
+    $("#preview-error").textContent = "";
+  } catch (error) { $("#preview-error").textContent = `请先完善当前编辑：${error.message}`; }
+  sizePreview();
+}
+function schedulePreview() { clearTimeout(previewTimer); previewTimer = setTimeout(sendPreview, 180); }
+function closePreview() {
+  clearTimeout(previewTimer);
+  $("#draft-preview").hidden = true;
+  $(".studio-columns").classList.remove("with-preview");
+  $("#preview-toggle").setAttribute("aria-expanded", "false");
+  $("#preview-frame").src = "about:blank";
+}
+$("#preview-toggle").onclick = () => {
+  if (!$("#draft-preview").hidden) { closePreview(); return; }
+  syncSettings();
+  $("#draft-preview").hidden = false;
+  $(".studio-columns").classList.add("with-preview");
+  $("#preview-toggle").setAttribute("aria-expanded", "true");
+  $("#preview-frame").src = "preview.html";
+  sizePreview();
+};
+$("#preview-close").onclick = () => { closePreview(); $("#preview-toggle").focus(); };
+$("#preview-page").onchange = sendPreview;
+$("#preview-device").onchange = sizePreview;
+$("#preview-hidden").onchange = sendPreview;
+new ResizeObserver(sizePreview).observe($(".preview-canvas"));
+window.addEventListener("message", event => {
+  if (event.origin !== location.origin || event.source !== $("#preview-frame").contentWindow) return;
+  if (event.data?.type === "gallery-preview-ready") sendPreview();
+  if (event.data?.type === "gallery-preview-navigate" && [...$("#preview-page").options].some(option => option.value === event.data.value)) {
+    $("#preview-page").value = event.data.value;
+    sendPreview();
+  }
+});
+bindPhotoOrdering($("#editor"), { getData: () => data, isBusy: () => busy, onChange: render });
 $("#export").disabled = true;
 try {
   const local = await getLocalStore();

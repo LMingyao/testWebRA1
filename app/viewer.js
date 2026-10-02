@@ -1,7 +1,7 @@
 import { createPhotoPreloader } from "./images.js";
 import { createPhotoStage } from "./photo-stage.js";
 
-export function onSwipe(element, callback) {
+export function onSwipe(element, callback, signal) {
   let start;
   element.addEventListener(
     "touchstart",
@@ -10,9 +10,9 @@ export function onSwipe(element, callback) {
       const touch = event.changedTouches[0];
       start = { x: touch.clientX, y: touch.clientY };
     },
-    { passive: true },
+    { passive: true, signal },
   );
-  element.addEventListener("touchcancel", () => { start = undefined; }, { passive: true });
+  element.addEventListener("touchcancel", () => { start = undefined; }, { passive: true, signal });
   element.addEventListener(
     "touchend",
     (event) => {
@@ -24,11 +24,12 @@ export function onSwipe(element, callback) {
         callback(dx < 0 ? 1 : -1);
       start = undefined;
     },
-    { passive: true },
+    { passive: true, signal },
   );
 }
 
 export function createPhotoViewer(dialog, onChange, onClose) {
+  const lifecycle = new AbortController();
   const preload = createPhotoPreloader();
   const stage = createPhotoStage(dialog.querySelector(".viewer-stage"), dialog.querySelector(".viewer-image"));
   let viewing = [],
@@ -62,21 +63,28 @@ export function createPhotoViewer(dialog, onChange, onClose) {
     preload.clear();
     document.body.classList.remove("viewing");
     onClose?.();
-  });
+  }, { signal: lifecycle.signal });
   dialog.addEventListener("click", (event) => {
     if (
       event.target === dialog ||
       event.target.classList.contains("viewer-stage")
     )
       dialog.close();
-  });
+  }, { signal: lifecycle.signal });
   dialog.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
       event.preventDefault();
       advance(event.key === "ArrowRight" ? 1 : -1);
     }
-  });
+  }, { signal: lifecycle.signal });
 
-  onSwipe(dialog, advance);
+  onSwipe(dialog, advance, lifecycle.signal);
+  open.destroy = () => {
+    lifecycle.abort();
+    if (dialog.open) dialog.close();
+    document.body.classList.remove("viewing");
+    stage.destroy();
+    preload.clear();
+  };
   return open;
 }

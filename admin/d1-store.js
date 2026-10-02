@@ -18,8 +18,9 @@ export class D1Store {
   }
   load() { return this.request("content"); }
   image(path) { return new URL(path, this.mediaBase).href; }
-  async save(data, revision, uploads) {
+  async save(data, revision, uploads, onProgress = () => {}) {
     validateContent(data);
+    onProgress({ stage: "save" });
     if (uploads.length && !this.canUpload) throw new Error("尚未配置服务端照片上传；可先保存已有照片的编辑。");
     // Check the version before media commits as well as in the final atomic D1 save.
     if ((await this.load()).revision !== revision)
@@ -29,13 +30,19 @@ export class D1Store {
       if (bytes.length > 1024 * 1024) throw new Error("云后台每个 WebP 文件最多 1 MB，请先缩小照片或分批处理。");
       return { path: upload.path, bytes };
     });
+    let completed = 0;
+    if (decoded.length) onProgress({ stage: "upload", completed, total: decoded.length });
     for (const upload of decoded) {
       await this.request("media", { method: "POST", headers: {
         "Content-Type": "image/webp", "X-Media-Path": upload.path,
       }, body: upload.bytes });
+      onProgress({ stage: "upload", completed: ++completed, total: decoded.length });
     }
-    return this.request("content", { method: "PUT", headers: { "Content-Type": "application/json" },
+    onProgress({ stage: "save" });
+    const result = await this.request("content", { method: "PUT", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data, revision }) });
+    onProgress({ stage: "done" });
+    return result;
   }
   async disconnect() {
     await this.request("logout", { method: "POST" });

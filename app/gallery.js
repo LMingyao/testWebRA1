@@ -6,14 +6,15 @@ import { arrowIcon } from "./icons.js";
 import { createPhotoStage } from "./photo-stage.js";
 
 export function createGallery(main, controls, content) {
-  let layoutObserver, singleFrame, selectedPhotoId, viewerChanged, viewerClosed, viewMode = "multi";
+  let layoutObserver, layoutResize, singleFrame, selectedPhotoId, viewerChanged, viewerClosed, viewMode = "multi";
   const preload = createPhotoPreloader();
   const openPhoto = createPhotoViewer(document.querySelector(".lightbox"), id => {
     selectedPhotoId = id;
     viewerChanged?.(id);
   }, () => viewerClosed?.());
-  return function renderGallery(category = "all") {
+  function renderGallery(category = "all") {
     layoutObserver?.disconnect();
+    if (layoutResize) window.removeEventListener("resize", layoutResize);
     singleFrame?.destroy();
     singleFrame = undefined;
     preload.clear();
@@ -58,18 +59,21 @@ export function createGallery(main, controls, content) {
     controls.onclick = changeView;
     const sheet = main.querySelector(".photo-sheet");
     const cards = new Map();
-    let layoutWidth;
+    let layoutWidth, layoutHeight;
     function arrangePhotos() {
       const width = Math.round(sheet.clientWidth);
-      if (!width || width === layoutWidth) return;
+      const viewportHeight = window.innerHeight;
+      if (!width || (width === layoutWidth && viewportHeight === layoutHeight)) return;
       layoutWidth = width;
+      layoutHeight = viewportHeight;
       const focused = sheet.contains(document.activeElement)
         ? document.activeElement.closest("[data-photo]")?.dataset.photo : undefined;
       const gap = parseFloat(getComputedStyle(sheet).rowGap);
-      const targetHeight = category === "portrait" ? 480 : 380;
+      const maxHeight = Math.max(240, viewportHeight - 200);
+      const targetHeight = Math.min(category === "portrait" ? 480 : 380, maxHeight);
       let index = 0;
       const fragment = document.createDocumentFragment();
-      for (const row of photoRows(photographs, { width, gap, targetHeight })) {
+      for (const row of photoRows(photographs, { width, gap, targetHeight, maxHeight })) {
         const ratioSum = row.photos.reduce((sum, photo) => sum + photo.width / photo.height, 0);
         const element = document.createElement("div");
         element.className = "photo-row";
@@ -97,6 +101,8 @@ export function createGallery(main, controls, content) {
       arrangePhotos();
       layoutObserver = new ResizeObserver(arrangePhotos);
       layoutObserver.observe(sheet);
+      layoutResize = arrangePhotos;
+      window.addEventListener("resize", layoutResize);
     }
     const opening = main.querySelector(".work-opening");
     function showPanorama(index, remember = false) {
@@ -153,5 +159,13 @@ export function createGallery(main, controls, content) {
       if (event.target.closest(".single-previous")) showSingle(singleCurrent - 1);
       if (event.target.closest(".single-next")) showSingle(singleCurrent + 1);
     };
+  }
+  renderGallery.destroy = () => {
+    layoutObserver?.disconnect();
+    if (layoutResize) window.removeEventListener("resize", layoutResize);
+    singleFrame?.destroy();
+    openPhoto.destroy();
+    preload.clear();
   };
+  return renderGallery;
 }

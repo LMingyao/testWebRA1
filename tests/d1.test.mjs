@@ -244,3 +244,30 @@ test("D1 adapter prechecks revisions, uploads sequentially and sends no token or
   assert.deepEqual(JSON.parse(calls[2].options.body), { data: fixture, revision: "current" });
   assert.equal(store.image("media/photo.webp"), "https://mingyaophoto.com/media/photo.webp");
 });
+
+test("private draft preview is frameable only by its own origin and still requires login", async t => {
+  const { request } = setup(t);
+  assert.equal((await request("/admin/preview.html", { auth: false })).status, 401);
+  assert.equal((await request("/admin/preview.js", { auth: false })).status, 401);
+  const preview = await request("/admin/preview.html");
+  assert.equal(preview.headers.get("X-Frame-Options"), "SAMEORIGIN");
+  assert.equal(preview.headers.get("Content-Security-Policy"), "frame-ancestors 'self'");
+  assert.equal((await request("/admin/")).headers.get("X-Frame-Options"), "DENY");
+});
+
+test("upload progress counts only completed versions and never reports success on failed save", async () => {
+  const store = new D1Store({ canUpload: true }), events = [];
+  store.request = async (endpoint, options = {}) => {
+    if (endpoint === "content" && !options.method) return { revision: "current" };
+    if (options.method === "PUT") throw new Error("Save conflict");
+    return {};
+  };
+  await assert.rejects(() => store.save(fixture, "current", [
+    { path: "media/a.webp", base64: "YWJj" }, { path: "media/b.webp", base64: "YWJj" },
+  ], event => events.push(event)), /Save conflict/);
+  assert.deepEqual(events.filter(e => e.stage === "upload").map(e => e.completed), [0, 1, 2]);
+  assert.ok(events.every(e => e.stage !== "done"));
+  events.length = 0;
+  await assert.rejects(() => store.save(fixture, "old", [], event => events.push(event)), /内容已更新/);
+  assert.deepEqual(events.map(e => e.stage), ["save"]);
+});

@@ -126,17 +126,17 @@ main,
   background: var(--pink);
 }
 .work-navigation {
-  position: relative;
+  position: static;
 }
 #work-menu {
   position: absolute;
-  right: 0;
-  top: 100%;
-  width: 190px;
-  background: #fff;
-  padding: 17px 24px 20px;
-  box-shadow: 0 8px 28px #0000000b;
-  border: 1px solid #f1f1f1;
+  inset: 100% 0 auto;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px 24px;
+  background: var(--paper);
+  padding: 24px 0 30px;
+  border-bottom: 1px solid var(--line);
   letter-spacing: 0;
   font-size: 12px;
   line-height: 1.5;
@@ -144,10 +144,14 @@ main,
 #work-menu[hidden] {
   display: none;
 }
+@media (min-width: 901px) {
+  .site-header.work-is-open { margin-bottom: var(--work-menu-height, 100px); }
+}
 #work-menu a {
   position: relative;
   display: block;
-  padding: 10px 0 10px 12px;
+  padding: 12px 0;
+  min-height: 44px;
   color: var(--muted);
 }
 #work-menu a:hover,
@@ -157,11 +161,10 @@ main,
 #work-menu a[aria-current="page"]:before {
   content: "";
   position: absolute;
+  bottom: 4px;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 2px;
-  height: 12px;
+  width: 20px;
+  height: 2px;
   background: var(--pink);
 }
 .menu-toggle {
@@ -497,27 +500,27 @@ body[data-page="portrait"] .collection-toolbar {
 }
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.08fr 1fr;
   gap: 9%;
-  align-items: start;
-  margin-top: 32px;
+  align-items: center;
+  margin-top: 40px;
 }
 .about-photo {
   width: 100%;
   height: auto;
-  max-height: 700px;
-  object-fit: cover;
+  max-height: min(700px, calc(100svh - 240px));
+  object-fit: contain;
 }
-.about-copy h1 {
+.editorial-heading h1 {
   font-size: clamp(30px, 3vw, 43px);
   font-weight: 400;
   letter-spacing: -0.03em;
-  margin: 20px 0 26px;
+  margin: 14px 0 0;
 }
 .body-copy {
   max-width: 42ch;
-  font-size: 16px;
-  line-height: 1.8;
+  font-size: clamp(16px, 1.45vw, 19px);
+  line-height: 1.85;
   color: #555;
 }
 .gear {
@@ -557,27 +560,25 @@ body[data-page="portrait"] .collection-toolbar {
   margin-top: 12px;
 }
 .text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 44px;
   font-size: 12px;
 }
 .contact-page {
-  padding: 55px 0 100px;
-  min-height: 60vh;
+  padding: clamp(48px, 10vh, 100px) 0 100px;
+  min-height: 55vh;
   width: 100%;
   margin-inline: auto;
 }
-.contact-page h1 {
-  font-size: clamp(30px, 3vw, 43px);
-  font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  margin-top: 28px;
-}
+
 .contact-details {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 26px;
-  margin: 32px 0 30px;
+  gap: 22px;
+  margin: 38px 0 42px;
 }
 .contact-details p {
   font-size: 13px;
@@ -585,7 +586,7 @@ body[data-page="portrait"] .collection-toolbar {
   color: #777;
 }
 .email-link {
-  font-size: clamp(22px, 2.4vw, 34px);
+  font-size: clamp(22px, 3.8vw, 52px);
   letter-spacing: -0.03em;
   overflow-wrap: anywhere;
   padding-bottom: 13px;
@@ -595,6 +596,7 @@ body[data-page="portrait"] .collection-toolbar {
   margin-left: 20px;
 }
 .contact-location {
+  line-height: 1.9;
   color: #777;
   font-size: 12px;
 }
@@ -719,6 +721,9 @@ body[data-page="portrait"] .collection-toolbar {
     padding: 5px 0 8px 18px;
     width: 100%;
   }
+  #work-menu {
+    display: block;
+  }
   .work-navigation {
     width: 100%;
   }
@@ -811,7 +816,7 @@ body[data-page="portrait"] .collection-toolbar {
   .about-photo {
     max-height: 550px;
   }
-  .about-copy h1 {
+  .editorial-heading h1 {
     font-size: 31px;
   }
   .body-copy {
@@ -819,10 +824,6 @@ body[data-page="portrait"] .collection-toolbar {
   }
   .contact-page {
     padding: 35px 0 65px;
-  }
-  .contact-page h1 {
-    font-size: 31px;
-    margin-top: 32px;
   }
   .contact-details {
     margin: 38px 0 32px;
@@ -846,3 +847,9 @@ body[data-page="portrait"] .collection-toolbar {
     transition: none !important;
   }
 }
+
+.body-copy p + p { margin-top: 1.2em; }
+#social-links .social-primary { color: var(--ink); }
+#social-links .social-secondary { font-size: 11px; }
+#social-links a:hover { color: var(--brand-focus); }
+.back-top[hidden] { display: none; }
