@@ -61,7 +61,8 @@ GitHub 存储模式使用仓库令牌，本机管理不需要令牌。D1 模式�
 | `app/site.js`          | 公共导航、页脚、个人介绍与联系页面             |
 | `app/gallery.js`       | 统一作品序列、手动横幅浏览与全屏查看           |
 | `app/layout.js`        | 保留原比例与顺序的自动分行算法                 |
-| `app/images.js`        | 响应式图片标记与加载策略                       |
+| `app/images.js`        | 响应式图片标记、观看尺寸与相邻图片加载策略 |
+| `app/photo-stage.js`   | 单张和全屏共用的加载、重试与尺寸适配 |
 | `app/viewer.js`        | 大图查看、键盘操作与滑动手势                   |
 | `app/site.css`         | 响应式布局                                     |
 | `app/design.css`       | 前台、后台与登录页共同的字体、色彩与品牌规则 |

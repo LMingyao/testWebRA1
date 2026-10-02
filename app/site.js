@@ -22,6 +22,29 @@ menu.onclick = () => {
   if (!open) setWorkMenu(false);
 };
 workToggle.onclick = () => setWorkMenu(workMenu.hidden);
+workToggle.addEventListener("keydown", event => {
+  if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
+  const links = [...workMenu.querySelectorAll("a")];
+  if (!links.length) return;
+  event.preventDefault();
+  setWorkMenu(true);
+  (event.key === "ArrowDown" ? links[0] : links.at(-1)).focus();
+});
+workMenu.addEventListener("keydown", event => {
+  const links = [...workMenu.querySelectorAll("a")];
+  const index = links.indexOf(document.activeElement);
+  if (index < 0 || !["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+  event.preventDefault();
+  const next = event.key === "Home" ? 0 : event.key === "End" ? links.length - 1
+    : (index + (event.key === "ArrowDown" ? 1 : -1) + links.length) % links.length;
+  links[next].focus();
+});
+document.querySelector(".work-navigation").addEventListener("focusout", event => {
+  if (!event.currentTarget.contains(event.relatedTarget)) setWorkMenu(false);
+});
+document.querySelector(".site-header").addEventListener("focusout", event => {
+  if (!event.currentTarget.contains(event.relatedTarget)) setMenu(false);
+});
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".work-navigation")) setWorkMenu(false);
   if (!event.target.closest(".site-header")) setMenu(false);
@@ -116,7 +139,7 @@ try {
   if (isWork) {
     workMenu.onclick = (event) => {
       const link = event.target.closest("[data-work]");
-      if (!link) return;
+      if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
       history.pushState(null, "", link.href);
       showWork(link.dataset.work);
