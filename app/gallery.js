@@ -4,9 +4,10 @@ import { photoImage, createPhotoPreloader } from "./images.js";
 import { createPhotoViewer, onSwipe } from "./viewer.js";
 import { arrowIcon } from "./icons.js";
 import { createPhotoStage } from "./photo-stage.js";
+import { collections } from "./config.js";
 
 export function createGallery(main, controls, content) {
-  let layoutObserver, layoutResize, singleFrame, selectedPhotoId, viewerChanged, viewerClosed, viewMode = "multi";
+  let layoutObserver, layoutResize, singleFrame, selectedPhotoId, viewerChanged, viewerClosed, viewMode = content.collections?.defaultView || "multi";
   const preload = createPhotoPreloader();
   const openPhoto = createPhotoViewer(document.querySelector(".lightbox"), id => {
     selectedPhotoId = id;
@@ -22,7 +23,7 @@ export function createGallery(main, controls, content) {
     const panoramas = sequence.filter((photo) => photo.placement === "hero");
     const photographs = sequence.filter((photo) => photo.placement !== "hero");
     const label =
-      content.categories.find((item) => item.id === category)?.label ||
+      collections(content, { includeHidden: true }).find((item) => item.id === category)?.label ||
       "Selected work";
     let current = 0;
     let singleCurrent = sequence.findIndex(photo => photo.id === selectedPhotoId);

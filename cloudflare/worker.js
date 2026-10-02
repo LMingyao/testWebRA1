@@ -7,7 +7,8 @@ const response = (status, body, headers = {}) => new Response(JSON.stringify(bod
     "X-Content-Type-Options": "nosniff", ...headers } });
 export function publicContent(data) {
   return { version: data.version, site: data.site, categories: data.categories,
-    photos: data.photos.filter(photo => photo.published) };
+    ...(data.collections ? { collections: data.collections } : {}),
+    photos: data.photos.filter(photo => photo.published && data.categories.some(category => category.id === photo.category && category.visible !== false)) };
 }
 async function load(env) {
   const row = await env.DB.prepare("SELECT document, revision FROM gallery_content WHERE id = 1").first();

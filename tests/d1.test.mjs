@@ -11,6 +11,8 @@ import { registerMedia } from "../cloudflare/media.js";
 import { administrator, SESSION_COOKIE } from "../cloudflare/auth.js";
 import { derivePassword, encode64, credentialMAC, PASSWORD_ITERATIONS } from "../app/password.js";
 import { D1Store } from "../admin/d1-store.js";
+import { defaultCollection, collections, editableCollections } from "../app/config.js";
+import { renderEditorial } from "../app/editorial.js";
 
 const schema = await readFile(new URL("../cloudflare/migrations/0001_gallery.sql", import.meta.url), "utf8");
 const authSchema = await readFile(new URL("../cloudflare/migrations/0002_admin_auth.sql", import.meta.url), "utf8");
@@ -108,6 +110,44 @@ test("D1 rejects invalid and oversized content without changing its version", as
   assert.equal((await request("/api/admin/content", { method: "PUT", data, revision: original.revision })).status, 400);
   assert.equal((await request("/api/admin/content", { method: "PUT", body: "x".repeat(1000001), headers: { "Content-Type": "application/json" } })).status, 413);
   assert.equal((await (await request("/api/admin/content")).json()).revision, original.revision);
+});
+
+test("successive admin saves change public navigation, entry, equipment and contact while stale writes reject", async t => {
+  const { request, data } = setup(t);
+  let { revision } = await (await request("/api/admin/content")).json();
+  const originalRevision = revision;
+  const config = editableCollections(data);
+  config.default = "aviation";
+  config.selected.label = "Highlights";
+  config.order = ["aviation", "all"];
+  data.site.gear = ["Camera A", "Lens A"];
+  data.site.email = "first@example.com";
+  const first = await request("/api/admin/content", { method: "PUT", data, revision });
+  assert.equal(first.status, 200); revision = (await first.json()).revision;
+  let feed = await (await request("/api/content", { auth: false })).json();
+  assert.equal(defaultCollection(feed), "aviation");
+  assert.deepEqual(collections(feed).map(item => item.label), ["Aviation", "Highlights"]);
+  let main = { innerHTML: "" };
+  renderEditorial(main, feed, "about");
+  assert.equal((main.innerHTML.match(/<li>/g) || []).length, 2);
+  config.default = "all";
+  data.categories[0].visible = false;
+  data.site.gear = ["Camera B"];
+  data.site.email = "second@example.com";
+  const second = await request("/api/admin/content", { method: "PUT", data, revision });
+  assert.equal(second.status, 200);
+  feed = await (await request("/api/content", { auth: false })).json();
+  assert.equal(defaultCollection(feed), "all");
+  assert.deepEqual(collections(feed).map(item => item.label), ["Highlights"]);
+  assert.equal(feed.photos.length, 0);
+  renderEditorial(main, feed, "about");
+  assert.equal((main.innerHTML.match(/<li>/g) || []).length, 1);
+  renderEditorial(main, feed, "contact");
+  assert.match(main.innerHTML, /mailto:second@example.com/);
+  assert.equal((await request("/api/admin/content", { method: "PUT", data, revision: originalRevision })).status, 409);
+  const reopened = await (await request("/api/admin/content")).json();
+  assert.equal(reopened.data.photos.length, data.photos.length);
+  assert.deepEqual(reopened.data.site.gear, ["Camera B"]);
 });
 
 const authSalt = encode64(new Uint8Array(16).fill(5));

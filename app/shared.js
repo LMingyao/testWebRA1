@@ -1,3 +1,4 @@
+import { collections } from "./config.js";
 export const escapeHTML = (value) =>
   String(value ?? "").replace(
     /[&<>"']/g,
@@ -22,9 +23,11 @@ export function contentImagePaths(data) {
 }
 // One navigation choice controls the opening panoramas and the photo sequence.
 export function workPhotos(data, category = "all") {
+  if (!collections(data).some(item => item.id === category)) return [];
+  const visible = new Set(data.categories.filter(item => item.visible !== false).map(item => item.id));
   const photos = data.photos.filter(
     (photo) =>
-      photo.published && (category === "all" ? photo.homeSelected === true : photo.category === category),
+      photo.published && visible.has(photo.category) && (category === "all" ? photo.homeSelected === true : photo.category === category),
   );
   return [
     ...photos
@@ -94,11 +97,22 @@ export function validateContent(data) {
     "aboutTitle",
     "about",
     "aboutImage",
-    "gear",
   ]) {
     if (typeof data.site[key] !== "string" || data.site[key].length > 12000)
       throw new Error(`Invalid site field: ${key}`);
   }
+  const gear = data.site.gear;
+  if (!(typeof gear === "string" && gear.length <= 12000) &&
+      !(Array.isArray(gear) && gear.length <= 100 && gear.every(item => typeof item === "string" && item.trim() && item.length <= 200)))
+    throw new Error("Equipment must be a list of up to 100 nonempty items (200 characters each).");
+  for (const key of ["brandName", "brandTitle", "workLabel", "aboutLabel", "contactLabel", "gearLabel", "contactLinkLabel"])
+    if (data.site[key] !== undefined && (typeof data.site[key] !== "string" || !data.site[key].trim() || data.site[key].length > 80))
+      throw new Error(`Use 1–80 characters for ${key}.`);
+  for (const key of ["contactText", "aboutImageAlt", "footerText"])
+    if (data.site[key] !== undefined && (typeof data.site[key] !== "string" || data.site[key].length > 400))
+      throw new Error(`Use up to 400 characters for ${key}.`);
+  for (const key of ["showAbout", "showContact"])
+    if (data.site[key] !== undefined && typeof data.site[key] !== "boolean") throw new Error(`Invalid ${key}.`);
   if (
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.site.email) ||
     !safeImage(data.site.aboutImage)
@@ -113,6 +127,7 @@ export function validateContent(data) {
     throw new Error("Social links must use HTTPS.");
   const categories = new Set();
   for (const category of data.categories) {
+    if (category.visible !== undefined && typeof category.visible !== "boolean") throw new Error("Invalid category visibility.");
     if (category.description !== undefined &&
         (typeof category.description !== "string" || category.description.length > 400))
       throw new Error("Category descriptions must be up to 400 characters.");
@@ -126,6 +141,24 @@ export function validateContent(data) {
       throw new Error("Category IDs must be unique lowercase names.");
     categories.add(category.id);
   }
+  if (data.collections !== undefined) {
+    const config = data.collections;
+    if (!config || typeof config !== "object" || Array.isArray(config)) throw new Error("Invalid collection settings.");
+    const ids = new Set(["all", ...categories]);
+    if (config.selected !== undefined) {
+      const selected = config.selected;
+      if (!selected || typeof selected !== "object" || Array.isArray(selected) || selected.id !== undefined ||
+          (selected.label !== undefined && (typeof selected.label !== "string" || !selected.label.trim() || selected.label.length > 80)) ||
+          (selected.description !== undefined && (typeof selected.description !== "string" || selected.description.length > 400)) ||
+          (selected.visible !== undefined && typeof selected.visible !== "boolean")) throw new Error("Invalid selected collection.");
+    }
+    if (config.order !== undefined && (!Array.isArray(config.order) || new Set(config.order).size !== config.order.length || config.order.some(id => !ids.has(id))))
+      throw new Error("Collection order must contain unique existing IDs.");
+    if (config.default !== undefined && (!ids.has(config.default) || !collections(data).some(item => item.id === config.default)))
+      throw new Error("Choose a visible collection as the default entry.");
+    if (config.defaultView !== undefined && !["multi", "single"].includes(config.defaultView)) throw new Error("Invalid default view.");
+  }
+  if (!collections(data).length) throw new Error("Keep at least one collection visible.");
   const ids = new Set();
   for (const photo of data.photos) {
     if (!/^[a-z0-9-]+$/.test(photo.id) || ids.has(photo.id))

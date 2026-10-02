@@ -10,6 +10,9 @@ import { backendConfig } from "../app/backend.js";
 import { preparePhoto } from "./images.js";
 import { bindPhotoOrdering } from "./ordering.js";
 import { previewContent } from "./preview-data.js";
+import { collections, defaultCollection, editableCollections, gearItems } from "../app/config.js";
+import { applySiteChrome } from "../app/chrome.js";
+import { renderCollectionEditor, renderSiteEditor, syncSiteForm, collectionTarget, moveCollection, setCollectionVisible, configurationError } from "./config-editor.js";
 let store,
   data,
   revision,
@@ -24,7 +27,7 @@ let uploads = [],
   previews = new Map();
 const $ = (selector) => document.querySelector(selector);
 function notice(message, error = false) {
-  $("#notification").textContent = message;
+  $("#notification").textContent = error ? configurationError(message) : message;
   $("#notification").classList.toggle("error", error);
 }
 function isDirty() {
@@ -44,7 +47,8 @@ function categoryName(id) {
 }
 function card(photo, boundaries) {
   const { first, last } = boundaries.get(photo.placement || "gallery");
-  return `<article class="admin-card" data-card="${e(photo.id)}"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.homeSelected ? " · 首页精选" : ""}${photo.featured ? " · 轮播首图" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "顶部轮播" : "作品画廊"}</span><span class="badge ${photo.published ? "" : "draft"}">${photo.published ? "展示中" : "已隐藏"}</span></div></div><div class="card-actions"><button class="drag-handle" data-drag="${e(photo.id)}" aria-label="拖动排序 ${e(photo.title)}" title="拖动排序">⠿</button><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${photo.id === first ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${photo.id === last ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
+  const categoryVisible = data.categories.find(category => category.id === photo.category)?.visible !== false;
+  return `<article class="admin-card" data-card="${e(photo.id)}"><button data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><div class="card-info"><div class="card-title">${e(photo.title)} ${photo.homeSelected ? " · 精选集合" : ""}${photo.featured ? " · 轮播首图" : ""}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "顶部轮播" : "作品画廊"}</span><span class="badge ${photo.published && categoryVisible ? "" : "draft"}">${!photo.published ? "已隐藏" : categoryVisible ? "展示中" : "分类已隐藏"}</span></div></div><div class="card-actions"><button class="drag-handle" data-drag="${e(photo.id)}" aria-label="拖动排序 ${e(photo.title)}" title="拖动排序">⠿</button><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" ${photo.id === first ? "disabled" : ""}>↑</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" ${photo.id === last ? "disabled" : ""}>↓</button><button data-toggle="${e(photo.id)}">${photo.published ? "隐藏" : "展示"}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
 }
 function renderCards() {
   const boundaries = new Map();
@@ -70,12 +74,12 @@ function matchesArea(photo, area) {
 }
 function renderPhotos() {
   $("#editor").innerHTML =
-    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><input id="search" type="search" placeholder="搜索照片…" aria-label="搜索照片" value="${e(search)}"><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>＋ 上传照片</button></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">首页只显示已勾选“首页精选”的展示照片，分类页显示该分类全部展示照片。轮播照片不会出现在下方图库。上传后默认隐藏且不加入精选，拖动手柄或 ↑ ↓ 调整所在区域的顺序；打开“作品预览”即可比较桌面与手机效果。</p>`;
+    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published && data.categories.some(category => category.id === p.category && category.visible !== false)).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><input id="search" type="search" placeholder="搜索照片…" aria-label="搜索照片" value="${e(search)}"><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>＋ 上传照片</button></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">精选集合只显示已勾选“加入精选集合”的展示照片，题材分类页显示该分类全部展示照片。轮播照片不会出现在下方图库。上传后默认隐藏且不加入精选集合，拖动手柄或 ↑ ↓ 调整所在区域的顺序；打开“作品预览”即可比较桌面与手机效果。</p>`;
   $(".stats").insertAdjacentHTML(
     "afterend",
     `<div class="library-areas">${[
         { id: "all", label: "全部照片" },
-        { id: "selected", label: "首页精选" },
+        { id: "selected", label: "精选集合" },
         { id: "gallery", label: "作品画廊" },
         { id: "hero", label: "顶部轮播" },
       ].map((area) =>
@@ -85,18 +89,14 @@ function renderPhotos() {
   renderCards();
 }
 function renderCategories() {
-  $("#editor").innerHTML =
-    `<section class="panel"><h2>组织你的收藏</h2><p class="hint">修改分类名称会同步更新网站筛选标签。有照片的分类需先转移照片再删除。</p><div class="category-list">${data.categories.map((c) => `<div class="category-row"><code>${e(c.id)}</code><input data-category-label="${e(c.id)}" value="${e(c.label)}" aria-label="${e(c.id)} 分类名称" maxlength="80"><textarea data-category-description="${e(c.id)}" maxlength="400" rows="2" placeholder="分类搜索简介（可选）" aria-label="${e(c.label)} 分类搜索简介">${e(c.description || "")}</textarea><span>${data.photos.filter((p) => p.category === c.id).length} 张</span><button data-delete-category="${e(c.id)}">删除</button></div>`).join("")}</div><form id="new-category" class="new-category"><input name="id" placeholder="分类 ID，例如 travel" aria-label="分类 ID" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required maxlength="60"><input name="label" placeholder="展示名称" aria-label="分类名称" required maxlength="80"><button class="primary" type="submit">添加分类</button></form></section>`;
-}
-function field(name, label, type = "input") {
-  return `<label>${label}${type === "textarea" ? `<textarea name="${name}" rows="4">${e(data.site[name])}</textarea>` : `<input name="${name}" value="${e(data.site[name])}" ${name === "email" ? 'type="email"' : ""} required>`}</label>`;
+  $("#editor").innerHTML = renderCollectionEditor(data);
 }
 function renderSettings() {
-  $("#editor").innerHTML =
-    `<section class="panel"><form class="settings-form" id="settings-form"><h2>网站内容</h2><div class="form-grid">${field("name", "摄影师名称")}${field("tagline", "品牌无障碍描述")}${field("location", "所在城市")}${field("email", "联系邮箱")}</div>${field("description", "搜索引擎简介", "textarea")}${field("aboutTitle", "关于页面标题")}${field("about", "个人介绍（空行分段）", "textarea")}${field("aboutImage", "关于页面图片路径")}${field("gear", "摄影器材", "textarea")}<h2>社交链接</h2><p class="hint">前两个链接作为主要平台显示，后续链接以较轻字号展示。</p><div class="social-list">${data.site.socials.map((s, i) => `<div class="social-row"><input name="social-label-${i}" value="${e(s.label)}" aria-label="社交平台 ${i + 1}" required><input name="social-url-${i}" type="url" value="${e(s.url)}" aria-label="社交链接 ${i + 1}" required><button type="button" data-remove-social="${i}" aria-label="移除社交链接 ${i + 1}">×</button></div>`).join("")}</div><button type="button" class="secondary" id="add-social">＋ 添加链接</button><button type="submit" class="primary">应用网站内容</button><p class="hint">应用后，点击右上角“保存更改”写入网站。</p></form></section>`;
+  $("#editor").innerHTML = renderSiteEditor(data, path => previews.get(path) || previews.get(data.photos.find(photo => photo.image === path)?.id) || store.image(path));
 }
 function render() {
   if (!data) return;
+  applySiteChrome(data);
   $("#view-title").textContent = {
     photos: "照片库",
     categories: "分类管理",
@@ -165,23 +165,8 @@ function editPhoto(id) {
 function syncSettings() {
   const form = $("#settings-form");
   if (!form) return;
-  const values = new FormData(form);
-  for (const key of [
-    "name",
-    "tagline",
-    "location",
-    "email",
-    "description",
-    "aboutTitle",
-    "about",
-    "aboutImage",
-    "gear",
-  ])
-    data.site[key] = values.get(key);
-  data.site.socials = data.site.socials.map((s, i) => ({
-    label: values.get(`social-label-${i}`),
-    url: values.get(`social-url-${i}`),
-  }));
+  syncSiteForm(form, data);
+  applySiteChrome(data);
   dirty();
 }
 document.querySelectorAll("[data-view]").forEach(
@@ -197,17 +182,33 @@ $("#editor").addEventListener("input", (event) => {
   if (event.target.id === "search") {
     search = event.target.value;
     renderCards();
-  } else if (event.target.matches("[data-category-label]")) {
-    data.categories.find(
-      (c) => c.id === event.target.dataset.categoryLabel,
-    ).label = event.target.value;
+  } else if (event.target.matches("[data-collection-label]")) {
+    collectionTarget(data, event.target.dataset.collectionLabel).label = event.target.value;
+    const option = $("#default-collection")?.querySelector(`option[value="${event.target.dataset.collectionLabel}"]`);
+    if (option) option.textContent = event.target.value;
     dirty();
-  } else if (event.target.matches("[data-category-description]")) {
-    data.categories.find(c => c.id === event.target.dataset.categoryDescription).description = event.target.value;
+  } else if (event.target.matches("[data-collection-description]")) {
+    collectionTarget(data, event.target.dataset.collectionDescription).description = event.target.value;
     dirty();
   } else if (event.target.closest("#settings-form")) syncSettings();
 });
 $("#editor").addEventListener("change", (event) => {
+  if (busy || !data) return;
+  try {
+    const target = event.target;
+    if (target.matches("[data-collection-visible]")) {
+      setCollectionVisible(data, target.dataset.collectionVisible, target.checked); render();
+    }
+    if (target.id === "default-collection") { editableCollections(data).default = target.value; dirty(); }
+    if (target.id === "default-photo-view") { editableCollections(data).defaultView = target.value; dirty(); }
+    if (target.id === "about-library") {
+      syncSettings();
+      data.site.aboutImage = target.value;
+      data.site.aboutImageAlt = data.photos.find(photo => photo.image === target.value)?.alt || data.site.aboutImageAlt;
+      render();
+    }
+    if (target.id === "about-upload-input") uploadAbout(target);
+  } catch (error) { notice(error.message, true); render(); }
   if (event.target.id === "category-filter") {
     filter = event.target.value;
     renderCards();
@@ -217,6 +218,25 @@ $("#editor").addEventListener("click", (event) => {
   if (busy || !data) return;
   const button = event.target.closest("button");
   if (!button) return;
+  if (button.dataset.collectionMove) {
+    if (moveCollection(data, button.dataset.collectionMove, Number(button.dataset.direction))) render();
+  }
+  if (button.id === "add-gear" || button.dataset.removeGear !== undefined) {
+    syncSettings();
+    data.site.gear = gearItems(data.site.gear);
+    if (button.id === "add-gear") data.site.gear.push("");
+    else data.site.gear.splice(Number(button.dataset.removeGear), 1);
+    render();
+    if (button.id === "add-gear") $(".equipment-row:last-child input").focus();
+  }
+  if (button.dataset.socialMove !== undefined) {
+    syncSettings();
+    const index = Number(button.dataset.socialMove), next = index + Number(button.dataset.direction);
+    if (next >= 0 && next < data.site.socials.length) {
+      [data.site.socials[index], data.site.socials[next]] = [data.site.socials[next], data.site.socials[index]]; render();
+    }
+  }
+  if (button.id === "upload-about") $("#about-upload-input").click();
   if (button.dataset.placementFilter) {
     placementFilter = button.dataset.placementFilter;
     render();
@@ -246,11 +266,15 @@ $("#editor").addEventListener("click", (event) => {
   }
   if (button.dataset.deleteCategory) {
     const id = button.dataset.deleteCategory;
+    if (collections(data).length === 1 && collections(data)[0].id === id) { notice("请至少保留一个可见的作品集合。", true); return; }
     if (data.photos.some((p) => p.category === id)) {
       notice("请先将这个分类中的照片移到其他分类。", true);
       return;
     }
     data.categories = data.categories.filter((c) => c.id !== id);
+    const config = editableCollections(data);
+    config.order = config.order.filter(item => item !== id);
+    config.default = defaultCollection(data);
     if (filter === id) filter = "all";
     render();
   }
@@ -275,7 +299,8 @@ $("#editor").addEventListener("submit", (event) => {
         label = values.get("label").trim();
       if (id === "all" || data.categories.some((c) => c.id === id) || !label)
         throw new Error("分类 ID 不可重复或使用 all。");
-      data.categories.push({ id, label });
+      data.categories.push({ id, label, visible: true });
+      editableCollections(data);
       render();
     }
     if (event.target.id === "settings-form") {
@@ -481,6 +506,22 @@ window.addEventListener("beforeunload", (event) => {
     event.returnValue = "";
   }
 });
+async function uploadAbout(input) {
+  const file = input.files[0];
+  if (!file) return;
+  syncSettings();
+  if (store.mode === "d1" && !store.canUpload) { notice("照片上传尚未配置。", true); input.value = ""; return; }
+  setBusy(true);
+  try {
+    const prepared = await preparePhoto(file, data.categories[0]?.id || "portrait");
+    data.site.aboutImage = prepared.photo.image;
+    data.site.aboutImageAlt = data.site.name;
+    uploads.push(...prepared.uploads.filter(item => item.path === prepared.photo.image));
+    previews.set(prepared.photo.image, prepared.preview);
+    notice("替换照片已准备好。预览确认后，保存更改即可发布。");
+  } catch (error) { notice(error.message, true); }
+  finally { setBusy(false); render(); }
+}
 let previewTimer;
 function progress({ stage, completed = 0, total = 0 }) {
   $("#save-progress").hidden = false;
@@ -501,16 +542,16 @@ function sizePreview() {
 }
 function sendPreview() {
   if ($("#draft-preview").hidden || !data || !store) return;
-  const select = $("#preview-page"), previous = select.value || "all";
-  select.innerHTML = '<option value="all">首页精选</option>' + data.categories.map(c => `<option value="${e(c.id)}">${e(c.label)}</option>`).join("") + '<option value="page:about">简介</option><option value="page:contact">联系</option>';
-  select.value = [...select.options].some(o => o.value === previous) ? previous : "all";
+  const select = $("#preview-page"), previous = select.value || "entry";
+  select.innerHTML = '<option value="entry">默认入口</option>' + collections(data, { includeHidden: true }).map(c => `<option value="${e(c.id)}">${e(c.label)}${c.visible === false ? "（已隐藏）" : ""}</option>`).join("") + '<option value="page:about">简介</option><option value="page:contact">联系</option>';
+  select.value = [...select.options].some(o => o.value === previous) ? previous : "entry";
   try {
     const content = previewContent(data, path => new URL(store.image(path), location.href).href, previews);
-    if ($("#preview-hidden").checked) content.photos.forEach(photo => { photo.published = true; });
+    if ($("#preview-hidden").checked) { content.photos.forEach(photo => { photo.published = true; }); content.categories.forEach(category => { category.visible = true; }); if (content.collections?.selected) content.collections.selected.visible = true; }
     const page = select.value.startsWith("page:") ? select.value.slice(5) : "portfolio";
-    $("#preview-frame").contentWindow.postMessage({ type: "gallery-preview", content, page, category: select.value }, location.origin);
+    $("#preview-frame").contentWindow.postMessage({ type: "gallery-preview", content, page, category: select.value === "entry" ? defaultCollection(data) : select.value }, location.origin);
     $("#preview-error").textContent = "";
-  } catch (error) { $("#preview-error").textContent = `请先完善当前编辑：${error.message}`; }
+  } catch (error) { $("#preview-error").textContent = `请先完善当前编辑：${configurationError(error.message)}`; }
   sizePreview();
 }
 function schedulePreview() { clearTimeout(previewTimer); previewTimer = setTimeout(sendPreview, 180); }
