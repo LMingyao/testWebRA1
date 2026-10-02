@@ -19,11 +19,13 @@
 & '.\tools\set-admin-password.ps1'
 ```
 
-脚本通过 stdin 将密码交给本机 Node 工具，以随机盐执行 PBKDF2-HMAC-SHA256（600,000 次），再加服务端随机 pepper 的 HMAC。盐、校验结果、pepper 和随机凭据版本组成的 `AUTH_CREDENTIALS` 只写入 Worker secret。不保存明文密码、临时密码文件、命令行参数或仓库变量。
+脚本先检查 Wrangler 授权和网站所属账号。尚未授权时，会打开浏览器完成 OAuth 授权，并使用 Windows 凭据管理器保存加密凭据；浏览器已登录 Cloudflare 并不等于 Wrangler 已授权。确认后才提示输入密码，不需要手工创建 API Token。
+
+脚本通过 stdin 将密码交给本机 Node 工具，以随机盐执行 PBKDF2-HMAC-SHA256（600,000 次），再加服务端随机 pepper 的 HMAC。盐、校验结果、pepper 和随机凭据版本组成的 `AUTH_CREDENTIALS` 只写入 Worker secret。不保存明文密码、临时密码文件、命令行参数或仓库变量。写入后核对公开接口返回的盐和迭代次数，确认云端生效才显示成功。
 
 登录时浏览器在用户设备执行同样的 PBKDF2，服务器进行 HMAC 校验，避免昂贵的密码派生消耗 Workers Free 的 CPU。派生结果通过 HTTPS 提交，仍是密码等价的凭据：不得记录或复制到日志，也不要在不可信页面输入密码。公开配置接口只返回盐和迭代次数。密码字段不写入 localStorage 或导出内容。
 
-重设密码会更换凭据版本，旧会话立即失效，无需邮件找回。设置脚本要求已完成 `wrangler login` 的账号；网站访客没有密码重置入口。
+重设密码会更换凭据版本，旧会话立即失效，无需邮件找回。设置脚本会协助完成 `wrangler login`；网站访客没有密码重置入口。
 
 ## 会话与访问边界
 
