@@ -35,6 +35,8 @@ npm start
 
 ## 线上管理
 
+后续免费云后台方案与当前准备状态见 [Supabase 接入与费用方案](docs/supabase-plan.md)。`npm run prepare:supabase` 生成迁移材料，不连接或上传云服务。当前管理后台仍使用以下 GitHub/本机方式；数据库及密码登录尚未接通。
+
 合并后访问 `https://mingyaophoto.com/admin/`。GitHub Pages 是静态托管，因此管理后台通过 GitHub API 保存内容与照片，不运行数据库或账户服务器。
 
 1. 在 GitHub 创建 fine-grained personal access token，仅选择 `LMingyao/testWebRA1`，授权 **Contents: read and write**，设置合理有效期。
