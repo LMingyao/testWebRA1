@@ -6,7 +6,6 @@ export class D1Store {
     this.email = session.email;
     this.mediaBase = session.mediaBase;
     this.canUpload = session.canUpload;
-    this.logoutURL = session.logoutURL;
   }
   async request(endpoint, options = {}) {
     const response = await fetch(`/api/admin/${endpoint}`, { ...options, cache: "no-store",
@@ -38,7 +37,10 @@ export class D1Store {
     return this.request("content", { method: "PUT", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data, revision }) });
   }
-  disconnect() { location.assign(this.logoutURL); }
+  async disconnect() {
+    await this.request("logout", { method: "POST" });
+    location.assign("/admin/login");
+  }
 }
 export async function getD1Store() {
   const response = await fetch("/api/admin/session", { cache: "no-store" });

@@ -1,5 +1,5 @@
 import { validateContent, contentImagePaths } from "../app/shared.js";
-import { administrator } from "./access.js";
+import { administrator, authRoute, logout } from "./auth.js";
 import { HTTPError, readLimited, registerMedia } from "./media.js";
 
 const response = (status, body, headers = {}) => new Response(JSON.stringify(body), { status,
@@ -51,14 +51,23 @@ export function createWorker({ fetcher = fetch, authenticate = administrator } =
         return response(200, { ...publicContent((await load(env)).data), mediaBase: env.MEDIA_BASE }, cors);
       }
       if (url.pathname === "/api/session") return response(404, { error: "Local editor unavailable." });
-      const email = await authenticate(request, env, fetcher);
-      if (!email) return response(401, { error: "请通过 Cloudflare Access 登录管理员账号。" });
       if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method) &&
           (origin !== url.origin || request.headers.get("X-Gallery-Request") !== "admin"))
         return response(403, { error: "保存请求必须来自后台页面。" });
+      const authResponse = await authRoute(request, env);
+      if (authResponse) return authResponse;
+      const publicAssets = ["/admin/login", "/admin/login.js", "/admin/login.css", "/app/password.js",
+        "/app/wordmark.css", "/assets/favicon.svg"];
+      const email = await authenticate(request, env, fetcher);
+      if (!email && !publicAssets.includes(url.pathname)) {
+        if (["GET", "HEAD"].includes(request.method) && ["/", "/admin", "/admin/", "/admin/index.html"].includes(url.pathname))
+          return new Response(null, { status: 302, headers: { Location: "/admin/login", "Cache-Control": "no-store" } });
+        return response(401, { error: "请登录管理员账号。" });
+      }
+      if (url.pathname === "/api/admin/logout" && request.method === "POST") return logout(request, env);
       if (url.pathname === "/api/admin/session" && request.method === "GET")
         return response(200, { mode: "d1", email, mediaBase: env.MEDIA_BASE,
-          canUpload: Boolean(env.GITHUB_TOKEN), logoutURL: "/cdn-cgi/access/logout" });
+          canUpload: Boolean(env.GITHUB_TOKEN) });
       if (url.pathname === "/api/admin/content") {
         if (request.method === "GET") return response(200, await load(env));
         if (request.method === "PUT") return response(200, await saveContent(request, env));
@@ -71,6 +80,7 @@ export function createWorker({ fetcher = fetch, authenticate = administrator } =
       if (url.pathname === "/" || url.pathname === "/admin")
         return Response.redirect(`${url.origin}/admin/`, 302);
       if (url.pathname === "/admin/") url.pathname = "/admin/index.html";
+      if (url.pathname === "/admin/login") url.pathname = "/admin/login.html";
       const asset = await env.ASSETS.fetch(new Request(url, request));
       const headers = new Headers(asset.headers);
       headers.set("Cache-Control", "no-store");

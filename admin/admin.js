@@ -410,10 +410,14 @@ $("#export").onclick = () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   notice("内容 JSON 已导出。照片文件需单独备份，完整历史保存在 GitHub。");
 };
-$("#disconnect").onclick = () => {
+$("#disconnect").onclick = async () => {
   if (busy) return;
   if (isDirty() && !confirm("有未保存的更改，确定断开连接？")) return;
-  if (store?.mode === "d1") { base = JSON.stringify(data); store.disconnect(); return; }
+  if (store?.mode === "d1") {
+    try { await store.disconnect(); base = JSON.stringify(data); }
+    catch (error) { notice(error.message, true); }
+    return;
+  }
   store?.disconnect();
   store = null;
   data = null;

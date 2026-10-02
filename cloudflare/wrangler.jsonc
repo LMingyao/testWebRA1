@@ -1,6 +1,7 @@
 {
   "$schema": "../node_modules/wrangler/config-schema.json",
   "name": "mingyao-gallery-admin",
+  "account_id": "cc922738446dbaec76200fb1992f7fda",
   "main": "worker.js",
   "compatibility_date": "2026-10-01",
   "assets": {
@@ -12,17 +13,14 @@
   "d1_databases": [{
     "binding": "DB",
     "database_name": "mingyao-gallery",
-    "database_id": "00000000-0000-0000-0000-000000000000",
+    "database_id": "650f4849-a44f-415c-ae31-b725b6277266",
     "migrations_dir": "migrations"
   }],
   "vars": {
     "SITE_ORIGIN": "https://mingyaophoto.com",
-    "MEDIA_BASE": "https://raw.githubusercontent.com/LMingyao/testWebRA1/main/",
-    "ACCESS_TEAM_DOMAIN": "",
-    "ACCESS_AUD": "",
-    "ADMIN_EMAILS": "",
+    "MEDIA_BASE": "https://raw.githubusercontent.com/LMingyao/testWebRA1/refactor/gallery-admin/",
     "GITHUB_REPO": "LMingyao/testWebRA1",
-    "GITHUB_BRANCH": "main"
+    "GITHUB_BRANCH": "refactor/gallery-admin"
   },
   "env": {
     "dev": {
@@ -31,9 +29,6 @@
         "LOCAL_DEV": "1",
         "SITE_ORIGIN": "http://127.0.0.1:4173",
         "MEDIA_BASE": "http://127.0.0.1:4173/",
-        "ACCESS_TEAM_DOMAIN": "",
-        "ACCESS_AUD": "",
-        "ADMIN_EMAILS": "",
         "GITHUB_REPO": "LMingyao/testWebRA1",
         "GITHUB_BRANCH": "refactor/gallery-admin"
       },

@@ -31,7 +31,8 @@ export async function prepareD1(root) {
   // scripts, database seed, or retired files as Worker assets.
   const files = ["admin/index.html", "admin/admin.js", "admin/admin.css", "admin/store.js",
     "admin/d1-store.js", "admin/images.js", "app/shared.js", "app/backend.js", "app/wordmark.css",
-    "assets/favicon.svg", "content/backend.json"];
+    "assets/favicon.svg", "content/backend.json", "admin/login.html", "admin/login.js",
+    "admin/login.css", "app/password.js"];
   for (const file of files) {
     const target = path.join(destination, "assets", file);
     await mkdir(path.dirname(target), { recursive: true });

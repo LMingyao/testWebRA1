@@ -1,33 +1,47 @@
 # D1 免费云后台
 
-选定日期：2026-10-01。数据库采用 Cloudflare D1，后台/API 采用 Workers Free，管理员认证采用 Cloudflare Access Free。前台和照片仍由现有 GitHub Pages 仓库托管；不启用 R2，不开通付费套餐。
+选定日期：2026-10-01。使用 Cloudflare D1、Workers Free 和自建单管理员密码登录；前台及照片沿用 GitHub 托管。不启用 R2、Access 或付费套餐，不要求绑定支付方式。
 
 ## 当前状态
 
-代码已实现 D1 内容读写、管理员认证检查、照片上传代理、前台读取切换和后台管理适配器。尚无 Cloudflare 账号，未创建或部署云资源，现有站点和本机管理仍使用原来的方式。真实 Access 登录、云端权限、生产上传与发布效果需要创建账号后验证。Access 可用邮箱一次性验证码或身份提供商登录；当前没有自建固定密码系统。
+- 云数据库：`mingyao-gallery`，ID `650f4849-a44f-415c-ae31-b725b6277266`。已导入原有 37 张作品、149 个媒体文件记录。
+- 云后台：<https://mingyao-gallery-admin.mingyao-photography.workers.dev/admin/>。
+- 云端实测通过：正确/错误密码、受保护会话、跨域拦截、内容读取、原样保存、旧版本冲突、退出后撤销会话和登录限速。临时测试凭据与会话已清除，等待所有者私下设置正式密码。
+- 初始云库备份在本机 `.local/cloudflare/initial-cloud-backup.sql`，不提交或部署。
+- `content/backend.json` 尚未启用云 API，main 和现有公开站点未切换。照片及上传目标先使用 `refactor/gallery-admin` 审阅分支。
+- 未配置服务端 GitHub 上传令牌；现有照片的内容管理可用，新增照片上传暂不可用，仍需实测。
 
-## 数据和保存方式
+## 设置或重置密码
 
-- `gallery_content` 保存一个有顺序的内容文档，结构与现有后台一致：网站配置、分类、照片信息。一次保存通过版本号条件更新，防止覆盖其他编辑。
-- `gallery_photos` / `gallery_categories` 是 SQL 只读视图，便于检查分类、照片位置及精选状态。当前编辑器总是读取并整体保存内容，保留文档结构比为每个字段建立独立接口更容易维护；需要海量查询时可以再拆表。
-- `gallery_media` 登记已存在的图片路径、大小和 SHA-256；保存内容不允许引用未登记文件。
-- `gallery_history` 自动保留最近 20 次修改前的内容，可检查或恢复。D1 免费 Time Travel 当前保留七天；另需定期导出数据库。照片仍需独立备份。
-- 内容文档限制 1 MB。照片不存进数据库；原始 37 张作品及分类、精选、顺序不变。
-- `/api/content` 只返回已展示照片，省去隐藏记录；不缓存且不在云 API 故障时回退旧 JSON，以免重新展示已经隐藏的照片。
+在项目目录的本机 PowerShell 终端运行，输入会隐藏。使用密码管理器生成的长密码，或至少 16 个字符的长口令。不要把密码发到聊天中。
 
-照片和旧内容仍存在于公开 GitHub 仓库及其提交历史里，隐藏不是照片保密机制。不上传 RAW；新上传仅保存浏览器生成的 WebP。
+```powershell
+& '.\tools\set-admin-password.ps1'
+```
 
-## 登录及访问边界
+脚本通过 stdin 将密码交给本机 Node 工具，以随机盐执行 PBKDF2-HMAC-SHA256（600,000 次），再加服务端随机 pepper 的 HMAC。盐、校验结果、pepper 和随机凭据版本组成的 `AUTH_CREDENTIALS` 只写入 Worker secret。不保存明文密码、临时密码文件、命令行参数或仓库变量。
 
-后台单独部署在 Worker 主机，页面和管理 API 同源。设置 Access 自托管应用，覆盖后台 Worker 的全部路径；另为 **`/api/content` 单独配置 Bypass 应用** 供公开网站读取。不要放行整个 `/api/*`，也不要把后台应用的策略设为 Bypass。
+登录时浏览器在用户设备执行同样的 PBKDF2，服务器进行 HMAC 校验，避免昂贵的密码派生消耗 Workers Free 的 CPU。派生结果通过 HTTPS 提交，仍是密码等价的凭据：不得记录或复制到日志，也不要在不可信页面输入密码。公开配置接口只返回盐和迭代次数。密码字段不写入 localStorage 或导出内容。
 
-Access Allow 策略只加入管理员邮箱，建议同时要求身份提供商的 MFA。Worker 还会验证 `Cf-Access-Jwt-Assertion` 的 RSA 签名、issuer、audience、到期时间和邮箱白名单，不能仅伪造邮箱头进入。未配置认证时拒绝管理访问。所有修改还要求同源 Origin 和自定义请求头，跨域预检不能通过。
+重设密码会更换凭据版本，旧会话立即失效，无需邮件找回。设置脚本要求已完成 `wrangler login` 的账号；网站访客没有密码重置入口。
 
-本地 `dev` 环境允许无登录测试，但仅在 `localhost` / `127.0.0.1` 生效；即使误把 `LOCAL_DEV=1` 部署到互联网，也不能绕过认证。
+## 会话与访问边界
+
+- 32 字节随机会话令牌，D1 只存 SHA-256 哈希、凭据版本及到期时间。Cookie 使用 `__Host-`、Secure、HttpOnly、SameSite=Strict；8 小时过期，退出会撤销会话，最多保留 10 个有效会话。
+- 每个 IP 每 15 分钟最多 5 次登录，整体最多 30 次，包含成功尝试。D1 条件更新原子限制并发，IP 用服务端 HMAC 匿名标记，过期计数自动清除。分布式恶意尝试可能短暂阻止管理员登录，下一窗口恢复。
+- 登录及所有管理修改要求同源 Origin 和自定义请求头，跨域预检不放行。页面禁止嵌入框架，登录页面使用仅同源的 CSP。
+- 登录页、登录模块、品牌样式、图标及 `/api/content` 公开；后台、内容管理与上传需要有效会话。未设置密码时拒绝管理访问。
+- 本地 `dev` 免登录仅对 `localhost` / `127.0.0.1` 生效，部署到互联网不能绕过登录。
+
+## 数据和保存
+
+`gallery_content` 保存配置、分类、照片组成的有序文档，通过版本号条件更新防止覆盖其他编辑。`gallery_photos` / `gallery_categories` 是 SQL 只读视图。
+
+`gallery_media` 登记路径、大小、SHA-256，保存内容不能引用未登记文件。`gallery_history` 保留最近 20 次修改前的内容。D1 免费 Time Travel 当前保留七天，还需独立备份照片。内容文档限制 1 MB，照片不存进数据库。
+
+公开 `/api/content` 只返回已展示照片；不缓存，云端故障不回退旧 JSON，避免重新展示隐藏照片。照片及旧内容仍存在于公开 GitHub 仓库和历史，隐藏不是保密机制。不上传 RAW，新上传仅保存浏览器生成的 WebP。
 
 ## 本机测试
-
-网站本机预览继续运行 `npm start`。Cloudflare 的开发工具需要安装开发依赖：
 
 ```sh
 npm ci
@@ -37,53 +51,50 @@ npx wrangler d1 execute mingyao-gallery-dev --local --env dev --config cloudflar
 npm run dev:d1
 ```
 
-后台：`http://127.0.0.1:8787/admin/`。这是隔离的本地 D1 数据库，不写入 `content/gallery.json`。初始化种子只能用于空数据库，重复导入会拒绝覆盖。
+本机 D1 后台为 `http://127.0.0.1:8787/admin/`，隔离于云库，不写入 `content/gallery.json`。初始化种子仅用于空库，重复导入拒绝覆盖；数据库已有数据时只应用新增迁移。网站本机预览继续运行 `npm start`。
 
-默认不提供照片上传凭据。管理已有照片、分类与网站信息不需要 GitHub 令牌。
+## 部署与切换
 
-## 首次部署
-
-1. 注册 Cloudflare 免费账号，运行 `npx wrangler login`，在浏览器授权。
-2. 运行 `npx wrangler d1 create mingyao-gallery --config cloudflare/wrangler.jsonc`。将返回的 database ID 填入配置顶层 `d1_databases`；开发数据库 ID 不需要替换。
-3. 在 Zero Trust 中选择 **Free**，建立 Access 应用/策略。它可能要求支付资料，仍应确认选的是 Free；不要选择按用户付费套餐。
-4. 配置 `ACCESS_TEAM_DOMAIN`（例如 `myteam.cloudflareaccess.com`）、后台应用的 `ACCESS_AUD`、`ADMIN_EMAILS`（逗号分隔）、`SITE_ORIGIN`（前台的精确 origin）。这几项不是密钥。
-5. `npm run prepare:d1`，应用迁移并首次导入：
+当前云库与 Worker 已创建，后续更新只应用新增迁移并部署，不重新导入种子：
 
 ```sh
 npx wrangler d1 migrations apply mingyao-gallery --remote --config cloudflare/wrangler.jsonc
-npx wrangler d1 execute mingyao-gallery --remote --config cloudflare/wrangler.jsonc --file .local/cloudflare/seed.sql
 npm run deploy:d1
 ```
 
-6. 验证未登录用户不能读取管理 API，只有白名单账号可登录，公开 API 不含隐藏照片。完成保存冲突、登录到期、照片上传与生产页面验证后再切换前台。
-7. 在 `content/backend.json` 填入 Worker origin `apiBase` 和 `https://<worker-host>/admin/` 的 `adminURL`。公开前台将读取 D1；现有 `/admin/` 会提供云后台入口。配置文件没有密钥。
+新账号首次部署先 `wrangler login`，创建 D1，替换配置的 account ID 和 database ID；运行 `npm run prepare:d1`，确认空库后导入种子，随后部署并设置密码。
 
-**顺序很重要：先导入与验证云后台，再发布前台切换配置。** 本次不会合并 main 或更改公开域名。
+验证所有者登录、保存、上传和页面读取后，再在 `content/backend.json` 填入：
 
-## 新照片上传
+```json
+{
+  "apiBase": "https://mingyao-gallery-admin.mingyao-photography.workers.dev",
+  "adminURL": "https://mingyao-gallery-admin.mingyao-photography.workers.dev/admin/"
+}
+```
 
-Worker 使用 `GITHUB_TOKEN` secret（仅当前仓库 Contents 读写）代理上传。运行以下交互命令，在终端输入密钥，不写入源码或前端：
+配置不含密钥。公开 API 只允许 `SITE_ORIGIN` 指定的精确前台 origin 通过浏览器跨域读取。发布时 `GITHUB_BRANCH`、`MEDIA_BASE` 同时切至同一分支；目前使用审阅分支，避免写入 main。
+
+## 照片上传
+
+Worker 使用仅当前仓库 Contents 读写权限的 `GITHUB_TOKEN` secret：
 
 ```sh
 npx wrangler secret put GITHUB_TOKEN --config cloudflare/wrangler.jsonc
 ```
 
-每张 WebP 单独上传，每次最多 1 MB，以控制 Workers Free 的请求负载。文件先提交到 `GITHUB_BRANCH`，然后登记 D1；所有文件成功后才保存内容。路径不允许覆盖，重试相同文件可继续，冲突则拒绝。每文件一个提交，上传过程中失败可能留下未引用文件，后续可清理；数据库与 GitHub 不是同一个事务。
+在交互终端输入，不发送到聊天、不写入源码或前端。每次上传单个 WebP，最多 1 MB。文件先提交目标分支，再登记 D1，全部成功后才保存内容。路径不可覆盖，相同文件可重试；每个文件一个提交。失败可能留下未引用文件，GitHub 和 D1 不是同一个事务。
 
-`GITHUB_BRANCH`、`MEDIA_BASE` 应指向同一份照片，默认 main。首次测试应改成已包含当前照片的审阅分支，避免写入生产 main。后台与 D1 模式前台都从配置的 raw GitHub 地址读取照片，新文件无需等待 Pages 重新构建。静态模式仍使用站点相对地址。该方式继续使用 GitHub 的免费托管及其限额，不适合无限量图片分发；有需要时再单独评估图片存储。
+D1 模式从配置的 raw GitHub 地址读取照片，不必等待 Pages 重建；沿用 GitHub 免费托管及限额，不适合无限量分发。上传仍受 GitHub API、Pages 和 Workers CPU 限制，应分批并实测；受限时调整方案，不自动升级付费。
 
 ## 免费额度与备份
 
-当前官方额度：D1 单库 500 MB、账户合计 5 GB，每天读 500 万行/写 10 万行；Workers Free 每天 10 万次请求、每次 10 ms CPU；Access Free 最多 50 用户。超额或耗尽计算预算可能导致请求失败，不代表免费无限资源。本方案不订阅 R2 或 Workers Paid；域名续费另计。
-
-20 次内容历史有界，照片不占 D1；现有内容约 20 KB，数据库需求很小。服务器端 GitHub 上传仍受 API 速率限制及 Pages 发布限制。大量连续上传需分批；若云上实测触及 CPU 限制，应调整上传方式，不能擅自升级付费套餐。
-
-导出云数据库：
+当前官方额度：D1 单库 500 MB、账户合计 5 GB，每天读 500 万行/写 10 万行；Workers Free 每天 10 万次请求、每次 10 ms CPU。超额可能导致请求失败，免费不代表无限。域名续费另计。
 
 ```sh
 npx wrangler d1 export mingyao-gallery --remote --config cloudflare/wrangler.jsonc --output .local/cloudflare/backup.sql
 ```
 
-切换回静态内容时，先从云后台导出最新 JSON、还原到 `content/gallery.json` 并构建；然后清空 `apiBase` / `adminURL`。不要直接回退陈旧快照。
+切回静态模式前，从云后台导出最新 JSON、还原至 `content/gallery.json` 并构建，再清空 `apiBase` / `adminURL`，避免回退陈旧内容。
 
-官方资料：[D1 价格](https://developers.cloudflare.com/d1/platform/pricing/)、[D1 限制](https://developers.cloudflare.com/d1/platform/limits/)、[Workers 价格](https://developers.cloudflare.com/workers/platform/pricing/)、[Access JWT 校验](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/)、[邮箱验证码登录](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/one-time-pin/)、[Access 免费套餐](https://www.cloudflare.com/plans/)。
+官方资料：[D1 价格](https://developers.cloudflare.com/d1/platform/pricing/)、[D1 限制](https://developers.cloudflare.com/d1/platform/limits/)、[Workers 价格](https://developers.cloudflare.com/workers/platform/pricing/)、[OWASP 密码存储](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)。

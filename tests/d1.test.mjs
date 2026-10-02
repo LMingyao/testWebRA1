@@ -8,14 +8,17 @@ import { contentImagePaths } from "../app/shared.js";
 import { seedSQL } from "../tools/prepare-d1.mjs";
 import { createWorker } from "../cloudflare/worker.js";
 import { registerMedia } from "../cloudflare/media.js";
-import { administrator } from "../cloudflare/access.js";
+import { administrator, SESSION_COOKIE } from "../cloudflare/auth.js";
+import { derivePassword, encode64, credentialMAC, PASSWORD_ITERATIONS } from "../app/password.js";
 import { D1Store } from "../admin/d1-store.js";
 
 const schema = await readFile(new URL("../cloudflare/migrations/0001_gallery.sql", import.meta.url), "utf8");
+const authSchema = await readFile(new URL("../cloudflare/migrations/0002_admin_auth.sql", import.meta.url), "utf8");
 function database(t) {
   const sqlite = new DatabaseSync(":memory:");
   t.after(() => sqlite.close());
   sqlite.exec(schema);
+  sqlite.exec(authSchema);
   const data = structuredClone(fixture);
   data.site.about = "Photographer's biography'; SELECT 1; --";
   data.photos[1].published = false;
@@ -54,8 +57,10 @@ test("D1 schema and seed preserve content, SQL quotes, media and ordering; resee
 });
 test("D1 denies unauthenticated admin and assets; public feed omits hidden works and limits CORS", async t => {
   const { request } = setup(t);
-  for (const path of ["/api/admin/session", "/api/admin/content", "/admin/", "/app/shared.js"])
+  for (const path of ["/api/admin/session", "/api/admin/content", "/app/shared.js"])
     assert.equal((await request(path, { auth: false })).status, 401);
+  assert.equal((await request("/admin/", { auth: false })).headers.get("Location"), "/admin/login");
+  assert.equal((await request("/admin/login", { auth: false })).status, 200);
   const publicFeed = await request("/api/content", { auth: false, origin: "https://mingyaophoto.com" });
   assert.equal(publicFeed.headers.get("Access-Control-Allow-Origin"), "https://mingyaophoto.com");
   assert.equal(publicFeed.headers.get("Cache-Control"), "no-store");
@@ -98,33 +103,81 @@ test("D1 rejects invalid and oversized content without changing its version", as
   assert.equal((await (await request("/api/admin/content")).json()).revision, original.revision);
 });
 
-const pair = await crypto.subtle.generateKey({ name: "RSASSA-PKCS1-v1_5", modulusLength: 2048,
-  publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" }, true, ["sign", "verify"]);
-const publicKey = { ...await crypto.subtle.exportKey("jwk", pair.publicKey), kid: "test-key" };
-const encode = value => Buffer.from(JSON.stringify(value)).toString("base64url");
-async function assertion(overrides = {}) {
-  const now = Math.floor(Date.now() / 1000);
-  const body = `${encode({ alg: "RS256", kid: "test-key" })}.${encode({
-    iss: "https://gallery-test.cloudflareaccess.com", aud: ["gallery-aud"], sub: "owner-id",
-    email: "owner@example.com", iat: now - 10, exp: now + 3600, ...overrides,
-  })}`;
-  return body + "." + Buffer.from(await crypto.subtle.sign("RSASSA-PKCS1-v1_5", pair.privateKey, new TextEncoder().encode(body))).toString("base64url");
+const authSalt = encode64(new Uint8Array(16).fill(5));
+const authPepper = encode64(new Uint8Array(32).fill(9));
+const authProof = await derivePassword("test-only-password-long-enough", authSalt);
+const authRecord = { salt: authSalt, pepper: authPepper, iterations: PASSWORD_ITERATIONS,
+  version: crypto.randomUUID(), verifier: await credentialMAC(authPepper, authProof) };
+function authSetup(t) {
+  const { env, sqlite } = setup(t);
+  env.AUTH_CREDENTIALS = JSON.stringify(authRecord);
+  const worker = createWorker();
+  const request = (route, { method = "GET", proof = encode64(authProof), cookie, origin = "https://studio.test",
+    ip = "192.0.2.1", headers = {}, body } = {}) => worker.fetch(new Request(`https://studio.test${route}`, {
+      method, headers: { Origin: origin, "X-Gallery-Request": "admin", "Content-Type": "application/json",
+        "CF-Connecting-IP": ip, ...(cookie ? { Cookie: cookie } : {}), ...headers },
+      body: method === "POST" ? body ?? JSON.stringify({ proof }) : undefined,
+    }), env);
+  return { env, sqlite, request };
 }
-test("Access verifies real signatures and rejects expiry, wrong audience/issuer/email and tampering", async () => {
-  const env = { ACCESS_TEAM_DOMAIN: "gallery-test.cloudflareaccess.com", ACCESS_AUD: "gallery-aud", ADMIN_EMAILS: "owner@example.com" };
-  const certs = async () => new Response(JSON.stringify({ keys: [publicKey] }));
-  const req = token => new Request("https://studio.test/admin/", { headers: { "Cf-Access-Jwt-Assertion": token } });
-  assert.equal(await administrator(req(await assertion()), env, certs), "owner@example.com");
-  for (const overrides of [{ exp: 0 }, { aud: ["other"] }, { iss: "https://evil.test" }, { email: "outsider@example.com" }, { iat: Date.now() / 1000 + 3600 }])
-    assert.equal(await administrator(req(await assertion(overrides)), env, certs), null);
-  const token = await assertion();
-  const parts = token.split(".");
-  parts[1] = encode({ ...JSON.parse(Buffer.from(parts[1], "base64url").toString()), exp: 9999999999 });
-  assert.equal(await administrator(req(parts.join(".")), env, certs), null);
-  assert.equal(await administrator(new Request("https://studio.test/admin/", { headers: { "Cf-Access-Authenticated-User-Email": "owner@example.com" } }), env, certs), null);
-  assert.equal(await administrator(req(token), {}), null);
-  assert.equal(await administrator(req(token), { LOCAL_DEV: "1" }), null);
+test("password login creates protected sessions; logout revokes the token and expiry rejects it", async t => {
+  const { request, sqlite, env } = authSetup(t);
+  const config = await (await request("/api/auth/config")).json();
+  assert.deepEqual(config, { salt: authSalt, iterations: PASSWORD_ITERATIONS });
+  assert.equal((await request("/api/admin/content")).status, 401);
+  const login = await request("/api/auth/login", { method: "POST" });
+  assert.equal(login.status, 200);
+  const setCookie = login.headers.get("Set-Cookie");
+  assert.match(setCookie, /Secure; HttpOnly; SameSite=Strict; Max-Age=28800/);
+  const cookie = setCookie.split(";")[0];
+  assert.equal((await request("/api/admin/content", { cookie })).status, 200);
+  assert.equal(sqlite.prepare("SELECT token_hash FROM admin_sessions").get().token_hash.includes(cookie.split("=")[1]), false);
+  assert.equal(await administrator(new Request("http://studio.test/admin/", { headers: { Cookie: cookie } }), env), null);
+  const changed = cookie.slice(0, -1) + (cookie.endsWith("A") ? "B" : "A");
+  assert.equal((await request("/api/admin/content", { cookie: changed })).status, 401);
+  assert.equal((await request("/api/admin/logout", { method: "POST", cookie, origin: "https://evil.test" })).status, 403);
+  assert.equal((await request("/api/admin/logout", { method: "POST", cookie })).status, 200);
+  assert.equal((await request("/api/admin/content", { cookie })).status, 401);
+  const second = await request("/api/auth/login", { method: "POST" });
+  const secondCookie = second.headers.get("Set-Cookie").split(";")[0];
+  sqlite.prepare("UPDATE admin_sessions SET expires_at = 0").run();
+  assert.equal((await request("/api/admin/content", { cookie: secondCookie })).status, 401);
+});
+test("password rotation and missing secrets reject old sessions; remote dev bypass remains impossible", async t => {
+  const { request, env } = authSetup(t);
+  const login = await request("/api/auth/login", { method: "POST" });
+  const cookie = login.headers.get("Set-Cookie").split(";")[0];
+  env.AUTH_CREDENTIALS = JSON.stringify({ ...authRecord, version: crypto.randomUUID() });
+  assert.equal((await request("/api/admin/content", { cookie })).status, 401);
+  env.AUTH_CREDENTIALS = "";
+  assert.equal((await request("/api/auth/login", { method: "POST" })).status, 503);
+  assert.equal((await request("/api/admin/content", { cookie })).status, 401);
+  assert.equal(await administrator(new Request("https://studio.test/admin/", { headers: { Cookie: cookie } }), { LOCAL_DEV: "1" }), null);
   assert.equal(await administrator(new Request("http://127.0.0.1:8787/admin/"), { LOCAL_DEV: "1" }), "local-development");
+});
+test("password attempts are limited atomically by IP and globally; expired buckets are cleared", async t => {
+  const { request, sqlite } = authSetup(t);
+  const wrong = encode64(new Uint8Array(32));
+  const attempts = await Promise.all(Array.from({ length: 8 }, () => request("/api/auth/login", { method: "POST", proof: wrong })));
+  assert.equal(attempts.filter(result => result.status === 401).length, 5);
+  assert.equal(attempts.filter(result => result.status === 429).length, 3);
+  assert.ok(Number(attempts.find(result => result.status === 429).headers.get("Retry-After")) > 0);
+  for (let i = 0; i < 22; i++) assert.equal((await request("/api/auth/login", { method: "POST", proof: wrong, ip: `192.0.2.${i + 2}` })).status, 401);
+  assert.equal((await request("/api/auth/login", { method: "POST", ip: "192.0.2.100" })).status, 429);
+  assert.equal(sqlite.prepare("SELECT attempts FROM admin_login_limits WHERE bucket LIKE 'global:%'").get().attempts, 30);
+  sqlite.prepare("INSERT INTO admin_login_limits VALUES ('expired', 1, 0)").run();
+  await request("/api/auth/login", { method: "POST" });
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM admin_login_limits WHERE bucket = 'expired'").get().n, 0);
+});
+test("login rejects CSRF, unsupported methods, malformed proofs and excessive request bodies", async t => {
+  const { request } = authSetup(t);
+  assert.equal((await request("/api/auth/login", { method: "POST", origin: "https://evil.test" })).status, 403);
+  assert.equal((await request("/api/auth/login", { method: "POST", headers: { "X-Gallery-Request": "" } })).status, 403);
+  assert.equal((await request("/api/auth/login")).status, 405);
+  assert.equal((await request("/api/auth/login", { method: "POST", proof: "short" })).status, 400);
+  assert.equal((await request("/api/auth/login", { method: "POST", body: "{" })).status, 400);
+  assert.equal((await request("/api/auth/login", { method: "POST", body: "x".repeat(2049) })).status, 413);
+  assert.equal((await request("/api/admin/session", { cookie: `${SESSION_COOKIE}=forged` })).status, 401);
 });
 test("media proxy commits only image bytes, registers successful uploads and retries safely", async t => {
   const { DB, sqlite } = database(t);

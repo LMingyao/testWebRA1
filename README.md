@@ -35,16 +35,16 @@ npm start
 
 ## 线上管理
 
-已选定 [D1 免费云后台方案](docs/d1-plan.md)：Workers + D1 + Access 管理内容与管理员登录，照片保留 GitHub 托管。代码支持云后台读写与上传，`npm run prepare:d1` 生成初始数据和后台部署文件。尚未创建云账号或部署；当前仍使用以下 GitHub/本机方式。Access 使用邮箱验证码或身份提供商登录。
+已部署 [D1 免费云后台方案](docs/d1-plan.md)：Workers + D1 管理内容，自建密码登录，照片保留 GitHub 托管，无需绑定支付方式。云后台在 <https://mingyao-gallery-admin.mingyao-photography.workers.dev/admin/>，等待所有者运行 `tools/set-admin-password.ps1` 私下设置正式密码。云端登录、保存冲突、退出与限速已实测；照片上传仍需配置服务端仓库令牌并验证。前台尚未启用 D1，当前仍使用以下 GitHub/本机方式。
 
-未启用 D1 时，合并后访问 `https://mingyaophoto.com/admin/`，管理后台通过 GitHub API 保存内容与照片。启用 D1 后此页面提供独立云后台入口，由 Workers 验证 Access 登录并保存数据库。
+未启用 D1 时，合并后访问 `https://mingyaophoto.com/admin/`，管理后台通过 GitHub API 保存内容与照片。启用 D1 后此页面提供独立云后台入口，由 Workers 验证管理员会话并保存数据库。
 
 1. 在 GitHub 创建 fine-grained personal access token，仅选择 `LMingyao/testWebRA1`，授权 **Contents: read and write**，设置合理有效期。
 2. 在后台连接窗口输入令牌与要编辑的分支。默认是 `main`；保存到 `main` 会触发现有 Pages 更新。可输入其他已包含重构代码的分支先审阅。
 3. 令牌只保留在当前页面内存，不写入 localStorage、Cookie、项目文件或导出的内容；刷新后需重新连接。
 4. 一次保存生成一个包含图片及内容的 Git 提交。检测到其他编辑改动会拒绝覆盖，提示导出草稿并重新连接。
 
-GitHub 存储模式使用仓库令牌，本机管理不需要令牌。D1 模式通过 Cloudflare Access 登录，令牌放在 Worker secret 中；它与静态模式的 GitHub 登录表单分别使用。
+GitHub 存储模式使用仓库令牌，本机管理不需要令牌。D1 模式使用管理员密码登录；上传令牌仅放在 Worker secret 中，不要求管理员在网页输入 GitHub 令牌。
 
 ## 代码结构
 
@@ -52,8 +52,9 @@ GitHub 存储模式使用仓库令牌，本机管理不需要令牌。D1 模式�
 | ---------------------- | ---------------------------------------------- |
 | `content/gallery.json` | 静态模式内容来源及 D1 首次导入数据 |
 | `content/backend.json` | 静态/D1 内容读取切换及云后台入口（不含密钥） |
-| `cloudflare/`          | D1 迁移、Workers API、Access 校验和上传代理 |
+| `cloudflare/`          | D1 迁移、Workers API、密码会话与上传代理 |
 | `tools/prepare-d1.mjs` | 生成空库种子、媒体登记与后台部署资源 |
+| `tools/set-admin-password.ps1` | 隐藏输入，设置或重置云后台密码 |
 | `app/site.js`          | 公共导航、页脚、个人介绍与联系页面             |
 | `app/gallery.js`       | 统一作品序列、手动横幅浏览与全屏查看           |
 | `app/layout.js`        | 保留原比例与顺序的自动分行算法                 |
