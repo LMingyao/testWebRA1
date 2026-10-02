@@ -35,7 +35,7 @@ npm start
 
 ## 线上管理
 
-已部署 [D1 免费云后台方案](docs/d1-plan.md)：Workers + D1 管理内容，自建密码登录，照片保留 GitHub 托管，无需绑定支付方式。云后台在 <https://mingyao-gallery-admin.mingyao-photography.workers.dev/admin/>，等待所有者运行 `tools/set-admin-password.ps1` 私下设置正式密码。云端登录、保存冲突、退出与限速已实测；照片上传仍需配置服务端仓库令牌并验证。前台尚未启用 D1，当前仍使用以下 GitHub/本机方式。
+已部署 [D1 免费云后台方案](docs/d1-plan.md)：Workers + D1 管理内容，自建密码登录，照片保留 GitHub 托管，无需绑定支付方式。云后台在 <https://mingyao-gallery-admin.mingyao-photography.workers.dev/admin/>，所有者已设置正式密码并成功登录。云端登录、保存冲突、退出与限速已实测；照片上传仍需配置服务端仓库令牌并验证。前台尚未启用 D1，当前仍使用以下 GitHub/本机方式。
 
 未启用 D1 时，合并后访问 `https://mingyaophoto.com/admin/`，管理后台通过 GitHub API 保存内容与照片。启用 D1 后此页面提供独立云后台入口，由 Workers 验证管理员会话并保存数据库。
 
