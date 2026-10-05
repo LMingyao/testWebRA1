@@ -1,3 +1,5 @@
+import {validateSourceDimensions} from "../app/media-policy.js";
+
 // Inspect bounded marker segments before decoding; EXIF rotation affects dimensions.
 function exifOrientation(bytes) {
   if (bytes.length < 14 || new TextDecoder().decode(bytes.subarray(0, 6)) !== "Exif\0\0") return 1;
@@ -47,7 +49,6 @@ export async function jpegSource(file) {
     offset += 2 + length;
   }
   if (!dimensions || !dimensions.width || !dimensions.height) throw new Error("无法读取 JPG 尺寸，请重新导出照片。");
-  if (dimensions.width > 30000 || dimensions.height > 30000 || dimensions.width * dimensions.height > 100000000)
-    throw new Error("原图超过 1 亿像素或最长边 30000 像素，请先缩小原图尺寸。");
+  validateSourceDimensions(dimensions);
   return orientation >= 5 ? {width: dimensions.height, height: dimensions.width} : dimensions;
 }

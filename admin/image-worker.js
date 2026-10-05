@@ -1,5 +1,5 @@
 import {createLosslessEncoder} from "./webp-encoder.js";
-import {validateSourceFile, renditionSizes, fitDimensions, DISPLAY_FILE_LIMIT} from "../app/media-policy.js";
+import {validateSourceFile, validateSourceDimensions, renditionSizes, fitDimensions, DISPLAY_FILE_LIMIT} from "../app/media-policy.js";
 import {jpegSource} from "./jpeg-source.js";
 
 const base64 = bytes => {
@@ -21,8 +21,7 @@ export async function prepareRenditions(file, category, placement) {
   } catch { throw new Error("无法解码照片，请重新导出为 sRGB JPG。"); }
   try {
     source ||= {width: bitmap.width, height: bitmap.height};
-    if (source.width > 30000 || source.height > 30000 || source.width * source.height > 100000000)
-      throw new Error("原图超过 1 亿像素或最长边 30000 像素，请先缩小原图尺寸。");
+    validateSourceDimensions(source);
     const encode = await createLosslessEncoder();
     const id = "photo-" + crypto.randomUUID(), uploads = [], renditions = [], paths = {}, seen = new Map();
     let preview;
@@ -58,5 +57,8 @@ export async function prepareRenditions(file, category, placement) {
 
 self.onmessage = async ({data}) => {
   try { self.postMessage(await prepareRenditions(data.file, data.category, data.placement)); }
-  catch (error) { self.postMessage({error: error.message || "图片处理失败。"}); }
+  catch (error) {
+    const message = error.message || "图片处理失败。";
+    self.postMessage({error: message.startsWith(data.file.name + "：") ? message : `${data.file.name}：${message}`});
+  }
 };

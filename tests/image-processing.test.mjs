@@ -30,9 +30,15 @@ test("JPEG preflight honors EXIF rotation and rejects unsupported precision befo
   assert.deepEqual(await jpegSource(jpeg({orientation:6})), {width:4000,height:6000});
   await assert.rejects(()=>jpegSource(jpeg({precision:12})), /8 位/);
   await assert.rejects(()=>jpegSource(jpeg({components:4})), /CMYK/);
-  await assert.rejects(()=>jpegSource(jpeg({width:16000,height:16000})), /1 亿/);
+  await assert.rejects(()=>jpegSource(jpeg({width:16000,height:16000})), /1.2 亿/);
   await assert.rejects(()=>jpegSource(new Blob(['not a JPEG'])), /内容无效/);
   const valid=jpeg(); await assert.rejects(()=>jpegSource(valid.slice(0,12)), /不完整/);
+});
+test("large photographic JPGs fit the source limit while larger images remain bounded", async () => {
+  assert.deepEqual(await jpegSource(jpeg({width:11656,height:8742})), {width:11656,height:8742});
+  assert.deepEqual(await jpegSource(jpeg({width:12000,height:10000})), {width:12000,height:10000});
+  await assert.rejects(()=>jpegSource(jpeg({width:12000,height:10001})), /12000 × 10001.*1.2 亿/);
+  await assert.rejects(()=>jpegSource(jpeg({width:30001,height:10})), /30000 像素/);
 });
 test("gallery and panorama sizes keep aspect ratio, do not crop or upscale tiny images", () => {
   assert.deepEqual(renditionSizes('gallery'), [640,1280,2048,3072]);
