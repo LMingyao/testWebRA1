@@ -456,6 +456,46 @@
       "placement": "gallery",
       "presentation": "auto",
       "group": ""
+    },
+    {
+      "id": "photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150",
+      "title": "C GSQY 1 3",
+      "alt": "C GSQY 1 3",
+      "category": "aviation",
+      "placement": "gallery",
+      "image": "media/photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150-3072.webp",
+      "thumbnail": "media/photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150-640.webp",
+      "display": "media/photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150-1280.webp",
+      "large": "media/photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150-3072.webp",
+      "width": 2839,
+      "height": 1893,
+      "renditions": [
+        {
+          "path": "media/photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150-2048.webp",
+          "width": 2048,
+          "height": 1366
+        },
+        {
+          "path": "media/photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150-3072.webp",
+          "width": 2839,
+          "height": 1893
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false,
+      "presentation": "auto",
+      "group": ""
     }
   ],
   "collections": {
