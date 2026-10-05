@@ -24,4 +24,4 @@ jobs:
       - name: Validate Worker bundle without deploying
         run: npx wrangler deploy --dry-run --config cloudflare/wrangler.jsonc
       - name: Check generated pages match the template
-        run: git diff --exit-code -- index.html ptr.html about_me.html contact.html aviation.html landscape.html wildlife.html motorsport.html sitemap.xml robots.txt admin/preview.html
+        run: git diff --exit-code -- index.html selected.html ptr.html about_me.html contact.html aviation.html landscape.html wildlife.html motorsport.html sitemap.xml robots.txt admin/preview.html

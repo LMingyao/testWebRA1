@@ -27,30 +27,36 @@
           ><span class="logo-title">Photography</span></span
         ></a
       >
+      <button id="sidebar-tools-toggle" aria-expanded="false" aria-controls="sidebar-tools history maintenance">更多 <span aria-hidden="true">⌄</span></button>
       <nav aria-label="管理页面">
-        <button data-view="photos" aria-current="page">▧ 照片库</button
-        ><button data-view="categories">◫ 分类管理</button
-        ><button data-view="settings">↗ 网站内容</button>
+        <p class="nav-label">作品管理</p>
+        <button data-view="photos" aria-current="page"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m3 15 5-5 6 6 3-3 4 4"/><circle cx="16" cy="8" r="1.5"/></svg>照片库</button>
+        <button data-view="categories"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="7" height="16" rx="2"/><rect x="14" y="4" width="7" height="10" rx="2"/><path d="M14 18h7"/></svg>分类管理</button>
+        <button data-view="settings"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v18M3 8h18M3 16h18"/><circle cx="8" cy="8" r="2"/><circle cx="16" cy="16" r="2"/></svg>网站内容</button>
+        <p class="nav-label system">网站管理</p>
+        <button id="history" data-view="history"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10a9 9 0 1 1 1 7M3 4v6h6M12 7v5l3 2"/></svg>修改记录</button>
+        <button id="maintenance" data-view="maintenance"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 6 4 4M3 21l8-8M15 3a6 6 0 0 0-7 8l-5 5a3 3 0 0 0 5 5l5-5a6 6 0 0 0 8-7l-4 4-4-4 4-4Z"/></svg>运行维护</button>
       </nav>
-      <div class="sidebar-bottom">
+      <div class="sidebar-bottom" id="sidebar-tools" data-open="false">
         <a href="../index.html" target="_blank" rel="noopener">查看网站 ↗</a>
         <p id="connection">正在连接…</p>
         <button id="disconnect" hidden>断开连接</button>
+        <div class="backup-tools"><button id="export"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg>导出备份</button><button id="import-backup"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 16V4m-4 4 4-4 4 4M4 16v4h16v-4"/></svg>导入备份</button></div>
       </div>
     </aside>
     <div class="workspace">
       <header class="toolbar">
         <div>
-          <span class="eyebrow">PHOTOGRAPHY / STUDIO</span>
-          <h1 id="view-title">照片库</h1>
+          <span class="eyebrow">摄影作品管理</span>
+          <h1 id="view-title">照片库</h1><p class="view-description" id="view-description">整理作品、选择精选，并安排展示顺序。</p>
         </div>
         <div class="toolbar-actions">
           <span id="dirty-state">已保存</span
           ><button id="preview-toggle" class="secondary" aria-expanded="false" aria-controls="draft-preview" disabled>作品预览</button
-          ><button id="export" class="secondary">导出备份</button
           ><button id="save" class="primary" disabled>保存更改</button>
         </div>
       </header>
+      <div id="draft-recovery" class="panel" hidden></div>
       <div id="notification" role="status" aria-live="polite"></div>
       <div id="save-progress" hidden><p id="progress-label" role="status"></p><progress id="progress-bar" aria-label="处理进度"></progress></div>
       <div class="studio-columns"><main id="editor"><p class="empty">正在打开内容管理…</p></main>
@@ -71,8 +77,8 @@
           <h2>编辑照片</h2>
           <button type="button" data-close aria-label="关闭">×</button>
         </header>
-        <img id="edit-preview" alt="照片预览" /><label
-          >标题（仅用于后台管理）<input
+        <div class="photo-editor-layout"><aside class="photo-preview-panel"><img id="edit-preview" alt="照片预览" /><p class="hint">完整画面预览。此处编辑会先进入草稿，保存更改后才上线。</p></aside><div class="photo-fields"><label
+          >照片标题<input
             name="title"
             required
             maxlength="180" /></label
@@ -94,14 +100,14 @@
           <label>画廊排版<select name="presentation"><option value="auto">自动组合</option><option value="solo">独立一行</option></select></label>
           <label>编排组名（可选）<input name="group" maxlength="80" placeholder="例如：秋日人像" /></label>
         </div>
-        <p class="hint">相邻、同组名的照片优先一起排版，每行最多三张；手机自动分行。独立一行优先于分组。顶部轮播不使用这些设置。</p>
+        <p class="hint">相邻同组照片一起编排；独立一行优先于分组。顶部轮播不使用这些设置。</p>
         <div class="check-row">
           <label><input type="checkbox" name="published" />在网站展示</label
           ><label><input type="checkbox" name="featured" />轮播首图</label>
           <label><input type="checkbox" name="homeSelected" />加入精选集合</label>
         </div>
-        <p class="hint">精选集合展示勾选“加入精选集合”的已展示照片；可见题材分类展示该分类所有已展示照片。默认进入哪个集合，可在分类管理设置。</p>
-        <footer>
+        <p class="hint">精选集合只展示勾选的已发布照片。分类页面展示该分类全部已发布作品。</p>
+        </div></div><footer>
           <button type="button" id="delete-photo" class="danger">
             从收藏移除</button
           ><button type="submit" class="primary">应用编辑</button>
@@ -140,6 +146,7 @@
         <footer><button type="submit" class="primary">连接仓库</button></footer>
       </form>
     </dialog>
+    <input id="backup-input" type="file" accept="application/json" hidden />
     <input
       id="upload-input"
       type="file"

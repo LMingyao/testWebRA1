@@ -8,12 +8,14 @@ export class D1Store {
     this.canUpload = session.canUpload;
   }
   async request(endpoint, options = {}) {
-    const response = await fetch(`/api/admin/${endpoint}`, { ...options, cache: "no-store",
-      headers: { "X-Gallery-Request": "admin", ...options.headers } });
+    let response;
+    try { response = await fetch(`/api/admin/${endpoint}`, { ...options, signal: AbortSignal.timeout(endpoint === "content" || endpoint === "publish" || endpoint === "media-batch" ? 120000 : 30000), cache: "no-store",
+      headers: { "X-Gallery-Request": "admin", ...options.headers } }); }
+    catch (error) { throw new Error(error.name === 'TimeoutError' ? '请求超时。保存结果尚未确认，请保留草稿并检查云端版本后重试。' : '连接失败，请检查网络并保留草稿。'); }
     if (response.status === 401 || response.redirected)
       throw new Error("登录已过期，请导出草稿后重新登录。");
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "后台请求失败。");
+    if (!response.ok) { const error = new Error(result.error || "后台请求失败。"); error.status = response.status; throw error; }
     return result;
   }
   load() { return this.request("content"); }
@@ -25,18 +27,27 @@ export class D1Store {
     // Check the version before media commits as well as in the final atomic D1 save.
     if ((await this.load()).revision !== revision)
       throw new Error("内容已更新，请导出草稿后重新连接。");
-    const decoded = uploads.map(upload => {
-      const bytes = Uint8Array.from(atob(upload.base64), c => c.charCodeAt(0));
-      if (bytes.length > 1024 * 1024) throw new Error("云后台每个 WebP 文件最多 1 MB，请先缩小照片或分批处理。");
-      return { path: upload.path, bytes };
-    });
+    const groups = new Map();
+    for (const upload of uploads) {
+      const id = upload.path.replace(/-(640|1280|1920)\.webp$/, '');
+      if (!groups.has(id)) groups.set(id, []);
+      if (atob(upload.base64).length > 1024 * 1024) throw new Error('图片超过上传限制，请重新导入。');
+      groups.get(id).push(upload);
+    }
     let completed = 0;
-    if (decoded.length) onProgress({ stage: "upload", completed, total: decoded.length });
-    for (const upload of decoded) {
-      await this.request("media", { method: "POST", headers: {
-        "Content-Type": "image/webp", "X-Media-Path": upload.path,
-      }, body: upload.bytes });
-      onProgress({ stage: "upload", completed: ++completed, total: decoded.length });
+    if (uploads.length) onProgress({stage:'upload',completed,total:uploads.length});
+    for (const batch of groups.values()) {
+      for (let attempt=0;;attempt++) {
+        try {
+          await this.request('media-batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uploads:batch})});
+          break;
+        } catch (error) {
+          if (attempt >= 2 || [400,401,403,409,413,415].includes(error.status) || /登录/.test(error.message)) throw error;
+          onProgress({stage:'upload',completed,total:uploads.length,retry:attempt+1});
+          await new Promise(resolve=>setTimeout(resolve,400*(attempt+1)));
+        }
+      }
+      onProgress({stage:'upload',completed:completed+=batch.length,total:uploads.length});
     }
     onProgress({ stage: "save" });
     const result = await this.request("content", { method: "PUT", headers: { "Content-Type": "application/json" },

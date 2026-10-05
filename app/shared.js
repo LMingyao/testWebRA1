@@ -1,4 +1,5 @@
 import { collections } from "./config.js";
+import { orderedPhotos, photoComposition } from "./sequence.js";
 export const escapeHTML = (value) =>
   String(value ?? "").replace(
     /[&<>"']/g,
@@ -16,6 +17,7 @@ export const currentYear = () =>
 export function contentImagePaths(data) {
   return new Set([
     data.site.aboutImage,
+    ...(data.site.shareImage ? [data.site.shareImage] : []),
     ...data.photos.flatMap((photo) =>
       [photo.image, photo.thumbnail, photo.display, photo.large].filter(Boolean),
     ),
@@ -25,7 +27,7 @@ export function contentImagePaths(data) {
 export function workPhotos(data, category = "all") {
   if (!collections(data).some(item => item.id === category)) return [];
   const visible = new Set(data.categories.filter(item => item.visible !== false).map(item => item.id));
-  const photos = data.photos.filter(
+  const photos = orderedPhotos(data, category).map(p => ({...p, ...photoComposition(data, category, p)})).filter(
     (photo) =>
       photo.published && visible.has(photo.category) && (category === "all" ? photo.homeSelected === true : photo.category === category),
   );
@@ -101,6 +103,7 @@ export function validateContent(data) {
     if (typeof data.site[key] !== "string" || data.site[key].length > 12000)
       throw new Error(`Invalid site field: ${key}`);
   }
+  if (data.site.shareImage !== undefined && data.site.shareImage !== "" && !safeImage(data.site.shareImage)) throw new Error("Invalid sharing image.");
   const gear = data.site.gear;
   if (!(typeof gear === "string" && gear.length <= 12000) &&
       !(Array.isArray(gear) && gear.length <= 100 && gear.every(item => typeof item === "string" && item.trim() && item.length <= 200)))
@@ -157,6 +160,16 @@ export function validateContent(data) {
     if (config.default !== undefined && (!ids.has(config.default) || !collections(data).some(item => item.id === config.default)))
       throw new Error("Choose a visible collection as the default entry.");
     if (config.defaultView !== undefined && !["multi", "single"].includes(config.defaultView)) throw new Error("Invalid default view.");
+    if (config.photoOrder !== undefined && (!config.photoOrder || Array.isArray(config.photoOrder) ||
+        typeof config.photoOrder !== "object" || Object.entries(config.photoOrder).some(([id, order]) =>
+          !ids.has(id) || !Array.isArray(order) || order.length > data.photos.length ||
+          new Set(order).size !== order.length || order.some(photoId => !data.photos.some(p => p.id === photoId)))))
+      throw new Error("Invalid collection photo order.");
+    if (config.photoLayout !== undefined && (!config.photoLayout || typeof config.photoLayout !== "object" || Array.isArray(config.photoLayout) ||
+        Object.entries(config.photoLayout).some(([id, layout]) => !ids.has(id) || !layout || typeof layout !== "object" || Array.isArray(layout) ||
+          Object.entries(layout).some(([photoId, value]) => !data.photos.some(p => p.id === photoId) || !value ||
+            !["auto", "solo"].includes(value.presentation) || typeof value.group !== "string" || value.group.length > 80 || Object.keys(value).some(key => !["presentation","group"].includes(key))))))
+      throw new Error("Invalid collection composition.");
   }
   if (!collections(data).length) throw new Error("Keep at least one collection visible.");
   const ids = new Set();

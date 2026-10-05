@@ -4,7 +4,11 @@ export function photoRows(photos, { width = 1320, gap = 24, targetHeight = 350, 
   if (!photos.length) return [];
   const ratios = photos.map(photo => photo.width / photo.height);
   if (width <= 660)
-    return photos.map((photo, i) => ({ photos: [photo], width, height: width / ratios[i] }));
+    return sectionRows(photos.map((photo, i) => {
+      const naturalHeight = width / ratios[i];
+      const height = photo.presentation === 'solo' ? Math.min(naturalHeight, maxHeight) : naturalHeight;
+      return {photos:[photo], width:height * ratios[i], height};
+    }));
   const options = Array.from({ length: photos.length }, () => []);
   for (let start = photos.length - 1; start >= 0; start--) {
     let ratio = 0;
@@ -55,5 +59,13 @@ export function photoRows(photos, { width = 1320, gap = 24, targetHeight = 350, 
     rows.push({ photos: photos.slice(choice.start, choice.end + 1), width: choice.width, height: choice.height });
     choice = choice.next;
   }
-  return rows;
+  return sectionRows(rows);
+}
+
+function sectionRows(rows) {
+  return rows.map((row,index) => {
+    const previous = rows[index - 1]?.photos.at(-1), first = row.photos[0];
+    const group = first.group?.trim() || '', previousGroup = previous?.group?.trim() || '';
+    return {...row, sectionStart:Boolean(previous && ((group !== previousGroup && (group || previousGroup)) || first.presentation === 'solo' || previous.presentation === 'solo'))};
+  });
 }

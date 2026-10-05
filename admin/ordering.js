@@ -1,6 +1,7 @@
 import { reorderPhoto } from "../app/shared.js";
+import { reorderVisible } from "../app/sequence.js";
 
-export function bindPhotoOrdering(editor, { getData, isBusy, onChange }) {
+export function bindPhotoOrdering(editor, { getData, isBusy, onChange, getIds, getCollection }) {
   let drag;
   const clear = () => {
     drag = undefined;
@@ -33,7 +34,10 @@ export function bindPhotoOrdering(editor, { getData, isBusy, onChange }) {
     const card = drag.active && !isBusy() ? targetAt(event) : undefined;
     if (card) {
       const bounds = card.getBoundingClientRect();
-      if (reorderPhoto(getData(), drag.id, card.dataset.card, event.clientY > bounds.top + bounds.height / 2)) onChange();
+      const after = event.clientY > bounds.top + bounds.height / 2;
+      const changed = getIds ? reorderVisible(getData(), getIds(), drag.id, card.dataset.card, after, getCollection?.())
+        : reorderPhoto(getData(), drag.id, card.dataset.card, after);
+      if (changed) onChange();
     }
     clear();
   });

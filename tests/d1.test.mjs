@@ -1,3 +1,4 @@
+import { gitFixture } from "./github-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
@@ -7,7 +8,8 @@ import { fixture } from "./fixture.mjs";
 import { contentImagePaths } from "../app/shared.js";
 import { seedSQL } from "../tools/prepare-d1.mjs";
 import { createWorker } from "../cloudflare/worker.js";
-import { registerMedia } from "../cloudflare/media.js";
+import { registerMedia, registerMediaBatch } from "../cloudflare/media.js";
+import { health, mediaReport, publish } from "../cloudflare/maintenance.js";
 import { administrator, SESSION_COOKIE } from "../cloudflare/auth.js";
 import { derivePassword, encode64, credentialMAC, PASSWORD_ITERATIONS } from "../app/password.js";
 import { D1Store } from "../admin/d1-store.js";
@@ -16,11 +18,13 @@ import { renderEditorial } from "../app/editorial.js";
 
 const schema = await readFile(new URL("../cloudflare/migrations/0001_gallery.sql", import.meta.url), "utf8");
 const authSchema = await readFile(new URL("../cloudflare/migrations/0002_admin_auth.sql", import.meta.url), "utf8");
+const awaitedPublicationSchema = await readFile(new URL("../cloudflare/migrations/0003_publication.sql", import.meta.url), "utf8");
 function database(t) {
   const sqlite = new DatabaseSync(":memory:");
   t.after(() => sqlite.close());
   sqlite.exec(schema);
   sqlite.exec(authSchema);
+  sqlite.exec(awaitedPublicationSchema);
   const data = structuredClone(fixture);
   data.site.about = "Photographer's biography'; SELECT 1; --";
   data.photos[1].published = false;
@@ -59,14 +63,15 @@ test("D1 schema and seed preserve content, SQL quotes, media and ordering; resee
 });
 test("D1 denies unauthenticated admin and assets; public feed omits hidden works and limits CORS", async t => {
   const { request } = setup(t);
-  for (const path of ["/api/admin/session", "/api/admin/content", "/app/shared.js"])
+  for (const path of ["/api/admin/session", "/api/admin/content", "/app/shared.js", "/admin/ui.js", "/admin/editor-views.js", "/admin/upload-dropzone.js", "/admin/admin.css"])
     assert.equal((await request(path, { auth: false })).status, 401);
   assert.equal((await request("/admin/", { auth: false })).headers.get("Location"), "/admin/login");
   assert.equal((await request("/admin/login", { auth: false })).status, 200);
   assert.equal((await request("/app/design.css", { auth: false })).status, 200);
+  assert.equal((await request("/admin/studio-tokens.css", { auth: false })).status, 200);
   const publicFeed = await request("/api/content", { auth: false, origin: "https://mingyaophoto.com" });
   assert.equal(publicFeed.headers.get("Access-Control-Allow-Origin"), "https://mingyaophoto.com");
-  assert.equal(publicFeed.headers.get("Cache-Control"), "no-store");
+  assert.equal(publicFeed.headers.get("Cache-Control"), "no-cache, must-revalidate");
   assert.deepEqual((await publicFeed.json()).photos.map(photo => photo.id), ["photo-one"]);
   assert.equal((await request("/api/content", { auth: false, origin: "https://evil.test" })).headers.get("Access-Control-Allow-Origin"), null);
   assert.equal((await request("/api/admin/content")).status, 200);
@@ -280,7 +285,7 @@ test("D1 adapter prechecks revisions, uploads sequentially and sends no token or
   calls.length = 0;
   const result = await store.save(fixture, "current", [{ path: "media/photo.webp", base64: "YWJj" }]);
   assert.equal(result.revision, "next");
-  assert.deepEqual(calls.map(call => call.endpoint), ["content", "media", "content"]);
+  assert.deepEqual(calls.map(call => call.endpoint), ["content", "media-batch", "content"]);
   assert.deepEqual(JSON.parse(calls[2].options.body), { data: fixture, revision: "current" });
   assert.equal(store.image("media/photo.webp"), "https://mingyaophoto.com/media/photo.webp");
 });
@@ -310,4 +315,109 @@ test("upload progress counts only completed versions and never reports success o
   events.length = 0;
   await assert.rejects(() => store.save(fixture, "old", [], event => events.push(event)), /内容已更新/);
   assert.deepEqual(events.map(e => e.stage), ["save"]);
+});
+
+
+test("history, backup and unused-media reports are protected and preserve current and historical references", async t => {
+  const {request,data,sqlite}=setup(t);
+  for(const route of ["history","backup","media-report","health"])
+    assert.equal((await request(`/api/admin/${route}`,{auth:false})).status,401);
+  const loaded=await (await request('/api/admin/content')).json();
+  data.site.email='second@example.com';
+  await request('/api/admin/content',{method:'PUT',data,revision:loaded.revision});
+  const history=await (await request('/api/admin/history')).json();
+  assert.equal(history.entries.length,1);
+  const older=await (await request(`/api/admin/history/${history.entries[0].sequence}`)).json();
+  assert.equal(older.data.site.email,fixture.site.email);
+  sqlite.prepare('INSERT INTO gallery_media(path,bytes) VALUES(?,?)').run('media/unused.webp',100);
+  const report=await (await request('/api/admin/media-report')).json();
+  assert.deepEqual(report.unused.map(p=>p.path),['media/unused.webp']);
+  const backup=await (await request('/api/admin/backup')).json();
+  assert.equal(backup.history.length,1);
+  assert.equal(backup.data.site.email,'second@example.com');
+  assert.equal(backup.media.length,contentImagePaths(data).size+1);
+  assert.equal((await request('/api/admin/history/999')).status,404);
+});
+
+test("conditional public reads revalidate after another save and never retain hidden photographs", async t=>{
+  const {request,data}=setup(t);
+  const first=await request('/api/content',{auth:false});const etag=first.headers.get('ETag');
+  assert.equal((await request('/api/content',{auth:false,headers:{'If-None-Match':etag}})).status,304);
+  const current=await (await request('/api/admin/content')).json();
+  data.photos.forEach(p=>p.published=false);
+  await request('/api/admin/content',{method:'PUT',data,revision:current.revision});
+  const next=await request('/api/content',{auth:false,headers:{'If-None-Match':etag}});
+  assert.equal(next.status,200);assert.notEqual(next.headers.get('ETag'),etag);assert.deepEqual((await next.json()).photos,[]);
+});
+
+test("publication records partial failure, retries current content and never sends hidden works to GitHub", async t=>{
+  const {DB,data,sqlite}=database(t), git=gitFixture();
+  const template=await readFile(new URL('../tools/page.html',import.meta.url),'utf8');
+  const env={DB,SITE_ORIGIN:'https://mingyaophoto.com',GITHUB_REPO:'LMingyao/testWebRA1',GITHUB_BRANCH:'main',GITHUB_TOKEN:'fixture-only',MEDIA_BASE:'https://mingyaophoto.com/',ASSETS:{fetch:async()=>new Response(template)}};
+  const worker=createWorker({fetcher:git.fetcher,authenticate:async()=> 'owner'});
+  const request=()=>worker.fetch(new Request('https://studio.test/api/admin/publish',{method:'POST',headers:{Origin:'https://studio.test','X-Gallery-Request':'admin'}}),env);
+  git.failNext(403);
+  assert.equal((await (await request()).json()).status,'failed');
+  assert.equal(sqlite.prepare('SELECT status FROM gallery_publication').get().status,'failed');
+  assert.equal((await (await request()).json()).status,'submitted');
+  const published=JSON.parse(git.files.get('content/gallery.json').bytes.toString());
+  assert.deepEqual(published.photos.map(p=>p.id),['photo-one']);
+  assert.match(git.files.get('index.html').bytes.toString(),/data-prerendered/);
+  const commits=git.commits.size;await request();assert.equal(git.commits.size,commits);
+  const current=sqlite.prepare('SELECT revision FROM gallery_content').get();
+  data.site.email='third@example.com';data.photos[0].published=false;
+  sqlite.prepare('UPDATE gallery_content SET document=?,revision=? WHERE revision=?').run(JSON.stringify(data),'updated',current.revision);
+  assert.equal((await (await request()).json()).status,'submitted');
+  assert.match(git.files.get('contact.html').bytes.toString(),/third@example.com/);
+  assert.doesNotMatch(git.files.get('index.html').bytes.toString(),/alt="A plane in flight"/);
+});
+
+test("a photograph's three renditions use one commit, and replay after a lost response creates no extra commits",async t=>{
+  const {DB}=database(t),git=gitFixture();
+  const env={DB,GITHUB_TOKEN:'fixture-only',GITHUB_REPO:'LMingyao/testWebRA1',GITHUB_BRANCH:'main'};
+  const worker=createWorker({fetcher:git.fetcher,authenticate:async()=> 'owner'});
+  const bytes=Buffer.alloc(24);bytes.write('RIFF');bytes.write('WEBP',8);bytes.write('VP8 ',12);
+  const uploads=[640,1280,1920].map(size=>({path:`media/photo-12345678-1234-1234-1234-123456789abc-${size}.webp`,base64:bytes.toString('base64')}));
+  const request=()=>worker.fetch(new Request('https://studio.test/api/admin/media-batch',{method:'POST',headers:{Origin:'https://studio.test','X-Gallery-Request':'admin','Content-Type':'application/json'},body:JSON.stringify({uploads})}),env);
+  assert.equal((await request()).status,200);assert.equal(git.commits.size,2);
+  assert.equal((await request()).status,200);assert.equal(git.commits.size,2);
+  const item=uploads[0];item.base64=Buffer.concat([bytes,Buffer.from('different')]).toString('base64');
+  assert.equal((await request()).status,409);
+});
+
+test('service status distinguishes a submitted commit from a deployed revision and scans Git-only media',async t=>{
+  const {DB,sqlite}=database(t),git=gitFixture();
+  const revision=sqlite.prepare('SELECT revision FROM gallery_content').get().revision;
+  sqlite.prepare('INSERT INTO gallery_publication(id,revision,status,message) VALUES(1,?,?,?)').run(revision,'submitted','Waiting');
+  const orphan='media/photo-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-640.webp';
+  git.files.set(orphan,{bytes:Buffer.from('orphan'),sha:'fixture'});
+  const env={DB,GITHUB_TOKEN:'fixture-only',GITHUB_REPO:'LMingyao/testWebRA1',GITHUB_BRANCH:'main',SITE_ORIGIN:'https://site.test',MEDIA_BASE:'https://media.test/'};
+  let liveRevision='old';
+  const fetcher=(url,options)=> new URL(url).hostname==='api.github.com' ? git.fetcher(url,options)
+    : Promise.resolve(new URL(url).pathname.endsWith('publication.json') ? Response.json({revision:liveRevision}) : new Response(null));
+  assert.equal((await health(env,fetcher)).publication.status,'submitted');
+  liveRevision=revision;
+  const state=await health(env,fetcher);assert.equal(state.publication.status,'published');assert.equal(state.mediaPreview.ok,true);
+  const report=await mediaReport(env,fetcher);assert.equal(report.repositoryChecked,true);
+  assert.ok(report.unused.some(file=>file.path===orphan&&file.unregistered));
+});
+
+test('publication refuses an expired lease before advancing the branch',async t=>{
+  const {DB,sqlite}=database(t),git=gitFixture(), template=await readFile(new URL('../tools/page.html',import.meta.url),'utf8');
+  const env={DB,GITHUB_TOKEN:'fixture-only',GITHUB_REPO:'LMingyao/testWebRA1',GITHUB_BRANCH:'main',ASSETS:{fetch:async()=>new Response(template)}};
+  const before=git.commits.size;
+  const fetcher=async(url,options)=>{if(options.method==='POST'&&new URL(url).pathname.endsWith('/git/commits')) sqlite.prepare('UPDATE gallery_publish_lock SET expires_at=0').run();return git.fetcher(url,options);};
+  const result=await publish(env,fetcher);
+  assert.equal(result.status,'pending');assert.equal(git.files.size,0);
+  assert.equal(sqlite.prepare('SELECT status FROM gallery_publication').get().status,'pending');
+  assert.ok(git.commits.size>before); // An unreachable commit is safe; the public branch is unchanged.
+});
+
+test('malformed media batches fail before any repository or database mutation',async t=>{
+  const {DB,sqlite}=database(t),before=sqlite.prepare('SELECT count(*) AS n FROM gallery_media').get().n;
+  for(const payload of [null,{uploads:[null]},{uploads:[{path:7}]},{uploads:[]}]) {
+    const request=new Request('https://studio.test/api/admin/media-batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    await assert.rejects(()=>registerMediaBatch(request,{DB},()=>{throw new Error('Must not access GitHub');}),error=>error.status===400);
+  }
+  assert.equal(sqlite.prepare('SELECT count(*) AS n FROM gallery_media').get().n,before);
 });

@@ -9,14 +9,15 @@ The authenticated editor saves the content document to D1. Categories, collectio
 - `collections.order` controls the Work menu. New categories append to the order. Hidden categories remain editable in the editor.
 - A hidden subject category removes its photographs from public collections and the public API. This does not change individual publication flags. Hiding the curated selection only hides that collection.
 - Keep at least one collection visible. Hiding or deleting the configured default changes the default to the first visible collection. Empty visible collections display the existing empty state.
-- `collections.default` controls the root homepage and logo link. Explicit category URLs retain their category. When the default is not `all`, the curated selection links to `index.html?category=all`.
+- `collections.default` controls the root homepage and logo link. Explicit category URLs retain their category. When the default is not `all`, the curated selection links to `selected.html`. Custom collections have their own generated entry pages. Legacy query links remain readable.
+- `collections.photoOrder` and `collections.photoLayout` optionally define independent collection sequences and composition. Library order and photo composition remain the fallback for other collections.
 - `collections.defaultView` chooses Multi or Single for a new browsing session. Visitors can still switch view.
 
 Visibility is an editorial control, not file access protection: previously published files and direct image URLs may remain accessible.
 
 ## Site content
 
-The site editor supports logo text, photographer name, location, email, biography, About heading and photograph, equipment title and items, navigation labels, About/Contact navigation visibility, contact copy, footer copyright copy, and ordered social links. The original typography, gradient and layout remain part of the design system.
+The site editor supports logo text, photographer name, location, email, biography, About heading and photograph, sharing cover, equipment title and items, navigation labels, About/Contact navigation visibility, contact copy, footer copyright copy, and ordered social links. The original typography, gradient and layout remain part of the design system.
 
 The About photograph can be selected from the library or uploaded independently. Uploading a replacement does not create a gallery record. The editor uploads the referenced WebP before saving the document, retaining its existing revision checks. A chosen library image is public on About even if its gallery publication flag is disabled.
 
@@ -24,9 +25,9 @@ Equipment is stored as an array of individual strings and rendered one item per 
 
 ## Saving and freshness
 
-Edits update the private draft preview. Use the main save button to publish. The public API returns uncached D1 content; visitors receive the saved navigation and content on the next page load or refresh. Existing visitor tabs do not automatically reload. Failed saves retain the draft, and stale revisions are rejected.
+Edits update the private draft preview and local recovery draft. Use the main save button to publish. The public API revalidates D1 content; visitors receive the saved navigation and content on the next page load or refresh. Existing visitor tabs can offer a refresh on refocus without automatically reloading. Failed saves retain the draft, and stale revisions are rejected.
 
-GitHub Pages serves static crawler metadata, sharing artwork, sitemap and fallback HTML from the last build. Browser metadata uses runtime content, but changing D1 content does not rebuild these static files. Domain, backend addresses, authentication credentials, image hosting, sharing artwork and the visual design system remain deployment/operator settings.
+Cloud saves submit current public pages, crawler metadata, sharing artwork references and sitemap to GitHub. GitHub Pages deployment and sharing-platform cache refresh happen later; check the maintenance page for the deployed version and retry failures. Domain, backend addresses, authentication credentials, image hosting and the visual design system remain deployment/operator settings. See [editing and recovery workflows](gallery-workflows.md) for upload, history, publishing and backup limits.
 
 ## Validation
 

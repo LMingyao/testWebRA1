@@ -2,11 +2,17 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { fixture } from "./fixture.mjs";
 import { collections, defaultCollection, resolveCollection, gearItems, siteSettings, editableCollections } from "../app/config.js";
-import { setCollectionVisible, moveCollection } from "../admin/config-editor.js";
+import { setCollectionVisible, moveCollection, renderSiteEditor } from "../admin/config-editor.js";
 import { validateContent, workPhotos } from "../app/shared.js";
 import { categoryURL, categoryFromURL } from "../app/metadata.js";
 import { renderEditorial } from "../app/editorial.js";
 import { previewContent } from "../admin/preview-data.js";
+
+test('editing other site fields preserves a current cover after its gallery record is hidden',()=>{
+  const data=structuredClone(fixture);data.site.shareImage=data.photos[0].image;data.photos[0].published=false;
+  const html=renderSiteEditor(data,path=>path);
+  assert.ok(html.includes(`value="${data.site.shareImage}" selected>保留当前分享封面`));
+});
 
 test("default entry, explicit selection URLs and hidden routes remain consistent after repeated edits", () => {
   const data = structuredClone(fixture), photos = structuredClone(data.photos);
@@ -14,8 +20,11 @@ test("default entry, explicit selection URLs and hidden routes remain consistent
   assert.equal(defaultCollection(data), "all");
   editableCollections(data).default = "travel";
   assert.equal(categoryFromURL(new URL("https://mingyaophoto.com/"), data), "travel");
-  assert.equal(categoryURL("all", data), "index.html?category=all");
+  assert.equal(categoryURL("all", data), "selected.html");
   assert.equal(categoryFromURL(new URL("https://mingyaophoto.com/index.html?category=all"), data), "all");
+  assert.equal(categoryFromURL(new URL("https://mingyaophoto.com/selected.html"), data), "all");
+  assert.equal(categoryURL("travel", data), "collection-travel.html");
+  assert.equal(categoryFromURL(new URL("https://mingyaophoto.com/collection-travel.html"), data), "travel");
   moveCollection(data, "travel", -1);
   moveCollection(data, "travel", -1);
   assert.deepEqual(collections(data).map(item => item.id), ["travel", "all", "aviation"]);

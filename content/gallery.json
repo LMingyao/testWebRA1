@@ -5,11 +5,11 @@
     "tagline": "Photography",
     "location": "Montréal, Canada",
     "description": "Aircraft in motion. Quiet landscapes. People, as they are. A collection of moments through my lens.",
-    "email": "MingyaoLee520@gmail.com",
-    "aboutTitle": "Mingyao Li",
+    "email": "mingyaolee520@gmail.com",
+    "aboutTitle": "",
     "about": "I’m Mingyao, a photographer based in Montréal. My work spans aviation, landscapes and portraits, with an interest in both the energy of flight and the quieter moments on the ground.",
     "aboutImage": "assets/MYL_PTR-13R2_4K.jpg",
-    "gear": "FUJIFILM X-H2S · FUJINON XF10–24mm, XF16–55mm, XF50–140mm, XF90mm, XF200mm · XF1.4X / XF2X teleconverters · SIGMA 56mm",
+    "gear": [],
     "socials": [
       {
         "label": "Instagram",
@@ -27,7 +27,19 @@
         "label": "X",
         "url": "https://twitter.com/Mingyao_Li_"
       }
-    ]
+    ],
+    "brandName": "MINGYAO",
+    "brandTitle": "Photography",
+    "workLabel": "Work",
+    "aboutLabel": "About",
+    "contactLabel": "Contact",
+    "contactText": "Photography enquiries & collaborations",
+    "contactLinkLabel": "Get in touch",
+    "gearLabel": "Camera & lenses",
+    "aboutImageAlt": "Mingyao Li",
+    "footerText": "All rights reserved.",
+    "showAbout": true,
+    "showContact": true
   },
   "categories": [
     {
@@ -40,15 +52,18 @@
     },
     {
       "id": "portrait",
-      "label": "Portraits"
+      "label": "Portraits",
+      "visible": false
     },
     {
       "id": "wildlife",
-      "label": "Wildlife"
+      "label": "Wildlife",
+      "visible": true
     },
     {
       "id": "motorsport",
-      "label": "Motorsport"
+      "label": "Motorsport",
+      "visible": false
     }
   ],
   "photos": [
@@ -69,22 +84,6 @@
       "homeSelected": true
     },
     {
-      "id": "mtl-x",
-      "title": "Montréal after dark",
-      "alt": "The illuminated Montréal skyline reflected in the waterfront at night.",
-      "category": "landscape",
-      "image": "assets/MTL_X.jpg",
-      "thumbnail": "media/mtl-x-640.webp",
-      "display": "media/mtl-x-1280.webp",
-      "large": "media/mtl-x-1920.webp",
-      "width": 3000,
-      "height": 1000,
-      "published": true,
-      "featured": false,
-      "placement": "hero",
-      "homeSelected": true
-    },
-    {
       "id": "ac-x",
       "title": "Into the clouds",
       "alt": "An Air Canada aircraft banking above the clouds.",
@@ -93,22 +92,6 @@
       "thumbnail": "media/ac-x-640.webp",
       "display": "media/ac-x-1280.webp",
       "large": "media/ac-x-1920.webp",
-      "width": 3000,
-      "height": 1000,
-      "published": true,
-      "featured": false,
-      "placement": "hero",
-      "homeSelected": true
-    },
-    {
-      "id": "jfk-x",
-      "title": "City of lights",
-      "alt": "A suspension bridge and the New York skyline illuminated at night.",
-      "category": "landscape",
-      "image": "assets/JFK_X.jpg",
-      "thumbnail": "media/jfk-x-640.webp",
-      "display": "media/jfk-x-1280.webp",
-      "large": "media/jfk-x-1920.webp",
       "width": 3000,
       "height": 1000,
       "published": true,
@@ -130,70 +113,6 @@
       "published": true,
       "featured": false,
       "placement": "hero",
-      "homeSelected": true
-    },
-    {
-      "id": "yyc-wsj787-2",
-      "title": "Above the city",
-      "alt": "A WestJet aircraft taking off in front of the city skyline.",
-      "category": "aviation",
-      "image": "assets/YYC_WSJ787-2.jpg",
-      "thumbnail": "media/yyc-wsj787-2-640.webp",
-      "display": "media/yyc-wsj787-2-1280.webp",
-      "large": "media/yyc-wsj787-2-1920.webp",
-      "width": 3900,
-      "height": 1300,
-      "published": true,
-      "featured": false,
-      "placement": "hero",
-      "homeSelected": true
-    },
-    {
-      "id": "nf436",
-      "title": "Into the mist",
-      "alt": "A sightseeing boat approaching the mist below Niagara Falls.",
-      "category": "landscape",
-      "image": "assets/NF436.jpg",
-      "thumbnail": "media/nf436-640.webp",
-      "display": "media/nf436-1280.webp",
-      "large": "media/nf436-1920.webp",
-      "width": 1600,
-      "height": 2160,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": true
-    },
-    {
-      "id": "cnt-626r",
-      "title": "Toronto, framed",
-      "alt": "The CN Tower framed by trees and city architecture.",
-      "category": "landscape",
-      "image": "assets/CNT_626R.jpg",
-      "thumbnail": "media/cnt-626r-640.webp",
-      "display": "media/cnt-626r-1280.webp",
-      "large": "media/cnt-626r-1920.webp",
-      "width": 1440,
-      "height": 2160,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": true
-    },
-    {
-      "id": "sa777",
-      "title": "Blue skies ahead",
-      "alt": "A Saudia airliner ascending across a blue sky.",
-      "category": "aviation",
-      "image": "assets/SA777.jpg",
-      "thumbnail": "media/sa777-640.webp",
-      "display": "media/sa777-1280.webp",
-      "large": "media/sa777-1920.webp",
-      "width": 2160,
-      "height": 1215,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
       "homeSelected": true
     },
     {
@@ -242,7 +161,9 @@
       "published": true,
       "featured": false,
       "placement": "gallery",
-      "homeSelected": true
+      "homeSelected": false,
+      "presentation": "auto",
+      "group": ""
     },
     {
       "id": "nf736",
@@ -258,7 +179,9 @@
       "published": true,
       "featured": false,
       "placement": "gallery",
-      "homeSelected": true
+      "homeSelected": false,
+      "presentation": "auto",
+      "group": ""
     },
     {
       "id": "oaci-9917",
@@ -373,22 +296,6 @@
       "homeSelected": false
     },
     {
-      "id": "en-nsrt-2ehc",
-      "title": "Lines in motion",
-      "alt": "The rear of a white sports car photographed on a city street.",
-      "category": "motorsport",
-      "image": "assets/EN_NSRT-2EHC.jpg",
-      "thumbnail": "media/en-nsrt-2ehc-640.webp",
-      "display": "media/en-nsrt-2ehc-1280.webp",
-      "large": "media/en-nsrt-2ehc-1920.webp",
-      "width": 1440,
-      "height": 2160,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
       "id": "ts-fin103",
       "title": "After hours",
       "alt": "An Air Transat aircraft parked on an illuminated airport apron at night.",
@@ -447,22 +354,6 @@
       "large": "media/f22r-1920.webp",
       "width": 2160,
       "height": 1215,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "f1rk",
-      "title": "Flat out",
-      "alt": "A red Formula One car racing past a green and yellow trackside wall.",
-      "category": "motorsport",
-      "image": "assets/F1RK.jpg",
-      "thumbnail": "media/f1rk-640.webp",
-      "display": "media/f1rk-1280.webp",
-      "large": "media/f1rk-1920.webp",
-      "width": 2160,
-      "height": 1080,
       "published": true,
       "featured": false,
       "placement": "gallery",
@@ -533,116 +424,54 @@
       "homeSelected": false
     },
     {
-      "id": "xfemgjn75348",
-      "title": "Afternoon light",
-      "alt": "A portrait in a black dress beside a stone balcony in warm light.",
-      "category": "portrait",
-      "image": "assets/XFEMGJN75348.jpg",
-      "thumbnail": "media/xfemgjn75348-640.webp",
-      "display": "media/xfemgjn75348-1280.webp",
-      "large": "media/xfemgjn75348-1920.webp",
-      "width": 1440,
-      "height": 2160,
+      "id": "photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4",
+      "title": "57347",
+      "alt": "57347",
+      "category": "landscape",
+      "image": "media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-1920.webp",
+      "thumbnail": "media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-640.webp",
+      "display": "media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-1280.webp",
+      "large": "media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-1920.webp",
+      "width": 3840,
+      "height": 2560,
       "published": true,
       "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
+      "homeSelected": true,
+      "placement": "gallery"
     },
     {
-      "id": "xfemgpsx",
-      "title": "In conversation",
-      "alt": "A relaxed outdoor portrait in a light jacket.",
-      "category": "portrait",
-      "image": "assets/XFEMGPSX.jpg",
-      "thumbnail": "media/xfemgpsx-640.webp",
-      "display": "media/xfemgpsx-1280.webp",
-      "large": "media/xfemgpsx-1920.webp",
-      "width": 1440,
-      "height": 2160,
+      "id": "photo-e44cf18d-6152-43b1-bd98-5610151961c0",
+      "title": "BDR M26 1 7",
+      "alt": "BDR M26 1 7",
+      "category": "wildlife",
+      "image": "media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-1920.webp",
+      "thumbnail": "media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-640.webp",
+      "display": "media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-1280.webp",
+      "large": "media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-1920.webp",
+      "width": 3926,
+      "height": 2944,
       "published": true,
       "featured": false,
+      "homeSelected": true,
       "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "ptr-sep29x",
-      "title": "A city afternoon",
-      "alt": "A street portrait with softly blurred architecture in the background.",
-      "category": "portrait",
-      "image": "assets/PTR_Sep29X.jpg",
-      "thumbnail": "media/ptr-sep29x-640.webp",
-      "display": "media/ptr-sep29x-1280.webp",
-      "large": "media/ptr-sep29x-1920.webp",
-      "width": 2160,
-      "height": 1600,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "ptr-oct20-4",
-      "title": "Autumn warmth",
-      "alt": "An outdoor portrait with autumn foliage and yellow flowers.",
-      "category": "portrait",
-      "image": "assets/PTR_OCT20-4.jpg",
-      "thumbnail": "media/ptr-oct20-4-640.webp",
-      "display": "media/ptr-oct20-4-1280.webp",
-      "large": "media/ptr-oct20-4-1920.webp",
-      "width": 2160,
-      "height": 1620,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "ptr-o5-flr-dxf",
-      "title": "Among the flowers",
-      "alt": "A portrait beside vivid pink flowers and climbing greenery.",
-      "category": "portrait",
-      "image": "assets/PTR_O5_FLR-DXF.jpg",
-      "thumbnail": "media/ptr-o5-flr-dxf-640.webp",
-      "display": "media/ptr-o5-flr-dxf-1280.webp",
-      "large": "media/ptr-o5-flr-dxf-1920.webp",
-      "width": 2160,
-      "height": 1080,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "ptr-oct20-1x",
-      "title": "A quiet chapter",
-      "alt": "An outdoor portrait reading a book beside autumn foliage.",
-      "category": "portrait",
-      "image": "assets/PTR_OCT20-1X.jpg",
-      "thumbnail": "media/ptr-oct20-1x-640.webp",
-      "display": "media/ptr-oct20-1x-1280.webp",
-      "large": "media/ptr-oct20-1x-1920.webp",
-      "width": 1600,
-      "height": 2160,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "vff-ptr-sg24",
-      "title": "Confidence, captured",
-      "alt": "A professional portrait in a suit outside a building.",
-      "category": "portrait",
-      "image": "assets/VFF_PTR_SG24.jpg",
-      "thumbnail": "media/vff-ptr-sg24-640.webp",
-      "display": "media/vff-ptr-sg24-1280.webp",
-      "large": "media/vff-ptr-sg24-1920.webp",
-      "width": 1440,
-      "height": 2160,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
+      "presentation": "auto",
+      "group": ""
     }
-  ]
+  ],
+  "collections": {
+    "selected": {
+      "label": "Selected work",
+      "visible": true
+    },
+    "order": [
+      "all",
+      "aviation",
+      "landscape",
+      "portrait",
+      "wildlife",
+      "motorsport"
+    ],
+    "default": "all",
+    "defaultView": "multi"
+  }
 }

@@ -28,7 +28,7 @@ export function onSwipe(element, callback, signal) {
   );
 }
 
-export function createPhotoViewer(dialog, onChange, onClose) {
+export function createPhotoViewer(dialog, onChange, onClose, onOpen) {
   const lifecycle = new AbortController();
   const preload = createPhotoPreloader();
   const stage = createPhotoStage(dialog.querySelector(".viewer-stage"), dialog.querySelector(".viewer-image"));
@@ -47,6 +47,7 @@ export function createPhotoViewer(dialog, onChange, onClose) {
     if (!photos[index]) return;
     viewing = photos;
     active = index;
+    onOpen?.(photos[index].id);
     dialog.showModal();
     document.body.classList.add("viewing");
     showPhoto();

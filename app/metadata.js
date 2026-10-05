@@ -4,11 +4,12 @@ export const categoryPages = {
   wildlife: "wildlife.html", motorsport: "motorsport.html",
 };
 export function categoryURL(id, content) {
-  return id === "all" ? (content && defaultCollection(content) !== "all" ? "index.html?category=all" : "index.html") : Object.hasOwn(categoryPages, id)
-    ? categoryPages[id] : `index.html?category=${encodeURIComponent(id)}`;
+  return id === "all" ? (content && defaultCollection(content) !== "all" ? "selected.html" : "index.html") : Object.hasOwn(categoryPages, id)
+    ? categoryPages[id] : `collection-${encodeURIComponent(id)}.html`;
 }
 export function categoryFromURL(url, content) {
-  return url.searchParams.get("category") ||
+  return url.searchParams.get("category") || (url.pathname.endsWith("/selected.html") ? "all" : null) ||
+    url.pathname.match(/\/collection-([a-z0-9-]+)\.html$/)?.[1] ||
     Object.entries(categoryPages).find(([, file]) => url.pathname.endsWith(`/${file}`))?.[0] || (content ? defaultCollection(content) : "all");
 }
 export function pageMetadata(content, page, category = "all") {
@@ -24,7 +25,7 @@ export function pageMetadata(content, page, category = "all") {
       : collection ? collection.description?.trim() || `${collection.label} photographs by ${site.name}, ${site.location}.`
       : site.description,
     canonical: new URL(file, "https://mingyaophoto.com/").href,
-    image: "https://mingyaophoto.com/assets/social-card.png",
+    image: site.shareImage ? new URL(site.shareImage, "https://mingyaophoto.com/").href : "https://mingyaophoto.com/assets/social-card.png",
   };
 }
 export function applyMetadata(metadata) {
@@ -37,5 +38,7 @@ export function applyMetadata(metadata) {
     ['meta[property="og:url"]', metadata.canonical],
     ['meta[name="twitter:title"]', metadata.title],
     ['meta[name="twitter:description"]', metadata.description],
+    ['meta[property="og:image"]', metadata.image],
+    ['meta[name="twitter:image"]', metadata.image],
   ]) document.querySelector(selector).content = value;
 }

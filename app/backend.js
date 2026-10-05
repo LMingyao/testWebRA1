@@ -1,5 +1,5 @@
 export async function backendConfig() {
-  const response = await fetch(new URL("../content/backend.json", import.meta.url), { cache: "no-store" });
+  const response = await fetch(new URL("../content/backend.json", import.meta.url), { cache: "no-cache", signal: AbortSignal.timeout(15000) });
   if (!response.ok) throw new Error("Backend configuration unavailable.");
   const config = await response.json();
   for (const key of ["apiBase", "adminURL"]) {
@@ -18,7 +18,7 @@ export async function backendConfig() {
 export async function loadPublicContent() {
   const config = await backendConfig();
   const response = await fetch(config.apiBase
-    ? `${config.apiBase.replace(/\/$/, "")}/api/content` : "content/gallery.json", { cache: "no-store" });
+    ? `${config.apiBase.replace(/\/$/, "")}/api/content` : "content/gallery.json", { cache: "no-cache", signal: AbortSignal.timeout(15000) });
   if (!response.ok) throw new Error("Collection unavailable");
   // Do not fall back to an old JSON snapshot when the cloud API fails: it could
   // republish a photograph that the owner has since hidden or removed.
@@ -34,6 +34,7 @@ export function contentForDisplay(data) {
     throw new Error("Invalid media base URL.");
   const content = structuredClone(data);
   content.site.aboutImage = new URL(content.site.aboutImage, base).href;
+  if (content.site.shareImage) content.site.shareImage = new URL(content.site.shareImage, base).href;
   for (const photo of content.photos)
     for (const key of ["image", "thumbnail", "display", "large"])
       if (photo[key]) photo[key] = new URL(photo[key], base).href;

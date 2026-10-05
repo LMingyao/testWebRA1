@@ -1,0 +1,42 @@
+:root {
+  font: 14px/1.6 "Segoe UI", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #242529;
+  background: #f6f6f8;
+  --accent: #242529;
+  --line: #e4e5ea;
+  --muted: #666a73;
+  --studio-surface: #fff;
+  --studio-soft: #f6f6f8;
+  --studio-selected: #fff1f6;
+  --studio-radius: 12px;
+  --studio-shadow: 0 8px 30px #24252906;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { border: 0; cursor: pointer; background: transparent; }
+button, input, select, textarea { border-radius: 8px; }
+button:disabled { opacity: .4; cursor: default; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--brand-focus); outline-offset: 3px; }
+input:not([type="checkbox"]):not([type="file"]):not([type="hidden"]), select, textarea { padding: 10px 12px; border: 1px solid var(--line); background: #fff; min-width: 0; width: 100%; }
+input::placeholder, textarea::placeholder { color: #858992; }
+input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--brand-focus); flex-shrink: 0; margin: 0; }
+textarea { resize: vertical; }
+label { display: grid; gap: 8px; font-size: 13px; font-weight: 500; }
+p { margin: 0; }
+h1, h2, h3 { letter-spacing: -.025em; color: var(--accent); }
+h1 { font-size: 28px; line-height: 1.3; font-weight: 650; margin: 0; }
+h2 { font-size: 17px; line-height: 1.5; font-weight: 600; margin: 0; }
+h3 { font-size: 14px; font-weight: 600; margin: 0; }
+.studio-icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.primary, .secondary, .danger { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 9px 16px; font-size: 13px; font-weight: 500; white-space: nowrap; }
+.primary { background: var(--accent); color: #fff; }
+.primary:hover:not(:disabled) { background: #42434a; }
+.secondary { background: #fff; border: 1px solid var(--line); }
+.secondary:hover:not(:disabled) { background: var(--studio-soft); }
+.danger { color: #a53f4a; background: #fff4f4; border: 1px solid #f0d8dc; }
+.hint { font-size: 12px; line-height: 1.8; color: var(--muted); font-weight: 400; }
+.hint a, .text-link { text-decoration: underline; text-underline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[hidden] { display: none !important; }

@@ -56,6 +56,17 @@ test("declared groups stay separate, solo photos stand alone and mobile keeps ev
   const mobile = photoRows(photos, { width: 350 });
   assert.deepEqual(mobile.flatMap(row => row.photos), photos);
   assert.ok(mobile.every(row => row.photos.length === 1 && row.width === 350));
+  assert.deepEqual(mobile.map(row=>row.sectionStart),[false,true,false,true,true]);
+  assert.ok(rows.find(row=>row.photos.includes(photos[1])).sectionStart);
+});
+
+test('isolated portrait rows respect viewing height on desktop and mobile without stretching or cropping',()=>{
+ const photo={id:'portrait',width:1000,height:1500,presentation:'solo'};
+ for(const width of [350,1200]) {
+  const [row]=photoRows([photo],{width,maxHeight:420});
+  assert.ok(row.height<=420 && row.width<=width);
+  assert.ok(Math.abs(row.width/row.height-2/3)<.0001);
+ }
 });
 
 test("long groups wrap within row limits without swallowing neighbouring works", () => {

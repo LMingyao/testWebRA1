@@ -5,6 +5,7 @@ import { previewContent } from "../admin/preview-data.js";
 import { categoryURL, categoryFromURL, pageMetadata } from "../app/metadata.js";
 import { photoRows } from "../app/layout.js";
 import { fixture } from "./fixture.mjs";
+import { photographScrollY } from '../app/reading-position.js';
 
 test("drag ordering moves within display slots without changing unrelated photos or visibility", () => {
  const data = structuredClone(fixture);
@@ -36,7 +37,15 @@ test("desktop rows respect viewport height and avoid an unnecessary last portrai
  photos.at(-1).presentation="solo";
  assert.equal(photoRows(photos,{width:1153,maxHeight:520}).at(-1).photos.length,1);
  const mobile=photoRows(photos,{width:350,maxHeight:240});
- assert.ok(mobile.every(row=>row.width===350));
+ assert.ok(mobile.every(row=>row.photos[0].presentation==='solo' ? row.height<=240 && row.width<=350 : row.width===350));
+});
+
+test('changed photographs remain still when visible and scroll only far enough when outside the viewport',()=>{
+ assert.equal(photographScrollY({top:100,bottom:550},1000,700),1000);
+ assert.equal(photographScrollY({top:600,bottom:900},1000,700),1224);
+ assert.equal(photographScrollY({top:-200,bottom:100},1000,700),776);
+ assert.equal(photographScrollY({top:600,bottom:1600},1000,700),1576);
+ assert.equal(photographScrollY({top:0,bottom:900},0,700),0);
 });
 
 test("preview resolves local pending images in a clone and preserves hidden/selected draft flags", () => {

@@ -1,4 +1,5 @@
 import { safeImage } from "../app/shared.js";
+import { github, commitFiles } from "./github.js";
 
 export class HTTPError extends Error {
   constructor(status, message) { super(message); this.status = status; }
@@ -76,4 +77,45 @@ export async function registerMedia(request, env, fetcher = fetch) {
   const stored = await env.DB.prepare("SELECT digest FROM gallery_media WHERE path = ?").bind(path).first();
   if (stored?.digest !== digest) throw new HTTPError(409, "图片路径发生冲突，请重新导入。");
   return { path };
+}
+
+export async function registerMediaBatch(request, env, fetcher = fetch) {
+  if (!request.headers.get('Content-Type')?.startsWith('application/json')) throw new HTTPError(415,'请使用 JSON 上传。');
+  let payload;
+  try { payload=JSON.parse(new TextDecoder().decode(await readLimited(request,4500000))); }
+  catch (error) { if (error instanceof HTTPError) throw error; throw new HTTPError(400,'上传内容无效。'); }
+  const items=payload?.uploads;
+  if (!Array.isArray(items)||items.length<1||items.length>3||items.some(i=>!i||typeof i.path!=='string')||new Set(items.map(i=>i.path)).size!==items.length)
+    throw new HTTPError(400,'每次提交一张照片的最多三个尺寸。');
+  const photoId=items[0].path?.match(/^media\/(photo-[a-f0-9-]{36})-(640|1280|1920)\.webp$/)?.[1];
+  const prepared=[];
+  for (const item of items) {
+    if (!photoId||!new RegExp(`^media/${photoId}-(640|1280|1920)\\.webp$`).test(item.path)||typeof item.base64!=='string'||item.base64.length>1400000)
+      throw new HTTPError(400,'图片路径或大小无效。');
+    let bytes; try { bytes=Uint8Array.from(atob(item.base64),c=>c.charCodeAt(0)); } catch { throw new HTTPError(400,'图片编码无效。'); }
+    const text=new TextDecoder();
+    if (bytes.length<20||bytes.length>1048576||text.decode(bytes.slice(0,4))!=='RIFF'||text.decode(bytes.slice(8,12))!=='WEBP'||!['VP8 ','VP8L','VP8X'].includes(text.decode(bytes.slice(12,16))))
+      throw new HTTPError(400,'请上传 1 MB 以内的有效 WebP。');
+    const hex=buffer=>Array.from(new Uint8Array(buffer),b=>b.toString(16).padStart(2,'0')).join('');
+    const digest=hex(await crypto.subtle.digest('SHA-256',bytes));
+    const existing=await env.DB.prepare('SELECT digest FROM gallery_media WHERE path = ?').bind(item.path).first();
+    if (existing) { if(existing.digest!==digest) throw new HTTPError(409,'图片路径已存在，不能覆盖。'); continue; }
+    let committed=false;
+    try {
+      const file=await github(env,`contents/${item.path}?ref=${encodeURIComponent(env.GITHUB_BRANCH)}`,'GET',undefined,fetcher);
+      const prefix=new TextEncoder().encode(`blob ${bytes.length}\0`), blob=new Uint8Array(prefix.length+bytes.length);
+      blob.set(prefix);blob.set(bytes,prefix.length);
+      if (file.sha!==hex(await crypto.subtle.digest('SHA-1',blob))) throw new HTTPError(409,'仓库图片路径冲突。');
+      committed=true;
+    } catch(error) { if(error.status!==404) throw error; }
+    prepared.push({...item,digest,bytes:bytes.length,committed});
+  }
+  const pending=prepared.filter(i=>!i.committed);
+  if (pending.length) await commitFiles(env,pending,'Add photography display renditions',fetcher);
+  for (const item of prepared) {
+    await env.DB.prepare('INSERT INTO gallery_media(path,digest,bytes) VALUES(?,?,?) ON CONFLICT(path) DO NOTHING').bind(item.path,item.digest,item.bytes).run();
+    const registered=await env.DB.prepare('SELECT digest FROM gallery_media WHERE path = ?').bind(item.path).first();
+    if(registered?.digest!==item.digest) throw new HTTPError(409,'图片登记冲突，请重新导入。');
+  }
+  return {paths:items.map(i=>i.path)};
 }

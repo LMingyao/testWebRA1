@@ -4,15 +4,22 @@ import { photoImage, createPhotoPreloader } from "./images.js";
 import { createPhotoViewer, onSwipe } from "./viewer.js";
 import { arrowIcon } from "./icons.js";
 import { createPhotoStage } from "./photo-stage.js";
+import { bindImageRecovery } from "./image-recovery.js";
 import { collections } from "./config.js";
+import { photographScrollY } from './reading-position.js';
 
 export function createGallery(main, controls, content) {
   let layoutObserver, layoutResize, singleFrame, selectedPhotoId, viewerChanged, viewerClosed, viewMode = content.collections?.defaultView || "multi";
   const preload = createPhotoPreloader();
+  let viewerSession, multiPosition;
   const openPhoto = createPhotoViewer(document.querySelector(".lightbox"), id => {
     selectedPhotoId = id;
     viewerChanged?.(id);
-  }, () => viewerClosed?.());
+  }, () => viewerClosed?.(), id => {
+    viewerSession = readingPosition(id);
+  });
+  function readingPosition(id) { return {id,left:window.scrollX,top:window.scrollY,width:window.innerWidth,height:window.innerHeight}; }
+  function samePosition(position) { return position?.id === selectedPhotoId && position.width === window.innerWidth && position.height === window.innerHeight; }
   function renderGallery(category = "all") {
     layoutObserver?.disconnect();
     if (layoutResize) window.removeEventListener("resize", layoutResize);
@@ -31,31 +38,38 @@ export function createGallery(main, controls, content) {
     selectedPhotoId = sequence[singleCurrent]?.id;
     const rememberedPanorama = panoramas.findIndex(photo => photo.id === selectedPhotoId);
     if (rememberedPanorama >= 0) current = rememberedPanorama;
-    const viewControls = `<p class="collection-label">${e(label)}</p><div class="view-controls" role="group" aria-label="Photo layout"><button data-view="single" aria-pressed="${viewMode === "single"}">Single view</button><button data-view="multi" aria-pressed="${viewMode === "multi"}">Multi view</button></div>`;
     const multi = `${panoramas.length ? `<div class="work-opening"><button class="opening-image" aria-label="Open panorama"></button>${panoramas.length > 1 ? `<div class="opening-controls"><button class="opening-previous" aria-label="Previous panorama">${arrowIcon(-1)}</button><button class="opening-next" aria-label="Next panorama">${arrowIcon(1)}</button></div>` : ""}</div>` : ""}${photographs.length ? '<div class="photo-sheet"></div>' : ""}`;
     const single = `<div class="single-stage"><button class="single-image" aria-label="Open photograph"></button></div><div class="single-controls"><button class="single-previous" aria-label="Previous photograph" ${sequence.length < 2 ? "disabled" : ""}>${arrowIcon(-1)}</button><button class="single-next" aria-label="Next photograph" ${sequence.length < 2 ? "disabled" : ""}>${arrowIcon(1)}</button></div>`;
-    controls.innerHTML = viewControls;
+    controls.innerHTML = `<p class="collection-label">${e(label)}</p><div class="view-controls" role="group" aria-label="Photo layout"><button data-view="single" aria-pressed="${viewMode === "single"}">Single view</button><button data-view="multi" aria-pressed="${viewMode === "multi"}">Multi view</button></div>`;
     main.innerHTML = `<section class="work-gallery" aria-label="${e(label)}"><h1 class="sr-only">${e(label)}</h1>${sequence.length ? viewMode === "multi" ? multi : single : '<p class="empty">New photographs will be added soon.</p>'}</section>`;
     function changeView(event) {
       const view = event.target.closest("[data-view]");
       if (!view || viewMode === view.dataset.view) return;
+      if (viewMode === 'multi') multiPosition = {category, ...readingPosition(selectedPhotoId)};
       viewMode = view.dataset.view;
       renderGallery(category);
       controls.querySelector(`[data-view="${viewMode}"]`).focus({ preventScroll: true });
-      if (viewMode === "multi") revealSelected();
+      if (viewMode === 'single') window.scrollTo({top:0,behavior:'instant'});
+      else if (multiPosition?.category === category && samePosition(multiPosition)) {
+        revealSelected(false); window.scrollTo({left:multiPosition.left,top:multiPosition.top,behavior:'instant'});
+      } else revealSelected();
     }
-    function revealSelected() {
+    function revealSelected(scroll = true) {
       const index = sequence.findIndex(photo => photo.id === selectedPhotoId);
       if (index < 0) return;
       const target = viewMode === "single" ? main.querySelector(".single-image")
         : index < panoramas.length ? main.querySelector(".opening-image")
         : main.querySelector(`[data-photo="${index}"]`);
       target?.focus({ preventScroll: true });
-      target?.scrollIntoView({ block: "center", behavior: "instant" });
+      if (target && scroll) window.scrollTo({top:photographScrollY(target.getBoundingClientRect(),window.scrollY,window.innerHeight),behavior:'instant'});
     }
     viewerClosed = () => {
       if (singleFrame) showSingle(singleCurrent);
-      revealSelected();
+      if (samePosition(viewerSession)) {
+        revealSelected(false);
+        window.scrollTo({left:viewerSession.left,top:viewerSession.top,behavior:'instant'});
+      } else revealSelected();
+      viewerSession = undefined;
     };
     controls.onclick = changeView;
     const sheet = main.querySelector(".photo-sheet");
@@ -78,6 +92,7 @@ export function createGallery(main, controls, content) {
         const ratioSum = row.photos.reduce((sum, photo) => sum + photo.width / photo.height, 0);
         const element = document.createElement("div");
         element.className = "photo-row";
+        if (row.sectionStart) element.dataset.sectionStart = '';
         element.style.gridTemplateColumns = row.photos.map(photo => `${photo.width / photo.height / ratioSum * 100}fr`).join(" ");
         element.style.width = `${Math.min(100, row.width / width * 100)}%`;
         for (const photo of row.photos) {
@@ -105,6 +120,7 @@ export function createGallery(main, controls, content) {
       layoutResize = arrangePhotos;
       window.addEventListener("resize", layoutResize);
     }
+    bindImageRecovery(main);
     const opening = main.querySelector(".work-opening");
     function showPanorama(index, remember = false) {
       current = (index + panoramas.length) % panoramas.length;

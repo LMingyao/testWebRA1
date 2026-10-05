@@ -12,7 +12,9 @@ const isWork = ["portfolio", "portrait"].includes(page);
 const { setMenu, setWorkMenu, workToggle, workMenu } = createNavigation();
 
 try {
-  const content = contentForDisplay(validateContent(await loadPublicContent()));
+  const source = validateContent(await loadPublicContent());
+  const fingerprint = JSON.stringify(source);
+  const content = contentForDisplay(source);
   applySiteChrome(content);
   document.querySelectorAll("[data-nav]").forEach((a) => {
     if (a.dataset.nav === page) a.setAttribute("aria-current", "page");
@@ -50,6 +52,23 @@ try {
   new ResizeObserver(updateBackTop).observe(main);
   window.addEventListener("resize", updateBackTop);
   updateBackTop();
+  let lastCheck = Date.now(), checking = false;
+  async function checkForUpdates() {
+    if (document.visibilityState !== "visible" || checking || Date.now() - lastCheck < 30000 || document.querySelector(".collection-refresh")) return;
+    checking = true; lastCheck = Date.now();
+    try {
+      if (JSON.stringify(validateContent(await loadPublicContent())) !== fingerprint) {
+        const message = document.createElement("div"); message.className = "collection-refresh"; message.setAttribute("role", "status");
+        message.textContent = "The collection has been updated.";
+        const refresh = document.createElement("button"); refresh.textContent = "Refresh"; refresh.onclick = () => location.reload();
+        message.append(refresh); main.before(message);
+      }
+    } catch { /* Keep the current view; a failed check never substitutes an older snapshot. */ }
+    finally { checking = false; }
+  }
+  document.addEventListener("visibilitychange", checkForUpdates);
+  window.addEventListener("focus", checkForUpdates);
+  window.addEventListener("pageshow", checkForUpdates);
   if (isWork) {
     workMenu.onclick = (event) => {
       const link = event.target.closest("[data-work]");
