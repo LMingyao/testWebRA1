@@ -34,10 +34,13 @@ test("backend configuration rejects insecure remote URLs and embedded credential
 });
 test("cloud images resolve from the media branch without changing stored logical paths", () => {
   const data = { ...structuredClone(fixture), mediaBase: "https://raw.githubusercontent.com/LMingyao/testWebRA1/review/" };
+  data.photos[0].renditions = [{path:'media/new-3072.webp',width:3072,height:1536}];
   const content = contentForDisplay(data);
   assert.equal(content.photos[0].image, data.mediaBase + fixture.photos[0].image);
   assert.equal(content.site.aboutImage, data.mediaBase + fixture.site.aboutImage);
   assert.equal(data.photos[0].image, fixture.photos[0].image);
+  assert.equal(content.photos[0].renditions[0].path, data.mediaBase + 'media/new-3072.webp');
+  assert.equal(data.photos[0].renditions[0].path, 'media/new-3072.webp');
   assert.equal(contentForDisplay(fixture), fixture);
   assert.throws(() => contentForDisplay({ ...data, mediaBase: "javascript:alert(1)" }));
 });

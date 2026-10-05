@@ -1,5 +1,6 @@
 import { safeImage } from "../app/shared.js";
 import { github, commitFiles } from "./github.js";
+import { MEDIA_PATH, DISPLAY_FILE_LIMIT, MEDIA_BATCH_LIMIT } from "../app/media-policy.js";
 
 export class HTTPError extends Error {
   constructor(status, message) { super(message); this.status = status; }
@@ -28,10 +29,10 @@ export async function registerMedia(request, env, fetcher = fetch) {
       !/^[a-zA-Z0-9_./-]+$/.test(env.GITHUB_BRANCH || "") || env.GITHUB_BRANCH.includes(".."))
     throw new HTTPError(503, "尚未配置照片上传凭据；已有照片仍可编辑。");
   const path = request.headers.get("X-Media-Path") || "";
-  if (!safeImage(path) || !/^media\/photo-[a-f0-9-]{36}-(640|1280|1920)\.webp$/.test(path) ||
+  if (!safeImage(path) || !MEDIA_PATH.test(path) ||
       request.headers.get("Content-Type") !== "image/webp")
     throw new HTTPError(400, "上传路径或图片格式无效。");
-  const bytes = await readLimited(request, 1024 * 1024);
+  const bytes = await readLimited(request, DISPLAY_FILE_LIMIT);
   const text = new TextDecoder();
   if (bytes.length < 20 || text.decode(bytes.subarray(0, 4)) !== "RIFF" ||
       text.decode(bytes.subarray(8, 12)) !== "WEBP" ||
@@ -82,20 +83,26 @@ export async function registerMedia(request, env, fetcher = fetch) {
 export async function registerMediaBatch(request, env, fetcher = fetch) {
   if (!request.headers.get('Content-Type')?.startsWith('application/json')) throw new HTTPError(415,'请使用 JSON 上传。');
   let payload;
-  try { payload=JSON.parse(new TextDecoder().decode(await readLimited(request,4500000))); }
+  try { payload=JSON.parse(new TextDecoder().decode(await readLimited(request,MEDIA_BATCH_LIMIT))); }
   catch (error) { if (error instanceof HTTPError) throw error; throw new HTTPError(400,'上传内容无效。'); }
   const items=payload?.uploads;
-  if (!Array.isArray(items)||items.length<1||items.length>3||items.some(i=>!i||typeof i.path!=='string')||new Set(items.map(i=>i.path)).size!==items.length)
-    throw new HTTPError(400,'每次提交一张照片的最多三个尺寸。');
-  const photoId=items[0].path?.match(/^media\/(photo-[a-f0-9-]{36})-(640|1280|1920)\.webp$/)?.[1];
+  if (!Array.isArray(items)||items.length<1||items.length>4||items.some(i=>!i||typeof i.path!=='string')||new Set(items.map(i=>i.path)).size!==items.length)
+    throw new HTTPError(400,'每次提交一张照片的最多四个尺寸。');
+  const photoId=items[0].path?.match(MEDIA_PATH)?.[1];
   const prepared=[];
   for (const item of items) {
-    if (!photoId||!new RegExp(`^media/${photoId}-(640|1280|1920)\\.webp$`).test(item.path)||typeof item.base64!=='string'||item.base64.length>1400000)
+    if (!photoId||item.path.match(MEDIA_PATH)?.[1]!==photoId||typeof item.base64!=='string'||item.base64.length>4*Math.ceil(DISPLAY_FILE_LIMIT/3))
       throw new HTTPError(400,'图片路径或大小无效。');
-    let bytes; try { bytes=Uint8Array.from(atob(item.base64),c=>c.charCodeAt(0)); } catch { throw new HTTPError(400,'图片编码无效。'); }
+    let bytes; try {
+      if (typeof Uint8Array.fromBase64 === 'function') bytes=Uint8Array.fromBase64(item.base64);
+      else {
+        const binary=atob(item.base64); bytes=new Uint8Array(binary.length);
+        for (let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+      }
+    } catch { throw new HTTPError(400,'图片编码无效。'); }
     const text=new TextDecoder();
-    if (bytes.length<20||bytes.length>1048576||text.decode(bytes.slice(0,4))!=='RIFF'||text.decode(bytes.slice(8,12))!=='WEBP'||!['VP8 ','VP8L','VP8X'].includes(text.decode(bytes.slice(12,16))))
-      throw new HTTPError(400,'请上传 1 MB 以内的有效 WebP。');
+    if (bytes.length<20||bytes.length>DISPLAY_FILE_LIMIT||text.decode(bytes.slice(0,4))!=='RIFF'||text.decode(bytes.slice(8,12))!=='WEBP'||!['VP8 ','VP8L','VP8X'].includes(text.decode(bytes.slice(12,16))))
+      throw new HTTPError(400,'请上传 8 MB 以内的有效 WebP。');
     const hex=buffer=>Array.from(new Uint8Array(buffer),b=>b.toString(16).padStart(2,'0')).join('');
     const digest=hex(await crypto.subtle.digest('SHA-256',bytes));
     const existing=await env.DB.prepare('SELECT digest FROM gallery_media WHERE path = ?').bind(item.path).first();

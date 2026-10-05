@@ -35,8 +35,10 @@ export function contentForDisplay(data) {
   const content = structuredClone(data);
   content.site.aboutImage = new URL(content.site.aboutImage, base).href;
   if (content.site.shareImage) content.site.shareImage = new URL(content.site.shareImage, base).href;
-  for (const photo of content.photos)
+  for (const photo of content.photos) {
+    for (const item of photo.renditions || []) item.path = new URL(item.path, base).href;
     for (const key of ["image", "thumbnail", "display", "large"])
       if (photo[key]) photo[key] = new URL(photo[key], base).href;
+  }
   return content;
 }

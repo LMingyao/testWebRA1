@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { photoImage, photoSource, fittedPhotoWidth } from "../app/images.js";
-import { contentImagePaths } from "../app/shared.js";
+import { photoImage, photoSource, fittedPhotoWidth, photoCandidates } from "../app/images.js";
+import { contentImagePaths, validateContent } from "../app/shared.js";
 import { fixture } from "./fixture.mjs";
 
 test("image widths follow the original ratio and duplicate small renditions collapse", () => {
@@ -14,6 +14,24 @@ test("image widths follow the original ratio and duplicate small renditions coll
   assert.match(small, /srcset="media\/one-1280.webp 200w"/);
   assert.match(small, /loading="lazy"/);
   assert.doesNotMatch(photoImage(fixture.photos[1]), /srcset=/);
+});
+
+test("new responsive renditions use actual pixel widths, survive publication and reject invalid metadata", () => {
+  const data = structuredClone(fixture), photo = data.photos[0];
+  Object.assign(photo, {width:9000,height:3000,image:'media/new-4096.webp',thumbnail:'media/new-640.webp',display:'media/new-1280.webp',large:'media/new-4096.webp',
+    renditions:[{path:'media/new-2048.webp',width:2048,height:683},{path:'media/new-640.webp',width:640,height:213},
+      {path:'media/new-4096.webp',width:4096,height:1365},{path:'media/new-1280.webp',width:1280,height:427}]});
+  validateContent(data);
+  assert.deepEqual(photoCandidates(photo).map(item=>item.width), [640,1280,2048,4096]);
+  assert.equal(photoSource(photo,{width:1320,pixelRatio:1}), 'media/new-2048.webp');
+  assert.equal(photoSource(photo,{width:1320,pixelRatio:2}), 'media/new-4096.webp');
+  assert.equal(photoSource(photo,{width:300,pixelRatio:2}), 'media/new-640.webp');
+  assert.ok(contentImagePaths(data).has('media/new-2048.webp'));
+  assert.match(photoImage(photo), /media\/new-4096.webp 4096w/);
+  photo.renditions[0].path = 'https://untrusted.invalid/image.webp';
+  assert.throws(()=>validateContent(data), /renditions/);
+  photo.renditions[0].path = 'media/new-2048.webp'; photo.renditions[0].height = 2048;
+  assert.throws(()=>validateContent(data), /renditions/);
 });
 
 test("shared media references include the about photo, omit missing variants and deduplicate", () => {

@@ -462,8 +462,7 @@ async function addPhotoFiles(files) {
     for (const file of files) {
       uploadStatus("正在处理 " + (count + 1) + " / " + files.length + "：" + file.name);
       progress({ stage: "prepare", completed: count, total: files.length });
-      const prepared = await preparePhoto(file, category);
-      prepared.photo.placement = placement;
+      const prepared = await preparePhoto(file, category, placement);
       data.photos.push(prepared.photo);
       uploads.push(...prepared.uploads);
       previews.set(prepared.photo.id, prepared.preview);

@@ -2,6 +2,7 @@ import { contentImagePaths, validateContent } from '../app/shared.js';
 import { publishedContent, publicationFiles, renderPublishedPage } from '../app/publishing.js';
 import { github, commitFiles } from './github.js';
 import { HTTPError } from './media.js';
+import { MEDIA_PATH } from '../app/media-policy.js';
 
 export async function listHistory(env) {
   const row=await env.DB.prepare("SELECT json_group_array(json_object('sequence', sequence, 'revision', revision, 'saved_at', saved_at, 'name', json_extract(document,'$.site.name'))) AS items FROM (SELECT * FROM gallery_history ORDER BY sequence DESC LIMIT 20)").first();
@@ -27,7 +28,7 @@ export async function mediaReport(env, fetcher = fetch) {
   if (env.GITHUB_TOKEN) {
     try {
       const tree=await github(env,`git/trees/${encodeURIComponent(env.GITHUB_BRANCH)}?recursive=1`,'GET',undefined,fetcher);
-      for (const file of tree.tree || []) if (file.type==='blob' && /^media\/photo-[a-f0-9-]{36}-(640|1280|1920)\.webp$/.test(file.path) && !used.has(file.path) && !registered.has(file.path))
+      for (const file of tree.tree || []) if (file.type==='blob' && MEDIA_PATH.test(file.path) && !used.has(file.path) && !registered.has(file.path))
         unused.push({path:file.path,bytes:file.size,unregistered:true});
       repositoryChecked=!tree.truncated;
       note=tree.truncated?'仓库目录过大，结果不完整；请用完整备份工具核对。':'已检查登记媒体及仓库中的未登记上传文件；未执行任何删除。';

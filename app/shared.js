@@ -19,7 +19,7 @@ export function contentImagePaths(data) {
     data.site.aboutImage,
     ...(data.site.shareImage ? [data.site.shareImage] : []),
     ...data.photos.flatMap((photo) =>
-      [photo.image, photo.thumbnail, photo.display, photo.large].filter(Boolean),
+      [photo.image, photo.thumbnail, photo.display, photo.large, ...(photo.renditions || []).map(item => item.path)].filter(Boolean),
     ),
   ]);
 }
@@ -200,6 +200,16 @@ export function validateContent(data) {
       photo.height < 1
     )
       throw new Error("Invalid photo dimensions.");
+    if (photo.renditions !== undefined) {
+      if (!Array.isArray(photo.renditions) || !photo.renditions.length || photo.renditions.length > 4 ||
+          photo.renditions.some(item => !item || !safeImage(item.path) || !Number.isInteger(item.width) ||
+            !Number.isInteger(item.height) || item.width < 1 || item.height < 1 || item.width > photo.width ||
+            item.height > photo.height || Math.max(item.width, item.height) > 4096 ||
+            Math.abs(item.width * photo.height - item.height * photo.width) > photo.width + photo.height) ||
+          new Set(photo.renditions.map(item => item.path)).size !== photo.renditions.length ||
+          [photo.image, photo.thumbnail, photo.display, photo.large].filter(Boolean).some(file => !photo.renditions.some(item => item.path === file)))
+        throw new Error("Invalid photo renditions.");
+    }
     if (
       typeof photo.published !== "boolean" ||
       typeof photo.featured !== "boolean"

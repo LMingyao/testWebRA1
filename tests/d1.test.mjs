@@ -63,7 +63,7 @@ test("D1 schema and seed preserve content, SQL quotes, media and ordering; resee
 });
 test("D1 denies unauthenticated admin and assets; public feed omits hidden works and limits CORS", async t => {
   const { request } = setup(t);
-  for (const path of ["/api/admin/session", "/api/admin/content", "/app/shared.js", "/admin/ui.js", "/admin/editor-views.js", "/admin/upload-dropzone.js", "/admin/admin.css"])
+  for (const path of ["/api/admin/session", "/api/admin/content", "/app/shared.js", "/admin/ui.js", "/admin/editor-views.js", "/admin/upload-dropzone.js", "/admin/image-worker.js", "/admin/webp-encoder.js", "/admin/vendor/webp/webp_enc.wasm", "/admin/admin.css"])
     assert.equal((await request(path, { auth: false })).status, 401);
   assert.equal((await request("/admin/", { auth: false })).headers.get("Location"), "/admin/login");
   assert.equal((await request("/admin/login", { auth: false })).status, 200);
@@ -257,7 +257,7 @@ test("media proxy commits only image bytes, registers successful uploads and ret
   await assert.rejects(() => registerMedia(req(path, changed), env, fetcher), /不能覆盖/);
   await assert.rejects(() => registerMedia(req("media/../secret.webp"), env, fetcher), /无效/);
   await assert.rejects(() => registerMedia(req(), { DB }, fetcher), /尚未配置/);
-  await assert.rejects(() => registerMedia(req(path, new Uint8Array(1048577)), env, fetcher), /大小限制/);
+  await assert.rejects(() => registerMedia(req(path, new Uint8Array(8*1024*1024+1)), env, fetcher), /大小限制/);
 });
 test("media retry after GitHub success and D1 failure verifies Git blob identity", async t => {
   const { DB } = database(t);
@@ -283,7 +283,7 @@ test("D1 adapter prechecks revisions, uploads sequentially and sends no token or
   await assert.rejects(() => store.save(fixture, "old", [{ base64: "" }]), /内容已更新/);
   assert.equal(calls.length, 1);
   calls.length = 0;
-  const result = await store.save(fixture, "current", [{ path: "media/photo.webp", base64: "YWJj" }]);
+  const result = await store.save(fixture, "current", [{ path: "media/photo-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-640.webp", base64: "YWJj" }]);
   assert.equal(result.revision, "next");
   assert.deepEqual(calls.map(call => call.endpoint), ["content", "media-batch", "content"]);
   assert.deepEqual(JSON.parse(calls[2].options.body), { data: fixture, revision: "current" });
@@ -308,7 +308,8 @@ test("upload progress counts only completed versions and never reports success o
     return {};
   };
   await assert.rejects(() => store.save(fixture, "current", [
-    { path: "media/a.webp", base64: "YWJj" }, { path: "media/b.webp", base64: "YWJj" },
+    { path: "media/photo-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-640.webp", base64: "YWJj" },
+    { path: "media/photo-bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb-640.webp", base64: "YWJj" },
   ], event => events.push(event)), /Save conflict/);
   assert.deepEqual(events.filter(e => e.stage === "upload").map(e => e.completed), [0, 1, 2]);
   assert.ok(events.every(e => e.stage !== "done"));
@@ -424,4 +425,37 @@ test('malformed media batches fail before any repository or database mutation',a
     await assert.rejects(()=>registerMediaBatch(request,{DB},()=>{throw new Error('Must not access GitHub');}),error=>error.status===400);
   }
   assert.equal(sqlite.prepare('SELECT count(*) AS n FROM gallery_media').get().n,before);
+});
+
+test('four new-size renditions over the old byte limit commit together, replay safely and reach public responsive metadata', async t => {
+  const {DB,sqlite}=database(t), git=gitFixture();
+  const env={DB,GITHUB_TOKEN:'fixture-only',GITHUB_REPO:'LMingyao/testWebRA1',GITHUB_BRANCH:'main'};
+  const bytes=Buffer.alloc(1100000); bytes.write('RIFF'); bytes.write('WEBP',8); bytes.write('VP8L',12);
+  const paths=[640,1280,2048,4096].map(size=>`media/photo-11111111-1111-1111-1111-111111111111-${size}.webp`);
+  const uploads=paths.map(path=>({path,base64:bytes.toString('base64')}));
+  const request=()=>new Request('https://studio.test/api/admin/media-batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uploads})});
+  await registerMediaBatch(request(),env,git.fetcher);
+  assert.equal(git.commits.size,2);
+  assert.equal(sqlite.prepare('SELECT count(*) AS n FROM gallery_media WHERE bytes=1100000').get().n,4);
+  await registerMediaBatch(request(),env,git.fetcher); assert.equal(git.commits.size,2);
+  const data=structuredClone(fixture), photo=data.photos[0];
+  Object.assign(photo,{width:9000,height:3000,image:paths[3],large:paths[3],thumbnail:paths[0],display:paths[1],
+    placement:'hero',renditions:[640,1280,2048,4096].map((size,i)=>({path:paths[i],width:size,height:Math.round(size/3)}))});
+  const worker=createWorker({authenticate:async()=> 'owner'});
+  const revision=sqlite.prepare('SELECT revision FROM gallery_content').get().revision;
+  const saved=await worker.fetch(new Request('https://studio.test/api/admin/content',{method:'PUT',headers:{Origin:'https://studio.test','X-Gallery-Request':'admin','Content-Type':'application/json'},body:JSON.stringify({data,revision})}),{DB});
+  assert.equal(saved.status,200);
+  const feed=await (await worker.fetch(new Request('https://studio.test/api/content'),{DB})).json();
+  assert.deepEqual(feed.photos[0].renditions,photo.renditions);
+});
+
+test('large lossless groups split into bounded requests without dropping a variant',async()=>{
+  const store=new D1Store({canUpload:true}), batches=[];
+  store.request=async(endpoint,options={})=>{
+    if(endpoint==='media-batch') {assert.ok(Buffer.byteLength(options.body)<=16*1024*1024);batches.push(JSON.parse(options.body).uploads);}
+    return {revision:'current'};
+  };
+  const uploads=[640,1280,2048,3072].map(size=>({path:`media/photo-11111111-1111-1111-1111-111111111111-${size}.webp`,base64:Buffer.alloc(4*1024*1024).toString('base64')}));
+  await store.save(fixture,'current',uploads);
+  assert.ok(batches.length>1); assert.deepEqual(batches.flat(),uploads);
 });

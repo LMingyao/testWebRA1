@@ -1,4 +1,5 @@
 import { validateContent } from "../app/shared.js";
+import { MEDIA_PATH, DISPLAY_FILE_LIMIT, MEDIA_BATCH_LIMIT } from "../app/media-policy.js";
 
 export class D1Store {
   constructor(session) {
@@ -29,14 +30,26 @@ export class D1Store {
       throw new Error("内容已更新，请导出草稿后重新连接。");
     const groups = new Map();
     for (const upload of uploads) {
-      const id = upload.path.replace(/-(640|1280|1920)\.webp$/, '');
+      const id = upload.path.match(MEDIA_PATH)?.[1];
+      if (!id) throw new Error('图片路径无效，请重新导入。');
       if (!groups.has(id)) groups.set(id, []);
-      if (atob(upload.base64).length > 1024 * 1024) throw new Error('图片超过上传限制，请重新导入。');
+      if (atob(upload.base64).length > DISPLAY_FILE_LIMIT) throw new Error('展示图片超过 8 MB，请重新导入。');
       groups.get(id).push(upload);
     }
     let completed = 0;
     if (uploads.length) onProgress({stage:'upload',completed,total:uploads.length});
-    for (const batch of groups.values()) {
+    const batches = [];
+    for (const group of groups.values()) {
+      let batch = [];
+      for (const item of group) {
+        if (batch.length && (batch.length >= 4 || JSON.stringify({uploads:[...batch,item]}).length > MEDIA_BATCH_LIMIT)) {
+          batches.push(batch); batch = [];
+        }
+        batch.push(item);
+      }
+      if (batch.length) batches.push(batch);
+    }
+    for (const batch of batches) {
       for (let attempt=0;;attempt++) {
         try {
           await this.request('media-batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uploads:batch})});

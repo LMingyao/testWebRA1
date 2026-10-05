@@ -4,11 +4,12 @@ import { validateUploadBatch, bindUploadDropzone, isFileTransfer } from "../admi
 
 const photo = {name:"image.jpg", type:"image/jpeg", size:1200};
 test("upload batches reject mixed invalid inputs before preparation", () => {
-  validateUploadBatch([photo, {...photo,type:"image/png"}]);
+  validateUploadBatch([photo, {...photo,type:"image/png"}, {...photo,size:100*1024*1024}]);
   assert.throws(() => validateUploadBatch([]), /文件夹/);
   assert.throws(() => validateUploadBatch(Array(21).fill(photo)), /20/);
   assert.throws(() => validateUploadBatch([photo,{...photo,type:"text/plain",name:"notes.txt"}]), /notes.txt/);
-  assert.throws(() => validateUploadBatch([{...photo,size:25*1024*1024+1}]), /25 MB/);
+  assert.throws(() => validateUploadBatch([{...photo,size:100*1024*1024+1}]), /100 MB/);
+  assert.throws(() => validateUploadBatch([{...photo,type:"image/png",size:25*1024*1024+1}]), /25 MB/);
   assert.throws(() => validateUploadBatch([{...photo,size:0}]), /非空/);
 });
 

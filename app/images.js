@@ -18,8 +18,11 @@ export function createPhotoPreloader() {
 
 export function photoCandidates(photo) {
   const seen = new Set();
-  return [[photo.thumbnail, 640], [photo.display, 1280], [photo.large, 1920]]
-    .map(([file, size]) => ({ file, width: Math.round(photo.width * Math.min(1, size / Math.max(photo.width, photo.height))) }))
+  const candidates = photo.renditions?.length
+    ? photo.renditions.map(item => ({file: item.path, width: item.width}))
+    : [[photo.thumbnail, 640], [photo.display, 1280], [photo.large, 1920]]
+      .map(([file, size]) => ({ file, width: Math.round(photo.width * Math.min(1, size / Math.max(photo.width, photo.height))) }));
+  return candidates.sort((a, b) => a.width - b.width)
     .filter(candidate => {
       if (!candidate.file || seen.has(candidate.width)) return false;
       seen.add(candidate.width);
