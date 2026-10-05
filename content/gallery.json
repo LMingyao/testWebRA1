@@ -63,7 +63,7 @@
     {
       "id": "motorsport",
       "label": "Motorsport",
-      "visible": false
+      "visible": true
     }
   ],
   "photos": [
@@ -296,6 +296,22 @@
       "homeSelected": false
     },
     {
+      "id": "en-nsrt-2ehc",
+      "title": "Lines in motion",
+      "alt": "The rear of a white sports car photographed on a city street.",
+      "category": "motorsport",
+      "image": "assets/EN_NSRT-2EHC.jpg",
+      "thumbnail": "media/en-nsrt-2ehc-640.webp",
+      "display": "media/en-nsrt-2ehc-1280.webp",
+      "large": "media/en-nsrt-2ehc-1920.webp",
+      "width": 1440,
+      "height": 2160,
+      "published": true,
+      "featured": false,
+      "placement": "gallery",
+      "homeSelected": false
+    },
+    {
       "id": "ts-fin103",
       "title": "After hours",
       "alt": "An Air Transat aircraft parked on an illuminated airport apron at night.",
@@ -354,6 +370,22 @@
       "large": "media/f22r-1920.webp",
       "width": 2160,
       "height": 1215,
+      "published": true,
+      "featured": false,
+      "placement": "gallery",
+      "homeSelected": false
+    },
+    {
+      "id": "f1rk",
+      "title": "Flat out",
+      "alt": "A red Formula One car racing past a green and yellow trackside wall.",
+      "category": "motorsport",
+      "image": "assets/F1RK.jpg",
+      "thumbnail": "media/f1rk-640.webp",
+      "display": "media/f1rk-1280.webp",
+      "large": "media/f1rk-1920.webp",
+      "width": 2160,
+      "height": 1080,
       "published": true,
       "featured": false,
       "placement": "gallery",
@@ -489,6 +521,126 @@
           "path": "media/photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150-3072.webp",
           "width": 2839,
           "height": 1893
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false,
+      "presentation": "auto",
+      "group": ""
+    },
+    {
+      "id": "photo-98dc9da7-6807-48d5-885b-aa746c3a8468",
+      "title": "CAR A21 1",
+      "alt": "CAR A21 1",
+      "category": "motorsport",
+      "placement": "gallery",
+      "image": "media/photo-98dc9da7-6807-48d5-885b-aa746c3a8468-3072.webp",
+      "thumbnail": "media/photo-98dc9da7-6807-48d5-885b-aa746c3a8468-640.webp",
+      "display": "media/photo-98dc9da7-6807-48d5-885b-aa746c3a8468-1280.webp",
+      "large": "media/photo-98dc9da7-6807-48d5-885b-aa746c3a8468-3072.webp",
+      "width": 5198,
+      "height": 3465,
+      "renditions": [
+        {
+          "path": "media/photo-98dc9da7-6807-48d5-885b-aa746c3a8468-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-98dc9da7-6807-48d5-885b-aa746c3a8468-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-98dc9da7-6807-48d5-885b-aa746c3a8468-2048.webp",
+          "width": 2048,
+          "height": 1365
+        },
+        {
+          "path": "media/photo-98dc9da7-6807-48d5-885b-aa746c3a8468-3072.webp",
+          "width": 3072,
+          "height": 2048
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false,
+      "presentation": "auto",
+      "group": ""
+    },
+    {
+      "id": "photo-7f3aff6e-4e46-485b-8096-f9b8687273c2",
+      "title": "CAR M12 1 2",
+      "alt": "CAR M12 1 2",
+      "category": "motorsport",
+      "placement": "gallery",
+      "image": "media/photo-7f3aff6e-4e46-485b-8096-f9b8687273c2-3072.webp",
+      "thumbnail": "media/photo-7f3aff6e-4e46-485b-8096-f9b8687273c2-640.webp",
+      "display": "media/photo-7f3aff6e-4e46-485b-8096-f9b8687273c2-1280.webp",
+      "large": "media/photo-7f3aff6e-4e46-485b-8096-f9b8687273c2-3072.webp",
+      "width": 3462,
+      "height": 2308,
+      "renditions": [
+        {
+          "path": "media/photo-7f3aff6e-4e46-485b-8096-f9b8687273c2-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-7f3aff6e-4e46-485b-8096-f9b8687273c2-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-7f3aff6e-4e46-485b-8096-f9b8687273c2-2048.webp",
+          "width": 2048,
+          "height": 1365
+        },
+        {
+          "path": "media/photo-7f3aff6e-4e46-485b-8096-f9b8687273c2-3072.webp",
+          "width": 3072,
+          "height": 2048
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false,
+      "presentation": "auto",
+      "group": ""
+    },
+    {
+      "id": "photo-22d7522e-b1d3-4788-8db4-afc824b0b52d",
+      "title": "B00038233FR1777664318 denoised d",
+      "alt": "B00038233FR1777664318 denoised d",
+      "category": "motorsport",
+      "placement": "gallery",
+      "image": "media/photo-22d7522e-b1d3-4788-8db4-afc824b0b52d-3072.webp",
+      "thumbnail": "media/photo-22d7522e-b1d3-4788-8db4-afc824b0b52d-640.webp",
+      "display": "media/photo-22d7522e-b1d3-4788-8db4-afc824b0b52d-1280.webp",
+      "large": "media/photo-22d7522e-b1d3-4788-8db4-afc824b0b52d-3072.webp",
+      "width": 11656,
+      "height": 8742,
+      "renditions": [
+        {
+          "path": "media/photo-22d7522e-b1d3-4788-8db4-afc824b0b52d-640.webp",
+          "width": 640,
+          "height": 480
+        },
+        {
+          "path": "media/photo-22d7522e-b1d3-4788-8db4-afc824b0b52d-1280.webp",
+          "width": 1280,
+          "height": 960
+        },
+        {
+          "path": "media/photo-22d7522e-b1d3-4788-8db4-afc824b0b52d-2048.webp",
+          "width": 2048,
+          "height": 1536
+        },
+        {
+          "path": "media/photo-22d7522e-b1d3-4788-8db4-afc824b0b52d-3072.webp",
+          "width": 3072,
+          "height": 2304
         }
       ],
       "published": true,
