@@ -62,7 +62,9 @@ export function createWorker({ fetcher = fetch, authenticate = administrator } =
         const current = await load(env);
         const etag = `"${current.revision}"`;
         const headers = { ...cors, ETag: etag, "Cache-Control": "no-cache, must-revalidate" };
-        if (request.headers.get("If-None-Match") === etag) return new Response(null, {status:304,headers});
+        // GET validators use weak comparison; edge compression can add W/.
+        const validators = (request.headers.get("If-None-Match") || "").split(",").map(value => value.trim().replace(/^W\//, ""));
+        if (validators.includes("*") || validators.includes(etag)) return new Response(null, {status:304,headers});
         return response(200, { ...publicContent(current.data), mediaBase: env.MEDIA_BASE }, headers);
       }
       if (url.pathname === "/api/session") return response(404, { error: "Local editor unavailable." });

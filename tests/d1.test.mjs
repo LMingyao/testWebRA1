@@ -343,11 +343,15 @@ test("conditional public reads revalidate after another save and never retain hi
   const {request,data}=setup(t);
   const first=await request('/api/content',{auth:false});const etag=first.headers.get('ETag');
   assert.equal((await request('/api/content',{auth:false,headers:{'If-None-Match':etag}})).status,304);
+  assert.equal((await request('/api/content',{auth:false,headers:{'If-None-Match':`W/${etag}`}})).status,304);
+  assert.equal((await request('/api/content',{auth:false,headers:{'If-None-Match':`"older", W/${etag}`}})).status,304);
+  assert.equal((await request('/api/content',{auth:false,headers:{'If-None-Match':'*'}})).status,304);
   const current=await (await request('/api/admin/content')).json();
   data.photos.forEach(p=>p.published=false);
   await request('/api/admin/content',{method:'PUT',data,revision:current.revision});
   const next=await request('/api/content',{auth:false,headers:{'If-None-Match':etag}});
   assert.equal(next.status,200);assert.notEqual(next.headers.get('ETag'),etag);assert.deepEqual((await next.json()).photos,[]);
+  assert.equal((await request('/api/content',{auth:false,headers:{'If-None-Match':`W/${etag}`}})).status,200);
 });
 
 test("publication records partial failure, retries current content and never sends hidden works to GitHub", async t=>{
