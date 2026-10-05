@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir, stat, copyFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir, stat, copyFile, rm } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
@@ -25,6 +25,12 @@ export async function prepareD1(root) {
   }
   const destination = path.join(root, ".local/cloudflare");
   await mkdir(destination, { recursive: true });
+  const assets = path.resolve(destination, "assets");
+  if (path.dirname(assets) !== path.resolve(root, ".local/cloudflare") || path.basename(assets) !== "assets")
+    throw new Error("Asset output must stay inside the local Cloudflare build directory.");
+  // Rebuild the disposable asset output so retired modules cannot survive packaging.
+  await rm(assets, { recursive: true, force: true });
+  await mkdir(assets, { recursive: true });
   await writeFile(path.join(destination, "seed.sql"), seedSQL(data, media));
   await writeFile(path.join(destination, "media-manifest.json"), JSON.stringify(media, null, 2) + "\n");
   // Copy an explicit list: never deploy the repository, originals, .local secrets,
