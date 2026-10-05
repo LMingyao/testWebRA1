@@ -408,22 +408,6 @@
       "homeSelected": false
     },
     {
-      "id": "jb-jfk",
-      "title": "A skyline departure",
-      "alt": "A JetBlue airliner approaching the runway in front of the city skyline.",
-      "category": "aviation",
-      "image": "assets/JB_JFK.jpg",
-      "thumbnail": "media/jb-jfk-640.webp",
-      "display": "media/jb-jfk-1280.webp",
-      "large": "media/jb-jfk-1920.webp",
-      "width": 2160,
-      "height": 1620,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
       "id": "yyz-dt-x",
       "title": "Above Toronto",
       "alt": "An aerial view of Toronto skyscrapers and the CN Tower through clouds.",
@@ -691,12 +675,42 @@
         "81-0041-wm",
         "f22r",
         "ospreyk",
-        "jb-jfk",
         "yyz-dt-x",
         "slr-ecpre",
         "photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4",
         "photo-e44cf18d-6152-43b1-bd98-5610151961c0",
         "photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150"
+      ],
+      "aviation": [
+        "af1cvrr",
+        "ac-x",
+        "qr-x",
+        "c-fvlx-snow-1-2",
+        "yvr-boat",
+        "bdr-jn1-web",
+        "nf736",
+        "oaci-9917",
+        "cmp",
+        "q400-excu-pt",
+        "aa-erj-plt",
+        "sd515",
+        "yqb-1",
+        "bdr-jl14-8r",
+        "en-nsrt-2ehc",
+        "ts-fin103",
+        "thunderbirdab",
+        "81-0041-wm",
+        "f22r",
+        "f1rk",
+        "ospreyk",
+        "yyz-dt-x",
+        "slr-ecpre",
+        "photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4",
+        "photo-e44cf18d-6152-43b1-bd98-5610151961c0",
+        "photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150",
+        "photo-98dc9da7-6807-48d5-885b-aa746c3a8468",
+        "photo-7f3aff6e-4e46-485b-8096-f9b8687273c2",
+        "photo-22d7522e-b1d3-4788-8db4-afc824b0b52d"
       ]
     },
     "photoLayout": {
@@ -720,6 +734,20 @@
         "photo-22d7522e-b1d3-4788-8db4-afc824b0b52d": {
           "presentation": "auto",
           "group": "group-ee9d23ae-fc3c-422c-8517-c4f4f767936b"
+        }
+      },
+      "aviation": {
+        "thunderbirdab": {
+          "presentation": "auto",
+          "group": "group-a6651011-1c9f-4d35-9b13-848c00eb0630"
+        },
+        "81-0041-wm": {
+          "presentation": "auto",
+          "group": "group-a6651011-1c9f-4d35-9b13-848c00eb0630"
+        },
+        "f22r": {
+          "presentation": "auto",
+          "group": "group-a6651011-1c9f-4d35-9b13-848c00eb0630"
         }
       }
     }
