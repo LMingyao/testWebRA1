@@ -1,7 +1,7 @@
 import { escapeHTML as e, validateContent, contentImagePaths } from '../app/shared.js';
 import { describeChanges } from './drafts.js';
 
-export function bindWorkflow({ store, data, apply, notice, isDirty }) {
+export function bindWorkflow({ store, data, apply, notice, isDirty, isBusy = () => false }) {
   const render = async view => {
     const body = document.createElement('section'); body.className = 'workflow-page';
     body.setAttribute('aria-label', view === 'maintenance' ? '运行维护' : '修改记录');
@@ -54,12 +54,23 @@ export function bindWorkflow({ store, data, apply, notice, isDirty }) {
       });
     } catch (error) { show(`<p>${e(error.message)}</p>`); }
   };
-  document.querySelector('#import-backup').onclick = () => document.querySelector('#backup-input').click();
+  const requireImportSession = () => {
+    if (!store() || !data()) throw new Error('请先登录后台，再导入备份。');
+    if (isBusy()) throw new Error('请等待当前操作完成，再导入备份。');
+  };
+  document.querySelector('#import-backup').onclick = () => {
+    try { requireImportSession(); document.querySelector('#backup-input').click(); }
+    catch (error) { notice(error.message, true); }
+  };
   document.querySelector('#backup-input').onchange = async event => {
     try {
+      requireImportSession();
+      const importStore = store();
       const file = event.target.files[0]; if (!file) return;
       if (file.size > 12 * 1024 * 1024) throw new Error('备份文件过大。');
       const backup = JSON.parse(await file.text()), content = validateContent(backup.data || backup);
+      requireImportSession();
+      if (store() !== importStore) throw new Error('后台连接已变化，请重新导入备份。');
       if (!confirm('将备份内容打开为新草稿？现有未保存编辑将被替换。照片文件必须仍存在。')) return;
       apply(content); notice(`备份已打开为草稿，含 ${contentImagePaths(content).size} 个媒体引用。请预览后保存。`);
     } catch (error) { notice(error.message, true); }

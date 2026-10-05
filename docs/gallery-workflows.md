@@ -2,6 +2,12 @@
 
 The authenticated D1 content document is the source of truth. GitHub stores public display images and published page snapshots. Editing a draft does not update the public site.
 
+## Enter the studio
+
+The public Admin entry automatically opens the configured cloud studio. Visitors without a valid session see the password page; authenticated visitors enter the photo library directly. Management controls stay hidden while the editor verifies its connection. A connection failure shows a retry action instead of an editable workspace. The local development editor and direct repository connection remain available in their respective environments.
+
+Backup import requires a connected editor with loaded content and is disabled during uploads or saves. The importer also checks that the connection has not changed while reading the file. Imported content becomes a draft; publishing still requires an authenticated save. Expired sessions cannot save cloud content, and existing unsaved drafts remain recoverable in the browser.
+
 ## Compose a collection
 
 In the photo library, select the curated collection or a subject filter before sorting. Each collection has its own sequence and composition overrides; arranging the curated collection does not rearrange a subject collection. Without a collection filter, ordering and composition change the library fallback. Search results move only within their visible display-area slots. Panorama photographs remain separate from the lower gallery.

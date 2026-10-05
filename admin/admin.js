@@ -169,8 +169,10 @@ async function connect(adapter) {
     store.mode === "github" ? `发布到 ${store.branch}` : "保存更改";
   $("#disconnect").textContent = store.mode === "d1" ? "退出登录" : "断开连接";
   $("#export").disabled = false;
+  $("#import-backup").disabled = false;
   $("#preview-toggle").disabled = false;
   render();
+  document.body.classList.remove("admin-connecting");
   await offerDraft();
   if (store.mode === "d1" && !store.canUpload)
     notice("已连接 D1。照片上传尚未配置，已有照片、分类和网站内容可以管理。");
@@ -434,7 +436,8 @@ function setBusy(value) {
   $("#editor").inert = value;
   document.querySelector(".sidebar nav").inert = value;
   $("#disconnect").disabled = value;
-  $("#export").disabled = value;
+  $("#export").disabled = value || !store || !data;
+  $("#import-backup").disabled = value || !store || !data;
   $("#preview-toggle").disabled = value;
   dirty();
 }
@@ -567,9 +570,12 @@ $("#disconnect").onclick = async () => {
   previews.clear();
   $("#editor").innerHTML = '<p class="empty">连接仓库以继续管理。</p>';
   $("#save").disabled = true;
+  $("#export").disabled = true;
+  $("#import-backup").disabled = true;
   $("#preview-toggle").disabled = true;
   $("#disconnect").hidden = true;
   $("#connection").textContent = "未连接";
+  document.body.classList.add("admin-connecting");
   $("#login-dialog").showModal();
 };
 $("#login-form").onsubmit = async (event) => {
@@ -679,11 +685,13 @@ window.addEventListener("message", event => {
   }
 });
 bindPhotoOrdering($("#editor"), { getData: () => data, isBusy: () => busy, onChange: render, getIds: visibleIds, getCollection: sequenceCollection });
-const workflow = bindWorkflow({store: () => store, data: () => data, isDirty, notice, apply: value => {
+const workflow = bindWorkflow({store: () => store, data: () => data, isBusy: () => busy, isDirty, notice, apply: value => {
   for (const url of previews.values()) URL.revokeObjectURL(url);
   previews.clear(); data = value; uploads = []; uploadResults = []; uploadMessage = ""; selection.clear(); view = "photos"; render();
 }});
 $("#export").disabled = true;
+$("#import-backup").disabled = true;
+$("#admin-retry").onclick = () => location.reload();
 try {
   const local = await getLocalStore();
   if (local) await connect(local);
@@ -693,8 +701,7 @@ try {
     else {
       const config = await backendConfig();
       if (config.adminURL) {
-        $("#connection").textContent = "云后台已启用";
-        $("#editor").innerHTML = `<section class="panel"><h2>管理摄影作品</h2><p>使用管理员账号登录云后台。</p><a class="text-link" href="${e(config.adminURL)}">打开后台 →</a></section>`;
+        location.replace(config.adminURL);
       } else {
         $("#connection").textContent = "等待 GitHub 连接";
         $("#editor").innerHTML =
@@ -704,7 +711,8 @@ try {
     }
   }
 } catch (error) {
-  notice(error.message, true);
+  $("#admin-start-status").textContent = configurationError(error.message);
+  $("#admin-retry").hidden = false;
 }
 
 function photoEditState() {
