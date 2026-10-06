@@ -262,22 +262,6 @@
       "homeSelected": false
     },
     {
-      "id": "bdr-jl14-8r",
-      "title": "Wings unfolding",
-      "alt": "A heron opening its wings among reeds and grass.",
-      "category": "wildlife",
-      "image": "assets/BDR_JL14-8R.jpg",
-      "thumbnail": "media/bdr-jl14-8r-640.webp",
-      "display": "media/bdr-jl14-8r-1280.webp",
-      "large": "media/bdr-jl14-8r-1920.webp",
-      "width": 1440,
-      "height": 2160,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
       "id": "en-nsrt-2ehc",
       "title": "Lines in motion",
       "alt": "The rear of a white sports car photographed on a city street.",
@@ -819,7 +803,6 @@
         "aa-erj-plt",
         "sd515",
         "yqb-1",
-        "bdr-jl14-8r",
         "en-nsrt-2ehc",
         "f1rk",
         "photo-7f3aff6e-4e46-485b-8096-f9b8687273c2",
@@ -848,7 +831,6 @@
         "q400-excu-pt",
         "sd515",
         "yqb-1",
-        "bdr-jl14-8r",
         "en-nsrt-2ehc",
         "aa-erj-plt",
         "ts-fin103",
