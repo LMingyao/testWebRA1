@@ -600,6 +600,82 @@
       "group": ""
     },
     {
+      "id": "photo-08852004-8055-4aa0-a1e5-e41ec5af56b8",
+      "title": "BDR M16 1",
+      "alt": "BDR M16 1",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-3072.webp",
+      "thumbnail": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-640.webp",
+      "display": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-1280.webp",
+      "large": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-3072.webp",
+      "width": 3400,
+      "height": 2267,
+      "renditions": [
+        {
+          "path": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-2048.webp",
+          "width": 2048,
+          "height": 1366
+        },
+        {
+          "path": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-3072.webp",
+          "width": 3072,
+          "height": 2048
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f",
+      "title": "BDR M8 1",
+      "alt": "BDR M8 1",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-3072.webp",
+      "thumbnail": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-640.webp",
+      "display": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-1280.webp",
+      "large": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-3072.webp",
+      "width": 2849,
+      "height": 4274,
+      "renditions": [
+        {
+          "path": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-640.webp",
+          "width": 427,
+          "height": 640
+        },
+        {
+          "path": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-1280.webp",
+          "width": 853,
+          "height": 1280
+        },
+        {
+          "path": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-2048.webp",
+          "width": 1365,
+          "height": 2048
+        },
+        {
+          "path": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-3072.webp",
+          "width": 2048,
+          "height": 3072
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
       "id": "photo-8ed94bfa-3066-463a-bd79-ab0c545239b3",
       "title": "BDR A29 1",
       "alt": "BDR A29 1",
@@ -631,6 +707,82 @@
           "path": "media/photo-8ed94bfa-3066-463a-bd79-ab0c545239b3-3072.webp",
           "width": 3072,
           "height": 2458
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-4b71659e-8357-40a3-ad81-962e42fdf1d6",
+      "title": "BDR A23 1 6",
+      "alt": "BDR A23 1 6",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
+      "thumbnail": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-640.webp",
+      "display": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-1280.webp",
+      "large": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
+      "width": 8301,
+      "height": 6226,
+      "renditions": [
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-640.webp",
+          "width": 640,
+          "height": 480
+        },
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-1280.webp",
+          "width": 1280,
+          "height": 960
+        },
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-2048.webp",
+          "width": 2048,
+          "height": 1536
+        },
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
+          "width": 3072,
+          "height": 2304
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2",
+      "title": "BDR JN16 5",
+      "alt": "BDR JN16 5",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-3072.webp",
+      "thumbnail": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-640.webp",
+      "display": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-1280.webp",
+      "large": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-3072.webp",
+      "width": 4816,
+      "height": 3612,
+      "renditions": [
+        {
+          "path": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-640.webp",
+          "width": 640,
+          "height": 480
+        },
+        {
+          "path": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-1280.webp",
+          "width": 1280,
+          "height": 960
+        },
+        {
+          "path": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-2048.webp",
+          "width": 2048,
+          "height": 1536
+        },
+        {
+          "path": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-3072.webp",
+          "width": 3072,
+          "height": 2304
         }
       ],
       "published": true,
