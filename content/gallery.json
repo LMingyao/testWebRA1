@@ -148,24 +148,6 @@
       "homeSelected": true
     },
     {
-      "id": "bdr-jn1-web",
-      "title": "At the water’s edge",
-      "alt": "A heron resting on a rock amid rushing river rapids.",
-      "category": "wildlife",
-      "image": "assets/BDR_JN1_WEB.jpg",
-      "thumbnail": "media/bdr-jn1-web-640.webp",
-      "display": "media/bdr-jn1-web-1280.webp",
-      "large": "media/bdr-jn1-web-1920.webp",
-      "width": 2160,
-      "height": 1440,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false,
-      "presentation": "auto",
-      "group": ""
-    },
-    {
       "id": "nf736",
       "title": "A view from above",
       "alt": "An aerial view of streets and architecture near Niagara Falls.",
@@ -280,22 +262,6 @@
       "homeSelected": false
     },
     {
-      "id": "bdr-jl14-8r",
-      "title": "Wings unfolding",
-      "alt": "A heron opening its wings among reeds and grass.",
-      "category": "wildlife",
-      "image": "assets/BDR_JL14-8R.jpg",
-      "thumbnail": "media/bdr-jl14-8r-640.webp",
-      "display": "media/bdr-jl14-8r-1280.webp",
-      "large": "media/bdr-jl14-8r-1920.webp",
-      "width": 1440,
-      "height": 2160,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
       "id": "en-nsrt-2ehc",
       "title": "Lines in motion",
       "alt": "The rear of a white sports car photographed on a city street.",
@@ -386,22 +352,6 @@
       "large": "media/f1rk-1920.webp",
       "width": 2160,
       "height": 1080,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "ospreyk",
-      "title": "On the wing",
-      "alt": "An osprey in flight with its wings outstretched against a blue sky.",
-      "category": "wildlife",
-      "image": "assets/OspreyK.jpg",
-      "thumbnail": "media/ospreyk-640.webp",
-      "display": "media/ospreyk-1280.webp",
-      "large": "media/ospreyk-1920.webp",
-      "width": 2160,
-      "height": 1620,
       "published": true,
       "featured": false,
       "placement": "gallery",
@@ -632,6 +582,196 @@
       "homeSelected": false,
       "presentation": "auto",
       "group": ""
+    },
+    {
+      "id": "photo-08852004-8055-4aa0-a1e5-e41ec5af56b8",
+      "title": "BDR M16 1",
+      "alt": "BDR M16 1",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-3072.webp",
+      "thumbnail": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-640.webp",
+      "display": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-1280.webp",
+      "large": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-3072.webp",
+      "width": 3400,
+      "height": 2267,
+      "renditions": [
+        {
+          "path": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-2048.webp",
+          "width": 2048,
+          "height": 1366
+        },
+        {
+          "path": "media/photo-08852004-8055-4aa0-a1e5-e41ec5af56b8-3072.webp",
+          "width": 3072,
+          "height": 2048
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f",
+      "title": "BDR M8 1",
+      "alt": "BDR M8 1",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-3072.webp",
+      "thumbnail": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-640.webp",
+      "display": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-1280.webp",
+      "large": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-3072.webp",
+      "width": 2849,
+      "height": 4274,
+      "renditions": [
+        {
+          "path": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-640.webp",
+          "width": 427,
+          "height": 640
+        },
+        {
+          "path": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-1280.webp",
+          "width": 853,
+          "height": 1280
+        },
+        {
+          "path": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-2048.webp",
+          "width": 1365,
+          "height": 2048
+        },
+        {
+          "path": "media/photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f-3072.webp",
+          "width": 2048,
+          "height": 3072
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-8ed94bfa-3066-463a-bd79-ab0c545239b3",
+      "title": "BDR A29 1",
+      "alt": "BDR A29 1",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-8ed94bfa-3066-463a-bd79-ab0c545239b3-3072.webp",
+      "thumbnail": "media/photo-8ed94bfa-3066-463a-bd79-ab0c545239b3-640.webp",
+      "display": "media/photo-8ed94bfa-3066-463a-bd79-ab0c545239b3-1280.webp",
+      "large": "media/photo-8ed94bfa-3066-463a-bd79-ab0c545239b3-3072.webp",
+      "width": 4487,
+      "height": 3590,
+      "renditions": [
+        {
+          "path": "media/photo-8ed94bfa-3066-463a-bd79-ab0c545239b3-640.webp",
+          "width": 640,
+          "height": 512
+        },
+        {
+          "path": "media/photo-8ed94bfa-3066-463a-bd79-ab0c545239b3-1280.webp",
+          "width": 1280,
+          "height": 1024
+        },
+        {
+          "path": "media/photo-8ed94bfa-3066-463a-bd79-ab0c545239b3-2048.webp",
+          "width": 2048,
+          "height": 1639
+        },
+        {
+          "path": "media/photo-8ed94bfa-3066-463a-bd79-ab0c545239b3-3072.webp",
+          "width": 3072,
+          "height": 2458
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-4b71659e-8357-40a3-ad81-962e42fdf1d6",
+      "title": "BDR A23 1 6",
+      "alt": "BDR A23 1 6",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
+      "thumbnail": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-640.webp",
+      "display": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-1280.webp",
+      "large": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
+      "width": 8301,
+      "height": 6226,
+      "renditions": [
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-640.webp",
+          "width": 640,
+          "height": 480
+        },
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-1280.webp",
+          "width": 1280,
+          "height": 960
+        },
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-2048.webp",
+          "width": 2048,
+          "height": 1536
+        },
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
+          "width": 3072,
+          "height": 2304
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2",
+      "title": "BDR JN16 5",
+      "alt": "BDR JN16 5",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-3072.webp",
+      "thumbnail": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-640.webp",
+      "display": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-1280.webp",
+      "large": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-3072.webp",
+      "width": 4816,
+      "height": 3612,
+      "renditions": [
+        {
+          "path": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-640.webp",
+          "width": 640,
+          "height": 480
+        },
+        {
+          "path": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-1280.webp",
+          "width": 1280,
+          "height": 960
+        },
+        {
+          "path": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-2048.webp",
+          "width": 2048,
+          "height": 1536
+        },
+        {
+          "path": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-3072.webp",
+          "width": 3072,
+          "height": 2304
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
     }
   ],
   "collections": {
@@ -656,7 +796,6 @@
         "qr-x",
         "c-fvlx-snow-1-2",
         "yvr-boat",
-        "bdr-jn1-web",
         "nf736",
         "oaci-9917",
         "cmp",
@@ -664,7 +803,6 @@
         "aa-erj-plt",
         "sd515",
         "yqb-1",
-        "bdr-jl14-8r",
         "en-nsrt-2ehc",
         "f1rk",
         "photo-7f3aff6e-4e46-485b-8096-f9b8687273c2",
@@ -674,7 +812,6 @@
         "thunderbirdab",
         "81-0041-wm",
         "f22r",
-        "ospreyk",
         "yyz-dt-x",
         "slr-ecpre",
         "photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4",
@@ -687,7 +824,6 @@
         "qr-x",
         "c-fvlx-snow-1-2",
         "yvr-boat",
-        "bdr-jn1-web",
         "nf736",
         "oaci-9917",
         "cmp",
@@ -695,14 +831,12 @@
         "q400-excu-pt",
         "sd515",
         "yqb-1",
-        "bdr-jl14-8r",
         "en-nsrt-2ehc",
         "aa-erj-plt",
         "ts-fin103",
         "thunderbirdab",
         "81-0041-wm",
         "f1rk",
-        "ospreyk",
         "f22r",
         "yyz-dt-x",
         "slr-ecpre",
