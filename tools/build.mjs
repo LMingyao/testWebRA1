@@ -5,7 +5,11 @@ import { createHash } from "node:crypto";
 import { validateContent, contentImagePaths, escapeHTML } from "../app/shared.js";
 import { arrowIcon } from "../app/icons.js";
 import { publicationFiles, publishedContent } from "../app/publishing.js";
+import { buildLegacy } from './build-legacy.mjs';
+import { buildHistory } from './build-history.mjs';
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+await buildLegacy(root);
+await buildHistory(root);
 const content = validateContent(
   JSON.parse(await readFile(path.join(root, "content/gallery.json"), "utf8")),
 );
@@ -27,7 +31,8 @@ const preview = template.replaceAll("{{page}}", "portfolio").replaceAll("{{title
   .replaceAll("{{description}}", "Private draft preview").replaceAll("{{canonical}}", "")
   .replaceAll("{{previousArrow}}", arrowIcon(-1)).replaceAll("{{nextArrow}}", arrowIcon(1))
   .replace('<head>', '<head><base href="../" /><meta name="robots" content="noindex,nofollow" />')
-  .replace('src="app/site.js"', 'src="admin/preview.js"');
+  .replace('src="app/site.js"', 'src="admin/preview.js"')
+  .replace(/<a class="legacy-link"[^>]*>Legacy views<\/a>/, '');
 await writeFile(path.join(root, "admin/preview.html"), preview);
 console.log(
   `Validated ${content.photos.length} photographs and generated static Pages entry points.`,

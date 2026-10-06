@@ -1,0 +1,948 @@
+{
+  "title": "A photographic identity, over time.",
+  "subtitle": "The Website Chronicle",
+  "reviewedThrough": "2 October 2026",
+  "sections": [
+    {
+      "number": 1,
+      "title": "A photographic identity, over time.",
+      "kicker": "THE WEBSITE CHRONICLE",
+      "deck": "",
+      "paragraphs": [
+        "From a first image experiment to a considered portfolio. The pages, marks and small decisions that made the website its own."
+      ],
+      "notes": [
+        "English edition | Front-end design and identity | Evidence reviewed through 2 October 2026"
+      ],
+      "figures": [
+        {
+          "asset": "opening-2026",
+          "alt": "The portfolio and year-free wordmark, captured in October 2026.",
+          "caption": "The portfolio and year-free wordmark, captured in October 2026."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 2,
+      "title": "A history of refinement, not replacement.",
+      "kicker": "PROLOGUE",
+      "deck": "The website has changed substantially. Its most familiar visual ideas have survived.",
+      "paragraphs": [
+        "The earliest page is almost disarmingly simple: one aviation photograph, repeated at different widths. By the end of the same day, a handwritten personal logo and a moving gallery were already taking shape. The first lasting instinct was clear: let a photograph make the introduction.",
+        "The white portfolio of March 2023 changed the frame. A personal wordmark arrived in August; pink became its distinguishing accent. In April 2024 that accent softened into a fade toward white, and the logo acquired a year. The 2025 revision kept the same structure. The present identity removes the annual stamp while retaining the name, the larger Photography line and the pink fade.",
+        "That continuity matters. The current site is not visually unrelated to the earlier one. It is a quieter expression of ideas already present: a wide photographic opening, a restrained navigation, black lettering on white, and a small amount of pink. Its clearest changes concern selection, proportion and the amount of interface surrounding each image."
+      ],
+      "notes": [],
+      "figures": [],
+      "subheads": [
+        {
+          "title": "WHAT THIS ARCHIVE DOCUMENTS",
+          "body": "Original logo artwork, historical page records, reconstructed browser views, preserved preview images and the current public website."
+        },
+        {
+          "title": "HOW TO READ THE IMAGES",
+          "body": "Reconstructed views were rendered from recorded historical pages on 2 October 2026. They show historical source in a modern browser, rather than claiming to be screenshots taken in that year."
+        },
+        {
+          "title": "HOW TO READ THE COMMENTARY",
+          "body": "Dates and file changes are recorded facts. Judgements about mood, hierarchy and continuity are design interpretations. A recorded page revision does not, by itself, prove a public launch date."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Four years, five visual chapters.",
+      "kicker": "CHRONOLOGY",
+      "deck": "Dates below use the Toronto calendar date of the recorded event. The recorded project begins on 10 November 2022.",
+      "paragraphs": [],
+      "notes": [
+        "The chronology follows the recorded page and logo history. A saved revision does not, on its own, establish an exact public launch date."
+      ],
+      "figures": [],
+      "subheads": [],
+      "table": {
+        "kind": "entries",
+        "rows": [
+          [
+            "2022",
+            "The image comes first.",
+            "10 November: image-size tests become a navy slideshow with a handwritten personal logo."
+          ],
+          [
+            "2023",
+            "A white portfolio finds its mark.",
+            "9 March: a white photo wall. 16 March: the panorama returns. 16 August: paired color and monochrome identities."
+          ],
+          [
+            "2024",
+            "The gradient becomes the signature.",
+            "27 April: a dated pink-gradient wordmark. 9 June: a separate portrait page. Further bird and profile updates follow."
+          ],
+          [
+            "2025",
+            "A recognisable design is carried forward.",
+            "4 January: the artwork changes to 2025, while the white shell, panoramic opening and dense photo wall remain."
+          ],
+          [
+            "2026",
+            "The same identity, more deliberately framed.",
+            "1-2 October: the year is removed; the wordmark becomes text; curation, browsing modes and shared composition evolve."
+          ]
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "title": "The first page was a sizing experiment.",
+      "kicker": "10 NOVEMBER 2022",
+      "deck": "The first recorded page experiments with the size of a single aviation photograph.",
+      "paragraphs": [
+        "There is no finished brand, gallery navigation or portfolio heading in the first saved page. A plain testing line precedes nine copies of the same picture, stepping down from large to small. The earliest website is a direct study of photographic scale.",
+        "The photograph shows a Pratt & Whitney-branded aircraft on the runway. Aviation is therefore present at the beginning of the recorded site, rather than being a later category attached to a general portfolio.",
+        "Within the same morning, the experiment becomes a homepage and the address mingyaophoto.com is attached to the project. Further photographs and presentation ideas follow. The recorded address establishes an early intention to create a personal website; it does not establish the exact first day visitors could see it."
+      ],
+      "notes": [],
+      "figures": [
+        {
+          "asset": "first-2022",
+          "alt": "A modern reconstruction of the first recorded page: one aviation photograph at successive widths.",
+          "caption": "A modern reconstruction of the first recorded page: one aviation photograph at successive widths."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 5,
+      "title": "A signature above a moving image.",
+      "kicker": "10 NOVEMBER 2022, EVENING",
+      "deck": "By the evening of the first day, a handwritten personal mark sits above the photography.",
+      "paragraphs": [
+        "The logo is informal and handwritten, with Mingyao above and Photography offset below. Its white strokes suit the dark page and translucent header. The separated lines feel like a personal signature rather than a formal corporate emblem, bringing a human presence to the aviation photographs.",
+        "The evening prototype uses a deep navy canvas, a header laid over the photograph, and the simple links Home and Gallery. The upper slideshow advances automatically. Beneath it, a separate moving album uses variable-width images and two rows on larger screens.",
+        "This version feels cinematic and immersive. It also establishes a recurring tension: how to combine a strong, wide opening image with a larger body of work. The contemporary site still answers that same question, with more deliberate controls and spacing."
+      ],
+      "notes": [
+        "Image: a modern reconstruction of the November 2022 page. The slide is representative of the early sequence."
+      ],
+      "figures": [
+        {
+          "asset": "signature-2022",
+          "alt": "Signature 2022 original artwork.",
+          "caption": "Signature 2022 - original artwork."
+        },
+        {
+          "asset": "blue-2022",
+          "alt": "Modern reconstruction of the November 2022 navy slideshow and moving album.",
+          "caption": "Modern reconstruction of the November 2022 navy slideshow and moving album."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 6,
+      "title": "An early design is preserved.",
+      "kicker": "MARCH 2023 / THE EARLY SHOWCASE",
+      "deck": "An archived showcase preserves the navy aviation slideshow after the main website moved toward white.",
+      "paragraphs": [
+        "An early showcase was saved on 19 March 2023. Its preview presents the white script logo over a large aircraft image, then a navy interval and an irregular tiled aviation album. It preserves the character of the first design: immersive photographs, a personal signature and a moving collection.",
+        "The saved page matches an earlier version of the main website, from before the white redesign was completed on 9 March. It preserves an earlier chapter rather than showing a later return to navy. That distinction keeps the visual sequence clear.",
+        "The preview makes the earliest design easier to appreciate as a complete experience. The logo sits within the photograph instead of above it; the dark background carries the viewing experience downward; the lower album feels like a collection in motion."
+      ],
+      "notes": [
+        "The preserved showcase records an earlier design even though it was saved after the white-page transition."
+      ],
+      "figures": [
+        {
+          "asset": "preserved-showcase",
+          "alt": "Original preview image preserved in the early showcase archive in March 2023.",
+          "caption": "Original preview image preserved in the early showcase archive in March 2023."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 7,
+      "title": "White space becomes the new frame.",
+      "kicker": "9 MARCH 2023",
+      "deck": "A substantial rebuild changes the tone from an immersive slideshow to a recognisable white portfolio.",
+      "paragraphs": [
+        "The personal identity is now a plain, bold MINGYAO LI link. Portfolio, About Me and Contact run across the top. A MY PORTFOLIO heading introduces a tightly packed wall of photographs, with narrow divisions and manually nested half- and quarter-width groups.",
+        "Signika and Montagu Slab appear in the typographic palette, giving the interface a different voice from the earlier handwritten-and-serif combination. Larger image previews are also present in this era. The later redesign refines an established viewing experience.",
+        "The site now gives the images a neutral backdrop and separates information into clear personal pages. It is less atmospheric than the navy prototype, but more adaptable to landscapes, portraits and different colors. These are the structural roots of the present website.",
+        "This is a substantial change of atmosphere, but it preserves the main priority: the photographs occupy the page, while the interface stays relatively small."
+      ],
+      "notes": [],
+      "figures": [
+        {
+          "asset": "white-2023",
+          "alt": "Modern reconstruction of the March 2023 white portfolio.",
+          "caption": "Modern reconstruction of the March 2023 white portfolio."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 8,
+      "title": "The panorama returns to the white page.",
+      "kicker": "16-17 MARCH 2023",
+      "deck": "The slideshow is not abandoned. It is combined with the new portfolio shell.",
+      "paragraphs": [
+        "A panorama above a white photo wall is already the design by March 2023. The current wide opening is an inherited composition, with a revised browsing system around it.",
+        "A language indicator appears on 16 March. Later that day, a four-image panoramic slideshow is added above the white portfolio grid. The cinematic opening from the early design is brought into the newer, more neutral photographic frame.",
+        "A French homepage follows on 17 March. The new language option expands how visitors can enter the portfolio, while retaining the same photographs and basic visual structure.",
+        "The panorama provides an immediate focal point, while the wall below lets visitors scan many subjects. That combination works as a recognisable opening, but it also creates two modes of attention: passive motion above and active selection below. The 2026 work attempts to make the transitions feel more coherent.",
+        "The design inheritance is concrete: the white shell and the panoramic photograph become a long-lived pairing, rather than a completely new invention in the present site."
+      ],
+      "notes": [],
+      "figures": [],
+      "subheads": [],
+      "table": {
+        "kind": "timeline",
+        "rows": [
+          [
+            "09 MAR",
+            "White page; photo wall first."
+          ],
+          [
+            "16 MAR",
+            "Four wide hero images added."
+          ],
+          [
+            "17 MAR",
+            "French edition introduced."
+          ]
+        ]
+      }
+    },
+    {
+      "number": 9,
+      "title": "The first color wordmark has its own vocabulary.",
+      "kicker": "16 AUGUST 2023 / COLOR IDENTITY",
+      "deck": "A new personal color mark replaces the plain name, establishing the stacked photographic wordmark.",
+      "paragraphs": [],
+      "notes": [
+        "The color identity is recorded on 16 August 2023. Its main wordmark does not carry a large annual date."
+      ],
+      "figures": [
+        {
+          "asset": "color-2023",
+          "alt": "Color 2023 original artwork.",
+          "caption": "Color 2023 - original artwork."
+        }
+      ],
+      "subheads": [],
+      "table": {
+        "kind": "cols",
+        "rows": [
+          [
+            "The name above the discipline.",
+            "MINGYAO is smaller than Photography. This hierarchy gives the profession the dominant line and the person a quieter signature. The same relationship is recognisable in the current wordmark."
+          ],
+          [
+            "Two offset squares.",
+            "Soft pink and purple blocks sit diagonally to the left. They form a compact graphic device that can change color across related editions, separate from the typography itself."
+          ],
+          [
+            "Pink arrives as a brand accent.",
+            "A bright pink underline and the small descriptor Colored distinguish the color edition. This is the earliest inspected personal logo family with a clearly visible pink line beneath Photography."
+          ]
+        ]
+      }
+    },
+    {
+      "number": 10,
+      "title": "Black and white is a coordinated edition.",
+      "kicker": "16 AUGUST 2023 / MONOCHROME IDENTITY",
+      "deck": "A full monochrome identity introduces the page. A separate compact badge closes the edition.",
+      "paragraphs": [
+        "The monochrome family shares the stacked typography and diagonal-square geometry with the color logo. Its gray upper block and dark lower block replace the soft color accents, while the wording identifies a dated black-and-white edition.",
+        "The larger mark introduces the black-and-white page. The compact edition badge appears in its footer. The two forms have complementary roles: one identifies the photographer, while the other marks the photographic edition.",
+        "This is the most explicit identity system in the early history: a personal color portfolio and a related editorial edition. The variation is controlled by a common structure, rather than two unrelated logos.",
+        "In design terms, the squares carry more visual weight in monochrome. The later shift toward a pure wordmark can be read as a reduction of that weight. That is an interpretation of the forms, not a documented statement of the original designer's intent."
+      ],
+      "notes": [
+        "Original transparent assets reproduced with only surrounding empty canvas excluded. Their relative placement within each mark is preserved."
+      ],
+      "figures": [
+        {
+          "asset": "monochrome-2023",
+          "alt": "Monochrome 2023 original artwork.",
+          "caption": "Monochrome 2023 - original artwork."
+        },
+        {
+          "asset": "badge-2023",
+          "alt": "Badge 2023 original artwork.",
+          "caption": "Badge 2023 - original artwork."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 11,
+      "title": "Two portals, one portfolio language.",
+      "kicker": "AUGUST 2023 / THE PAGES",
+      "deck": "The color homepage exposes a second logo as a link into the black-and-white page.",
+      "paragraphs": [],
+      "notes": [
+        "Both views are modern reconstructions of the August 2023 pages. They share the white shell while presenting different color treatments."
+      ],
+      "figures": [
+        {
+          "asset": "portfolio-2023",
+          "alt": "Modern reconstruction of the August 2023 color portfolio.",
+          "caption": "Modern reconstruction of the August 2023 color portfolio."
+        },
+        {
+          "asset": "bw-2023",
+          "alt": "Modern reconstruction of the August 2023 black-and-white edition.",
+          "caption": "Modern reconstruction of the August 2023 black-and-white edition."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 12,
+      "title": "Editorial branches are narrowed, then retired.",
+      "kicker": "OCTOBER 2023 - JUNE 2024",
+      "deck": "The history includes deliberate withdrawal, not just the accumulation of new pages.",
+      "paragraphs": [],
+      "notes": [
+        "These earlier editions belong to the historical identity, even though they are no longer part of the current public presentation."
+      ],
+      "figures": [],
+      "subheads": [],
+      "table": {
+        "kind": "events",
+        "rows": [
+          [
+            "14 OCT 2023",
+            "The monochrome header becomes smaller.",
+            "The black-and-white header becomes smaller and an explanatory special-content notice is added. The edition remains visible, with a quieter introduction."
+          ],
+          [
+            "17 DEC 2023",
+            "Duplicate material is cleared away.",
+            "A year-end cleanup clears away duplicated and superseded material. The public identity remains familiar rather than introducing another new logo."
+          ],
+          [
+            "14 APR 2024",
+            "A retirement notice replaces the BW gallery.",
+            "The black-and-white gallery is replaced by a retirement notice. The separate French feature is also withdrawn, narrowing the site around its main presentation."
+          ],
+          [
+            "09 JUN 2024",
+            "The French chapter is closed.",
+            "Obsolete French pages are removed. Some later views retain a language label, but the separate translated experience no longer forms an active chapter of the site."
+          ]
+        ]
+      }
+    },
+    {
+      "number": 13,
+      "title": "Two 2024 directions, one adopted identity.",
+      "kicker": "27 APRIL 2024 / THE ORIGINAL ARTWORK",
+      "deck": "The archive preserves two variations. The main website adopts the one with a handwritten year beside the wordmark.",
+      "paragraphs": [
+        "The year is faintly embedded in the pink bar, to the left of the name. The bar runs across a wider lower band. This alternative is preserved in the archive, but its use on the public pages is not established.",
+        "A handwritten 2024 sits beside the wordmark. The gradient begins under Photography and fades to the right. This is the design adopted by the main homepage, with a slightly larger presence than the previous color identity.",
+        "The alternatives show an identity being refined. One brings the year into the color band; the other gives the handwritten date its own space. Both belong to the creative history, while the adopted mark defines the public visual chapter."
+      ],
+      "notes": [],
+      "figures": [
+        {
+          "asset": "alternative-2024",
+          "alt": "Alternative 2024 original artwork.",
+          "caption": "Alternative 2024 - original artwork."
+        },
+        {
+          "asset": "gradient-2024",
+          "alt": "Gradient 2024 original artwork.",
+          "caption": "Gradient 2024 - original artwork."
+        }
+      ],
+      "subheads": [
+        {
+          "title": "AN ALTERNATIVE PRESERVED IN THE ARCHIVE"
+        },
+        {
+          "title": "THE IDENTITY ADOPTED BY THE WEBSITE"
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "title": "The pink line becomes a soft gradient.",
+      "kicker": "27 APRIL 2024 / THE ACTIVE IDENTITY",
+      "deck": "The diagonal-square emblem gives way to a dated wordmark, while the stacked name and Photography remain.",
+      "paragraphs": [
+        "The active 2024 identity keeps the familiar typographic hierarchy but removes the square device and the Colored descriptor. Its handwritten annual stamp adds a personal, editorial character next to otherwise restrained black lettering.",
+        "The pink bar now fades toward white, instead of retaining the stronger pink-to-lilac accent of the 2023 underline. It is strongest at the left and becomes almost white toward the right. The lower strokes of g, p and y pass across this band, making the letters and color feel like one assembled mark.",
+        "The page itself stays white and recognisable. The second black-and-white mark disappears from the main header, leaving one personal identity. Earlier in April, the wide Air Force One photograph enters the opening sequence. That same image remains a prominent bridge to the present website.",
+        "Aesthetic continuity is stronger here than the individual revisions might suggest: the pink accent evolves in character, while the relationship between the name, profession and opening photograph remains stable."
+      ],
+      "notes": [
+        "Image: reconstruction of the April page. The displayed slide is representative of the sequence, not evidence of which frame a visitor saw first in 2024."
+      ],
+      "figures": [
+        {
+          "asset": "gradient-2024",
+          "alt": "Gradient 2024 original artwork.",
+          "caption": "Gradient 2024 - original artwork."
+        },
+        {
+          "asset": "portfolio-2024",
+          "alt": "Modern reconstruction of the April 2024 page with its adopted gradient identity.",
+          "caption": "Modern reconstruction of the April 2024 page with its adopted gradient identity."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 15,
+      "title": "Portraits receive a page of their own.",
+      "kicker": "9 JUNE 2024",
+      "deck": "Portrait becomes a top-level destination, broadening the website beyond its existing photographic subjects.",
+      "paragraphs": [
+        "The portrait page broadens the public presentation of the practice. Its three images place people alongside the already established aircraft, places and wildlife. The new navigation item makes that change visible before a visitor scrolls.",
+        "The 2024 logo, white background and familiar information pages remain. A new subject receives a new destination without requiring a different brand. This is a useful model of continuity: expand the work while keeping the frame recognisable."
+      ],
+      "notes": [],
+      "figures": [
+        {
+          "asset": "portraits-2024",
+          "alt": "Modern reconstruction of the first portrait page, June 2024.",
+          "caption": "Modern reconstruction of the first portrait page, June 2024."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 16,
+      "title": "The photography changes inside a stable frame.",
+      "kicker": "JUNE - OCTOBER 2024",
+      "deck": "Not every meaningful evolution is a new layout or a new logo.",
+      "paragraphs": [
+        "June brings photo replacements, a separate portrait page and the withdrawal of older language editions. July introduces more bird photography and successive profile-image updates. October revisits the portrait photographs themselves.",
+        "These successive updates show a working portfolio being maintained, not simply a design demonstration frozen at release. A site's perceived identity is formed by its images as much as by its navigation or wordmark: faces, aircraft, cities and birds change the breadth and pace of the experience.",
+        "The visible shell remains largely consistent during these updates. That stability is a strength of the earlier design. Its limitation is different: fixed photo groupings make the presentation depend on the exact pictures placed in each position.",
+        "The later composition system addresses that practical constraint while preserving the principle that original photographs, rather than explanatory cards, should carry the page."
+      ],
+      "notes": [],
+      "figures": [
+        {
+          "asset": "portrait-study",
+          "alt": "Historical portrait from the 2024 updates; an archive image, not a new portfolio selection.",
+          "caption": "Historical portrait from the 2024 updates; an archive image, not a new portfolio selection."
+        },
+        {
+          "asset": "bird-study",
+          "alt": "Historical bird photograph from the recorded updates; an archive image, not a new portfolio selection.",
+          "caption": "Historical bird photograph from the recorded updates; an archive image, not a new portfolio selection."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 17,
+      "title": "A new year, the same visual family.",
+      "kicker": "4 JANUARY 2025",
+      "deck": "The annual artwork changes to 2025, carrying forward the composition established in 2024.",
+      "paragraphs": [
+        "The 2025 artwork arrives on 4 January. Its handwritten annual stamp changes, while the name, profession and pink fade remain almost unchanged. The identity feels familiar at a glance because its strongest relationships are retained.",
+        "The refresh appears across the homepage, portrait page, About and Contact. It carries the identity through the whole public site, giving the different destinations the same personal signature.",
+        "The structure remains familiar: MINGYAO above Photography, a script date beside it, and a pink fade below. This is an iteration of the 2024 family rather than a new identity system.",
+        "The photographic shell also remains stable: the wide opening, white background, small navigation and dense photo wall are carried forward. The next substantial recorded design chapter begins in October 2026."
+      ],
+      "notes": [],
+      "figures": [
+        {
+          "asset": "gradient-2025",
+          "alt": "Gradient 2025 original artwork.",
+          "caption": "Gradient 2025 - original artwork."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 18,
+      "title": "The original site already had a clear identity.",
+      "kicker": "THE PRE-REDESIGN PUBLIC WEBSITE",
+      "deck": "An actual capture from before the October 2026 refactor preserves the mature annual-wordmark design.",
+      "paragraphs": [
+        "This is the website many visitors would recognise: a small personal identity at upper left, a simple navigation opposite it, a long aircraft image and a densely assembled photographic wall below. Pink is used sparingly, mainly within the logo.",
+        "The design is not inherently poor. Its white background supports very different subjects; the wordmark is memorable; the wide opening gives the page a strong first image. Those qualities explain why the present redesign feels like a continuation rather than a replacement.",
+        "The pressure comes from accumulation. Tight gutters, several image shapes competing at once, and a large body of photographs shown in one sequence make the wall more difficult to read as a carefully selected exhibition. The dated raster logo also ties an otherwise lasting identity to annual asset replacement.",
+        "The most useful evolution is therefore selective: keep the signature and the photographic opening, while improving hierarchy, scale, grouping and the way visitors choose work."
+      ],
+      "notes": [
+        "This archival screenshot records a pre-refactor state. It is not a screenshot taken in January 2025."
+      ],
+      "figures": [
+        {
+          "asset": "before-redesign",
+          "alt": "Actual public-site capture from 1 October 2026, before the refactor, showing the 2025 identity.",
+          "caption": "Actual public-site capture from 1 October 2026, before the refactor, showing the 2025 identity."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 19,
+      "title": "The logo family, seen together.",
+      "kicker": "IDENTITY ATLAS",
+      "deck": "The original marks, gathered into one visual family. Plain text and the current wordmark complete the sequence.",
+      "paragraphs": [],
+      "notes": [
+        "Original logo artwork is shown at comparable card sizes. Text identities are editorial reconstructions. The alternative 2024 mark has no confirmed public-page use."
+      ],
+      "figures": [],
+      "subheads": [],
+      "table": {
+        "kind": "cards",
+        "rows": [
+          {
+            "label": "2022 / Handwritten personal mark",
+            "asset": "signature-2022"
+          },
+          {
+            "label": "MAR 2023 / Plain personal name",
+            "asset": null
+          },
+          {
+            "label": "AUG 2023 / Color edition",
+            "asset": "color-2023"
+          },
+          {
+            "label": "AUG 2023 / Monochrome header",
+            "asset": "monochrome-2023"
+          },
+          {
+            "label": "AUG 2023 / Monochrome badge",
+            "asset": "badge-2023"
+          },
+          {
+            "label": "APR 2024 / Archived variant",
+            "asset": "alternative-2024"
+          },
+          {
+            "label": "APR 2024 / Active gradient mark",
+            "asset": "gradient-2024"
+          },
+          {
+            "label": "JAN 2025 / Annual refresh",
+            "asset": "gradient-2025"
+          },
+          {
+            "label": "OCT 2026 / Year-free wordmark",
+            "asset": "current"
+          }
+        ]
+      }
+    },
+    {
+      "number": 20,
+      "title": "The first refactor is an intermediate chapter.",
+      "kicker": "1 OCTOBER 2026 / 10:10",
+      "deck": "An early redesign draft rebuilds the annual wordmark as live text, while still retaining its year.",
+      "paragraphs": [
+        "The first 2026 draft is more editorial. It introduces larger text, an opening statement, photo titles, category labels and counts. The logo becomes text rather than a fixed image, but still includes a dynamically generated annual number.",
+        "This snapshot is important precisely because it is not the final design. The denser explanatory interface and the separation between hero and collection are subsequently pared back. Describing all of these experiments as permanent improvements would misrepresent the actual sequence.",
+        "Later that morning, the logo year is removed. Further changes simplify the navigation and presentation. By the curated-view stage that afternoon, the site has moved closer to a single photographic experience, with Single and Multi browsing modes.",
+        "The direction is reduction: fewer repeated labels, a clearer opening selection, and a wordmark that can retain its visual identity without needing a new annual image."
+      ],
+      "notes": [],
+      "figures": [
+        {
+          "asset": "first-refactor",
+          "alt": "Modern reconstruction of the early October 2026 redesign draft, before later simplifications.",
+          "caption": "Modern reconstruction of the early October 2026 redesign draft, before later simplifications."
+        }
+      ],
+      "subheads": []
+    },
+    {
+      "number": 21,
+      "title": "A few pixels reconnect the logo to its past.",
+      "kicker": "OCTOBER 2026 / WORDMARK REFINEMENT",
+      "deck": "The final wordmark refinements concern the baseline, the letter spacing and the visible left edge of P.",
+      "paragraphs": [],
+      "notes": [
+        "Enlarged editorial reconstruction of the current Arial wordmark. The dashed baseline is an explanatory overlay, not part of the website logo."
+      ],
+      "figures": [],
+      "subheads": [],
+      "table": {
+        "kind": "details",
+        "rows": [
+          [
+            "THE FIRST ADJUSTMENT",
+            "The bar is lifted toward the baseline.",
+            "The pink band is brought closer to the text baseline. The descending strokes of g, p and y overlap the color, restoring the relationship visible in the 2024 and 2025 artwork."
+          ],
+          [
+            "THE SECOND ADJUSTMENT",
+            "The letter bodies gain breathing room.",
+            "The band is lowered slightly so the main letter bodies remain clear. The spacing is eased, allowing Photography to read as a balanced word rather than a tightly compressed shape."
+          ],
+          [
+            "THE FINAL ALIGNMENT",
+            "The geometry is tied to the actual text.",
+            "The band begins at the visible left edge of P and follows the baseline beneath the word. The color and lettering now feel deliberately aligned, rather than placed independently."
+          ]
+        ]
+      }
+    },
+    {
+      "number": 22,
+      "title": "From a packed wall to a composed sequence.",
+      "kicker": "OCTOBER 2026 / THE PHOTOGRAPHIC EXPERIENCE",
+      "deck": "A wide opening remains. Multi view becomes the default; Single view offers a different pace through the same work.",
+      "paragraphs": [
+        "Photographs are grouped by their shapes and sequence, preserving their proportions. Consistent gaps and considered changes of scale help the pictures read as a composed exhibition. On smaller screens, the sequence settles into one image per row.",
+        "A contained image stage gives one photograph the visual priority. Controls sit outside the picture; the separate View full size link is removed. Larger previews remain available as part of the browsing experience, with less interface competing with the image."
+      ],
+      "notes": [
+        "Current public front-end captures, October 2026. A responsive composition supports curation; it does not replace the photographer's judgement about which pictures belong together."
+      ],
+      "figures": [
+        {
+          "asset": "multi-view",
+          "alt": "Multi view captured in October 2026: photographs organised by proportion and sequence.",
+          "caption": "Multi view captured in October 2026: photographs organised by proportion and sequence."
+        },
+        {
+          "asset": "single-view",
+          "alt": "Single view captured in October 2026: a contained image stage and controls outside the photograph.",
+          "caption": "Single view captured in October 2026: a contained image stage and controls outside the photograph."
+        }
+      ],
+      "subheads": [
+        {
+          "title": "MULTI VIEW / proportion and rhythm"
+        },
+        {
+          "title": "SINGLE VIEW / attention and control"
+        }
+      ]
+    },
+    {
+      "number": 23,
+      "title": "The navigation follows the exhibition.",
+      "kicker": "OCTOBER 2026 / COLLECTIONS AND CURATION",
+      "deck": "The opening selection is a curated collection, rather than an obligatory display of every photograph.",
+      "paragraphs": [
+        "2022: Home / Gallery\nMarch 2023: Portfolio / About Me / Contact\nAugust 2023: a second logo opens the BW edition\nJune 2024: Portrait becomes a top-level link",
+        "The current Work menu gathers the photographic destinations into one place. Selected work acts as an intentional introduction, while subject collections offer a fuller route into the practice. About and Contact remain the stable personal destinations outside that grouping.",
+        "Collection order, visibility and the default entry can change without the site needing a different visual shell. The visitor-facing implication is important: the same site can open on a carefully chosen selection or on a particular subject, according to the photographer's current priorities.",
+        "The captured menu shows Selected work, Aviation, Landscapes and Wildlife. Portrait and Motorsport are not visible in this particular state. That is a snapshot of the current selection, not a claim that those subjects have disappeared from the photographic history.",
+        "The design becomes more coherent when navigation reflects the exhibition being presented, rather than exposing every historical page or every stored image equally."
+      ],
+      "notes": [],
+      "figures": [
+        {
+          "asset": "work-navigation",
+          "alt": "Work navigation captured in October 2026; collection visibility is a snapshot of that moment.",
+          "caption": "Work navigation captured in October 2026; collection visibility is a snapshot of that moment."
+        }
+      ],
+      "subheads": [
+        {
+          "title": "Earlier public structures"
+        }
+      ]
+    },
+    {
+      "number": 24,
+      "title": "The personal pages share the same quiet voice.",
+      "kicker": "OCTOBER 2026 / ABOUT, CONTACT AND FOOTER",
+      "deck": "The site's identity extends beyond the photo wall, without introducing a second visual language.",
+      "paragraphs": [
+        "About presents the photographer alongside restrained text. Its spacing and hierarchy belong to the same white photographic frame as the gallery. The separate About page itself dates back to the March 2023 white rebuild.",
+        "Contact makes the email the central action. A longer pink gradient in the footer echoes the logo, distributing the signature across the site at a larger scale. Repetition of one motif creates continuity without scattering unrelated decoration."
+      ],
+      "notes": [
+        "Current public front-end captures. The visible biography, portrait and contact information are an October 2026 content state, rather than fixed design requirements."
+      ],
+      "figures": [
+        {
+          "asset": "about-2026",
+          "alt": "The About page captured in October 2026.",
+          "caption": "The About page captured in October 2026."
+        },
+        {
+          "asset": "contact-2026",
+          "alt": "The Contact page captured in October 2026.",
+          "caption": "The Contact page captured in October 2026."
+        }
+      ],
+      "subheads": [
+        {
+          "title": "A portrait, then a personal introduction."
+        },
+        {
+          "title": "A direct route to a conversation."
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "title": "What survives is more important than what disappears.",
+      "kicker": "DESIGN INHERITANCE",
+      "deck": "The strongest reading of the redesign is a refinement of an existing photographic identity.",
+      "paragraphs": [],
+      "notes": [
+        "Design interpretation based on the documented forms. Simplification does not mean the original website lacked design; it means the same vocabulary is used more selectively."
+      ],
+      "figures": [],
+      "subheads": [],
+      "table": {
+        "kind": "rows",
+        "rows": [
+          [
+            "Aviation at the opening",
+            "An aircraft is the subject of the first experiment; wide aircraft slides define later openings.",
+            "The long photographic opening remains, with controls clear of the image."
+          ],
+          [
+            "A neutral photographic frame",
+            "White becomes the dominant canvas in March 2023.",
+            "The white shell remains; margins and the pace between pictures become more deliberate."
+          ],
+          [
+            "The stacked wordmark",
+            "The personal name above Photography is explicit in the August 2023 family.",
+            "The hierarchy survives in live text, without diagonal blocks or an annual stamp."
+          ],
+          [
+            "The pink accent",
+            "The pink/lilac underline of 2023 becomes a fade toward white in April 2024.",
+            "The gradient remains beneath the logo and reappears as a longer footer signature."
+          ],
+          [
+            "Separate personal pages",
+            "About and Contact are established within the 2023 white portfolio.",
+            "They retain their roles and adopt the gallery's shared typographic and spacing language."
+          ],
+          [
+            "An evolving body of work",
+            "Portraits, birds, travel images and aviation are added or revised over time.",
+            "The homepage becomes a selection; subject collections and browsing modes provide depth."
+          ]
+        ]
+      }
+    },
+    {
+      "number": 26,
+      "title": "The design, carried forward.",
+      "kicker": "A CONTINUING PHOTOGRAPHIC IDENTITY",
+      "deck": "The recorded story begins on 10 November 2022. This edition follows its visual development through 2 October 2026.",
+      "paragraphs": [
+        "The first photograph is already an introduction. The earliest handwritten name gives it a personal signature. The white portfolio provides a neutral frame, and the paired color and monochrome marks begin to organise a recognisable visual family.",
+        "The pink accent becomes more distinctive as the wordmark is refined. The annual stamps give the 2024 and 2025 editions their moment in time. Portraits and wildlife widen the practice without requiring the site to abandon its identity.",
+        "The contemporary website carries those choices forward: a wide opening photograph, a stacked personal wordmark, white space and a quiet pink fade. Its refinements concern the clarity of selection, the scale of pictures and the consistency of the experience.",
+        "About the historical images. Original logo artwork and preserved preview images are identified separately from modern reconstructions of old pages. A reconstruction illustrates an earlier design; it is not presented as a screenshot taken in that year.",
+        "About the dates. The timeline follows the recorded design history and uses Toronto calendar dates. Some alternatives were preserved without a confirmed public-page appearance. They are treated as design explorations rather than additional launched identities."
+      ],
+      "notes": [
+        "English edition | Public website and visual identity | 2 October 2026"
+      ],
+      "figures": [],
+      "subheads": []
+    }
+  ],
+  "assets": {
+    "signature-2022": {
+      "src": "assets/history/signature-2022.png",
+      "width": 612,
+      "height": 238,
+      "kind": "logo",
+      "bounds": [
+        54,
+        47,
+        558,
+        205
+      ]
+    },
+    "color-2023": {
+      "src": "assets/history/color-2023.png",
+      "width": 2755,
+      "height": 1378,
+      "kind": "logo",
+      "bounds": [
+        176,
+        465,
+        2755,
+        1049
+      ]
+    },
+    "monochrome-2023": {
+      "src": "assets/history/monochrome-2023.png",
+      "width": 2755,
+      "height": 1378,
+      "kind": "logo",
+      "bounds": [
+        176,
+        465,
+        2752,
+        1135
+      ]
+    },
+    "badge-2023": {
+      "src": "assets/history/badge-2023.png",
+      "width": 2755,
+      "height": 1378,
+      "kind": "logo",
+      "bounds": [
+        176,
+        465,
+        2398,
+        913
+      ]
+    },
+    "alternative-2024": {
+      "src": "assets/history/alternative-2024.png",
+      "width": 1607,
+      "height": 536,
+      "kind": "logo",
+      "bounds": [
+        0,
+        188,
+        1607,
+        536
+      ]
+    },
+    "gradient-2024": {
+      "src": "assets/history/gradient-2024.png",
+      "width": 1607,
+      "height": 536,
+      "kind": "logo",
+      "bounds": [
+        115,
+        188,
+        1607,
+        536
+      ]
+    },
+    "gradient-2025": {
+      "src": "assets/history/gradient-2025.png",
+      "width": 1607,
+      "height": 536,
+      "kind": "logo",
+      "bounds": [
+        164,
+        185,
+        1607,
+        536
+      ]
+    },
+    "opening-2026": {
+      "src": "assets/history/opening-2026.webp",
+      "width": 1265,
+      "height": 1558,
+      "kind": "screenshot"
+    },
+    "first-2022": {
+      "src": "assets/history/first-2022.webp",
+      "width": 1265,
+      "height": 3830,
+      "kind": "screenshot"
+    },
+    "blue-2022": {
+      "src": "assets/history/blue-2022.webp",
+      "width": 1280,
+      "height": 1722,
+      "kind": "screenshot"
+    },
+    "preserved-showcase": {
+      "src": "assets/history/preserved-showcase.webp",
+      "width": 1600,
+      "height": 1828,
+      "kind": "screenshot"
+    },
+    "white-2023": {
+      "src": "assets/history/white-2023.webp",
+      "width": 1265,
+      "height": 2151,
+      "kind": "screenshot"
+    },
+    "portfolio-2023": {
+      "src": "assets/history/portfolio-2023.webp",
+      "width": 1280,
+      "height": 3259,
+      "kind": "screenshot"
+    },
+    "bw-2023": {
+      "src": "assets/history/bw-2023.webp",
+      "width": 1280,
+      "height": 2950,
+      "kind": "screenshot"
+    },
+    "portfolio-2024": {
+      "src": "assets/history/portfolio-2024.webp",
+      "width": 1280,
+      "height": 3242,
+      "kind": "screenshot"
+    },
+    "portraits-2024": {
+      "src": "assets/history/portraits-2024.webp",
+      "width": 1265,
+      "height": 806,
+      "kind": "screenshot"
+    },
+    "portrait-study": {
+      "src": "assets/history/portrait-study.webp",
+      "width": 1600,
+      "height": 800,
+      "kind": "screenshot"
+    },
+    "bird-study": {
+      "src": "assets/history/bird-study.webp",
+      "width": 1440,
+      "height": 2160,
+      "kind": "screenshot"
+    },
+    "before-redesign": {
+      "src": "assets/history/before-redesign.webp",
+      "width": 1440,
+      "height": 3642,
+      "kind": "screenshot"
+    },
+    "first-refactor": {
+      "src": "assets/history/first-refactor.webp",
+      "width": 1265,
+      "height": 5699,
+      "kind": "screenshot"
+    },
+    "multi-view": {
+      "src": "assets/history/multi-view.webp",
+      "width": 1265,
+      "height": 2503,
+      "kind": "screenshot"
+    },
+    "single-view": {
+      "src": "assets/history/single-view.webp",
+      "width": 1265,
+      "height": 712,
+      "kind": "screenshot"
+    },
+    "work-navigation": {
+      "src": "assets/history/work-navigation.webp",
+      "width": 1265,
+      "height": 712,
+      "kind": "screenshot"
+    },
+    "about-2026": {
+      "src": "assets/history/about-2026.webp",
+      "width": 1265,
+      "height": 779,
+      "kind": "screenshot"
+    },
+    "contact-2026": {
+      "src": "assets/history/contact-2026.webp",
+      "width": 1265,
+      "height": 720,
+      "kind": "screenshot"
+    }
+  }
+}

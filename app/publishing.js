@@ -28,11 +28,12 @@ export function publicationEntries(data) {
     entries.push([`collection-${category.id}.html`,'portfolio',category.id]);
   return entries;
 }
-export function renderPublishedPage(template, content, page, category, {prerender = true} = {}) {
+export function renderPublishedPage(template, content, page, category, {prerender = true, home = false} = {}) {
   const site = siteSettings(content.site), metadata = pageMetadata(content,page,category);
   let html = template.replaceAll('{{page}}',page).replaceAll('{{title}}',e(metadata.title))
     .replaceAll('{{description}}',e(metadata.description)).replaceAll('{{canonical}}',e(metadata.canonical))
     .replaceAll('{{previousArrow}}',arrowIcon(-1)).replaceAll('{{nextArrow}}',arrowIcon(1));
+  if (!home) html = html.replace(/<a class="legacy-link"[^>]*>Legacy views<\/a>/, '');
   html = html.replace('MINGYAO</span',`${e(site.brandName)}</span`).replace('Photography</span',`${e(site.brandTitle)}</span`)
     .replace('aria-label="Mingyao Photography home"',`aria-label="${e(site.name)} ${e(site.brandTitle)} home"`)
     .replace('WORK <span',`${e(site.workLabel)} <span`)
@@ -60,7 +61,7 @@ export function renderPublishedPage(template, content, page, category, {prerende
 export function publicationFiles(template, data, revision, options = {}) {
   const entries=publicationEntries(data), visible=new Set(collections(data).map(c=>c.id));
   const sitemap=entries.filter(([file,page,category])=>file==='index.html'||(page==='portfolio'?visible.has(category)&&!(file==='selected.html'&&defaultCollection(data)==='all'):siteSettings(data.site)[page==='about'?'showAbout':'showContact']));
-  return [...entries.map(([path,page,category])=>({path,content:renderPublishedPage(template,data,page,category,options)})),
+  return [...entries.map(([path,page,category])=>({path,content:renderPublishedPage(template,data,page,category,{...options,home:path==='index.html'})})),
     {path:'sitemap.xml',content:`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemap.map(([file])=>`<url><loc>https://mingyaophoto.com/${e(file)}</loc></url>`).join('')}</urlset>\n`},
     {path:'content/publication.json',content:JSON.stringify({revision,publishedAt:new Date().toISOString(),pages:entries.map(([file])=>file)})+'\n'}];
 }

@@ -151,7 +151,7 @@ export function createServer(root) {
         requested.includes("..") ||
         requested.includes("\\") ||
         !(
-          /^(index|ptr|about_me|contact|aviation|landscape|wildlife|motorsport)\.html$/.test(requested) ||
+          /^(index|selected|ptr|about_me|contact|aviation|landscape|wildlife|motorsport|legacy|legacy-2022|legacy-2023|history)\.html$/.test(requested) ||
           /^(robots\.txt|sitemap\.xml)$/.test(requested) ||
           /^(app|admin|assets|media|content)\/[a-zA-Z0-9_./-]+$/.test(requested)
         )

@@ -372,6 +372,8 @@ body[data-page="portrait"] .collection-toolbar {
 .back-top {
   text-align: right;
 }
+.footer-links { display:flex; justify-content:flex-end; gap:24px; }
+.legacy-link { color:var(--muted); }
 .lightbox {
   border: 0;
   margin: 0;
@@ -781,6 +783,7 @@ body[data-page="portrait"] .collection-toolbar {
   .back-top {
     text-align: left;
   }
+  .footer-links { justify-content:flex-start; flex-wrap:wrap; }
   .lightbox {
     padding: max(18px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
   }
