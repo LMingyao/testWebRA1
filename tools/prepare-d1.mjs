@@ -39,7 +39,7 @@ export async function prepareD1(root) {
     "admin/ui.js", "admin/editor-views.js", "admin/upload-dropzone.js", "admin/studio-tokens.css", "admin/d1-store.js", "admin/drafts.js", "admin/workflow.js", "app/sequence.js", "app/publishing.js", "admin/images.js", "admin/image-worker.js", "admin/jpeg-source.js", "app/media-policy.js",
     "admin/webp-encoder.js", "admin/vendor/webp/webp_enc.js", "admin/vendor/webp/webp_enc.wasm", "admin/vendor/webp/meta.js", "admin/vendor/webp/LICENSE", "admin/vendor/webp/LIBWEBP-COPYING", "admin/config-editor.js", "app/shared.js", "app/backend.js", "app/design.css", "app/wordmark.css",
     "assets/favicon.svg", "content/backend.json", "admin/login.html", "admin/login.js",
-    "admin/login.css", "app/password.js", "admin/preview.html", "admin/preview.js", "admin/preview-data.js", "admin/ordering.js",
+    "admin/login.css", "app/password.js", "app/api-response.js", "admin/preview.html", "admin/preview.js", "admin/preview-data.js", "admin/ordering.js",
     "app/gallery.js", "app/reading-position.js", "app/image-recovery.js", "app/layout.js", "app/images.js", "app/viewer.js", "app/photo-stage.js",
     "app/icons.js", "app/editorial.js", "app/site.css", "app/navigation.js", "app/metadata.js", "app/config.js", "app/chrome.js"];
   for (const file of files) {

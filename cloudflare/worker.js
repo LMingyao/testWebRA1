@@ -74,7 +74,7 @@ export function createWorker({ fetcher = fetch, authenticate = administrator } =
       const authResponse = await authRoute(request, env);
       if (authResponse) return authResponse;
       const publicAssets = ["/admin/login", "/admin/login.js", "/admin/login.css", "/admin/studio-tokens.css", "/app/password.js",
-        "/app/design.css", "/app/wordmark.css", "/assets/favicon.svg"];
+        "/app/design.css", "/app/wordmark.css", "/app/api-response.js", "/assets/favicon.svg"];
       const email = await authenticate(request, env, fetcher);
       if (!email && !publicAssets.includes(url.pathname)) {
         if (["GET", "HEAD"].includes(request.method) && ["/", "/admin", "/admin/", "/admin/index.html"].includes(url.pathname))

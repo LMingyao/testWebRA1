@@ -1,4 +1,5 @@
 import { validateContent } from "../app/shared.js";
+import { readAPIResponse } from "../app/api-response.js";
 import { MEDIA_PATH, DISPLAY_FILE_LIMIT, MEDIA_BATCH_LIMIT } from "../app/media-policy.js";
 
 export class D1Store {
@@ -13,11 +14,7 @@ export class D1Store {
     try { response = await fetch(`/api/admin/${endpoint}`, { ...options, signal: AbortSignal.timeout(endpoint === "content" || endpoint === "publish" || endpoint === "media-batch" ? 120000 : 30000), cache: "no-store",
       headers: { "X-Gallery-Request": "admin", ...options.headers } }); }
     catch (error) { throw new Error(error.name === 'TimeoutError' ? '请求超时。保存结果尚未确认，请保留草稿并检查云端版本后重试。' : '连接失败，请检查网络并保留草稿。'); }
-    if (response.status === 401 || response.redirected)
-      throw new Error("登录已过期，请导出草稿后重新登录。");
-    const result = await response.json();
-    if (!response.ok) { const error = new Error(result.error || "后台请求失败。"); error.status = response.status; throw error; }
-    return result;
+    return readAPIResponse(response, { session: true });
   }
   load() { return this.request("content"); }
   image(path) { return new URL(path, this.mediaBase).href; }
@@ -55,7 +52,7 @@ export class D1Store {
           await this.request('media-batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uploads:batch})});
           break;
         } catch (error) {
-          if (attempt >= 2 || [400,401,403,409,413,415].includes(error.status) || /登录/.test(error.message)) throw error;
+          if (attempt >= 2 || error.retryable === false || [400,401,403,404,409,413,415].includes(error.status) || /登录/.test(error.message)) throw error;
           onProgress({stage:'upload',completed,total:uploads.length,retry:attempt+1});
           await new Promise(resolve=>setTimeout(resolve,400*(attempt+1)));
         }
@@ -76,6 +73,6 @@ export class D1Store {
 export async function getD1Store() {
   const response = await fetch("/api/admin/session", { cache: "no-store" });
   if (!response.ok || response.redirected) return null;
-  const session = await response.json();
+  const session = await readAPIResponse(response, { session: true });
   return session.mode === "d1" ? new D1Store(session) : null;
 }

@@ -1,4 +1,5 @@
 import { derivePassword, encode64, PASSWORD_ITERATIONS } from "../app/password.js";
+import { readAPIResponse } from "../app/api-response.js";
 
 const form = document.querySelector("#password-form");
 const status = document.querySelector("#login-status");
@@ -9,8 +10,7 @@ try {
   if (session.ok) location.replace("/admin/");
   else {
     const response = await fetch("/api/auth/config", { cache: "no-store" });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
+    const data = await readAPIResponse(response);
     if (data.iterations !== PASSWORD_ITERATIONS) throw new Error("登录设置已更新，请刷新页面。");
     config = data;
     status.textContent = "";
@@ -37,8 +37,7 @@ form.addEventListener("submit", async event => {
       "Content-Type": "application/json", "X-Gallery-Request": "admin",
     }, body: JSON.stringify({ proof: encode64(proof) }) });
     proof.fill(0);
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "登录失败。");
+    await readAPIResponse(response);
     location.replace("/admin/");
   } catch (error) {
     status.textContent = error.message || "登录失败，请稍后重试。";
