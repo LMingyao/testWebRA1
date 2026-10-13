@@ -35,7 +35,7 @@ window.addEventListener("message", event => {
 // Parent owns navigation; links in the draft cannot replace the preview frame.
 document.addEventListener("click", event => {
   const link = event.target.closest("a:not([target='_blank'])");
-  if (!link) return;
+  if (!link || link.protocol === "mailto:") return;
   event.preventDefault();
   if (link.classList.contains("back-top")) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
   const value = link.dataset.work || (link.dataset.nav ? `page:${link.dataset.nav}` : link.getAttribute("href") === "contact.html" ? "page:contact" : home);

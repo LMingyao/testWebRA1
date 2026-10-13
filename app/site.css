@@ -568,40 +568,67 @@ body[data-page="portrait"] .collection-toolbar {
   min-height: 44px;
   font-size: 12px;
 }
+body[data-page="contact"] main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: clamp(64px, 10vh, 110px) 0 clamp(80px, 12vh, 130px);
+}
 .contact-page {
-  padding: clamp(48px, 10vh, 100px) 0 100px;
-  min-height: 55vh;
   width: 100%;
+  max-width: 600px;
   margin-inline: auto;
 }
-
-.contact-details {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 22px;
-  margin: 38px 0 42px;
+.contact-purpose {
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.55;
+  color: #303030;
+  max-width: 460px;
 }
-.contact-details p {
-  font-size: 13px;
-  line-height: 1.8;
-  color: #777;
+.contact-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin-top: 32px;
 }
 .email-link {
-  font-size: clamp(22px, 3.8vw, 52px);
-  letter-spacing: -0.03em;
-  overflow-wrap: anywhere;
-  padding-bottom: 13px;
-  background: var(--brand-gradient) left bottom / 100% 2px no-repeat;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  gap: 16px;
+  padding: 9px 0;
+  font-size: 24px;
+  letter-spacing: -0.015em;
+  line-height: 1.5;
 }
-.email-link span {
-  margin-left: 20px;
+.contact-arrow {
+  font: 400 18px/1 Arial, sans-serif;
+  transition: transform 0.15s;
 }
-.contact-location {
-  line-height: 1.9;
-  color: #777;
+.email-link:hover .contact-arrow { transform: translate(2px, -2px); }
+.email-link:hover > span:first-child {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 7px;
+}
+.copy-email {
+  min-height: 44px;
+  padding: 8px 0;
   font-size: 12px;
+  color: #626262;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-color: #d0d0d0;
 }
+.copy-email:hover { color: #171717; text-decoration-color: #171717; }
+.contact-location {
+  margin-top: 22px;
+  line-height: 1.8;
+  color: #666;
+  font-size: 14px;
+}
+.contact-email-fallback { margin-top: 16px; font-size: 14px; overflow-wrap: anywhere; }
 .loading,
 .error-state {
   padding: 100px 0;
@@ -649,9 +676,6 @@ body[data-page="portrait"] .collection-toolbar {
   }
   .work-opening {
     margin-bottom: 20px;
-  }
-  .contact-details {
-    gap: 30px;
   }
 }
 @media (max-width: 900px) {
@@ -825,19 +849,11 @@ body[data-page="portrait"] .collection-toolbar {
   .body-copy {
     font-size: 15px;
   }
-  .contact-page {
-    padding: 35px 0 65px;
-  }
-  .contact-details {
-    margin: 38px 0 32px;
-    gap: 25px;
-  }
-  .email-link {
-    font-size: 22px;
-  }
-  .email-link span {
-    margin-left: 6px;
-  }
+  body[data-page="contact"] main { padding: 52px 0 74px; align-items: flex-start; }
+  .contact-purpose { font-size: 23px; max-width: 320px; }
+  .contact-actions { margin-top: 26px; }
+  .email-link { font-size: 20px; gap: 14px; }
+  .contact-location { margin-top: 26px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html {
