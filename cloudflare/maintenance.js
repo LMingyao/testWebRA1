@@ -36,10 +36,22 @@ export async function mediaReport(env, fetcher = fetch) {
   }
   return {unused,mediaCount:backup.media.length,repositoryChecked,note};
 }
+export async function publicationStatus(env, fetcher = fetch) {
+  const row = await env.DB.prepare('SELECT revision FROM gallery_content WHERE id = 1').first();
+  if (!row) throw new HTTPError(503, '没有可发布内容。');
+  let publication = await env.DB.prepare('SELECT revision,status,commit_sha,message FROM gallery_publication WHERE id = 1').first();
+  if (publication?.status==='submitted' && publication.revision===row.revision) {
+    try {
+      const deployed=await fetcher(new URL('/content/publication.json',env.SITE_ORIGIN),{headers:{'Cache-Control':'no-cache'},signal:AbortSignal.timeout(10000)});
+      if (deployed.ok && (await deployed.json()).revision===row.revision) publication={...publication,status:'published',message:'正式页面的发布版本已同步。'};
+    } catch { /* Submission is not evidence of completed deployment. */ }
+  }
+  return {revision:row.revision, publication: publication?.revision === row.revision ? publication :
+    {status:'pending',message:'当前内容尚未同步到静态网站与分享信息。'}};
+}
 export async function health(env, fetcher) {
   const row=await env.DB.prepare('SELECT document, revision, updated_at FROM gallery_content WHERE id = 1').first();
   const count=await env.DB.prepare('SELECT count(*) AS n FROM gallery_media').first();
-  let publication=await env.DB.prepare('SELECT revision,status,commit_sha,message FROM gallery_publication WHERE id = 1').first();
   let upload={ok:false,message:'尚未配置上传令牌。'};
   if (env.GITHUB_TOKEN) {
     try { await github(env,`git/ref/heads/${encodeURIComponent(env.GITHUB_BRANCH)}`,'GET',undefined,fetcher);
@@ -54,12 +66,7 @@ export async function health(env, fetcher) {
       mediaPreview.ok=response.ok;mediaPreview.message=response.ok?'抽查的一张照片可以公开读取。':'抽查照片读取失败，请检查图片托管。';
     } catch { mediaPreview.message='照片读取检查未完成，请稍后重试。'; }
   }
-  if (publication?.status==='submitted' && publication.revision===row?.revision) {
-    try {
-      const deployed=await fetcher(new URL('/content/publication.json',env.SITE_ORIGIN),{headers:{'Cache-Control':'no-cache'},signal:AbortSignal.timeout(10000)});
-      if (deployed.ok && (await deployed.json()).revision===row.revision) publication={...publication,status:'published',message:'正式页面的发布版本已同步。'};
-    } catch { /* Submission is not evidence of completed deployment. */ }
-  }
+  const publication = row ? (await publicationStatus(env, fetcher)).publication : {status:'pending',message:'数据库尚未初始化。'};
   return {database:Boolean(row),updatedAt:row?.updated_at,mediaCount:count.n,upload,mediaPreview,
     publication:publication?.revision===row?.revision?publication:{status:'pending',message:'当前内容尚未同步到静态网站与分享信息。'}};
 }

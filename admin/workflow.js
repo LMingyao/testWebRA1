@@ -1,19 +1,51 @@
+import { backupGuideHTML, validateBackupReceipt } from "./backup-guide.js";
 import { escapeHTML as e, validateContent, contentImagePaths } from '../app/shared.js';
 import { describeChanges } from './drafts.js';
 
 export function bindWorkflow({ store, data, apply, notice, isDirty, isBusy = () => false }) {
   const render = async view => {
     const body = document.createElement('section'); body.className = 'workflow-page';
-    body.setAttribute('aria-label', view === 'maintenance' ? '运行维护' : '修改记录');
+    body.setAttribute('aria-label', view === 'maintenance' ? '运行维护' : view === 'backup' ? '备份与恢复' : '修改记录');
     document.querySelector('#editor').replaceChildren(body);
     const show = html => { if (body.isConnected) body.innerHTML = html; };
+    if (view === 'backup') {
+      const adapter = store();
+      if (adapter?.mode !== 'd1') { show('<section class="panel"><p>完整云端备份需要连接 D1 云后台。</p></section>'); return; }
+      const key = `gallery-backup-check:${location.origin}`;
+      let receipt;
+      try { const raw = localStorage.getItem(key); if (raw) receipt = validateBackupReceipt(JSON.parse(raw)); } catch { /* A broken local receipt is not evidence of a backup. */ }
+      show(backupGuideHTML(receipt));
+      body.querySelector('#full-backup').onclick = async event => {
+        if (isBusy() || store() !== adapter) return;
+        const button = event.currentTarget; button.disabled = true;
+        try { download(await adapter.request('backup'), 'gallery-backup-manifest.json'); notice('清单已下载。请继续第二步下载并校验照片，才算完整备份。'); }
+        catch (error) { notice(error.message, true); }
+        finally { button.disabled = false; }
+      };
+      body.querySelector('#choose-backup-report').onclick = () => { if (!isBusy() && store() === adapter) body.querySelector('#backup-report-input').click(); };
+      body.querySelector('#backup-report-input').onchange = async event => {
+        try {
+          if (isBusy() || store() !== adapter) throw new Error('请等待当前操作完成，并确认后台连接。');
+          const file = event.target.files[0]; if (!file) return;
+          if (file.size > 16384) throw new Error('校验报告文件过大。');
+          const report = validateBackupReceipt(JSON.parse(await file.text()));
+          if (isBusy() || store() !== adapter || !body.isConnected) throw new Error('后台状态已变化，请重新选择校验报告。');
+          await adapter.request('session');
+          if (isBusy() || store() !== adapter || !body.isConnected) throw new Error('后台状态已变化，请重新选择校验报告。');
+          localStorage.setItem(key, JSON.stringify(report));
+          await render('backup'); notice('本机校验报告已记录；此操作不会更改线上网站。');
+        } catch (error) { notice(error.message, true); }
+        finally { event.target.value = ''; }
+      };
+      return;
+    }
     if (view === 'maintenance') {
     if (store()?.mode !== 'd1') { show('<section class="panel"><p>运行维护功能需要连接 D1 云后台。</p></section>'); return; }
     show('<section class="panel"><p role="status">正在检查服务与媒体清单…</p></section>');
     try {
       const s = await store().request('health');
       if (!body.isConnected) return;
-      show(`<section class="panel"><h2>服务状态</h2><dl><dt>数据库</dt><dd>${s.database ? '正常' : '异常'}</dd><dt>上传权限</dt><dd>${e(s.upload.message)}</dd><dt>照片读取</dt><dd>${e(s.mediaPreview.message)}</dd><dt>网站发布</dt><dd>${e(s.publication.message)}</dd></dl><p class="hint">已登记媒体 ${s.mediaCount} 个；最近保存 ${e(s.updatedAt)}。此检查不会修改网站。</p></section><section class="panel"><h2>发布与备份</h2><p class="hint">保存更新云端内容；静态页面和分享信息的部署进度可在这里检查、重试。</p><div class="maintenance-actions"><button id="retry-publication" class="secondary">同步网站与分享信息</button><button id="media-report" class="secondary">检查未使用文件</button><button id="full-backup" class="secondary">下载完整备份清单</button></div><div id="maintenance-result" role="status"></div></section>`);
+      show(`<section class="panel"><h2>服务状态</h2><dl><dt>数据库</dt><dd>${s.database ? '正常' : '异常'}</dd><dt>上传权限</dt><dd>${e(s.upload.message)}</dd><dt>照片读取</dt><dd>${e(s.mediaPreview.message)}</dd><dt>网站发布</dt><dd>${e(s.publication.message)}</dd></dl><p class="hint">已登记媒体 ${s.mediaCount} 个；最近保存 ${e(s.updatedAt)}。此检查不会修改网站。</p></section><section class="panel"><h2>发布与备份</h2><p class="hint">保存更新云端内容；静态页面和分享信息的部署进度可在这里检查、重试。</p><div class="maintenance-actions"><button id="retry-publication" class="secondary">同步网站与分享信息</button><button id="media-report" class="secondary">检查未使用文件</button><button id="backup-guide" class="secondary">备份与恢复向导</button></div><div id="maintenance-result" role="status"></div></section>`);
       body.querySelector('#retry-publication').onclick = async () => {
         const button=body.querySelector('#retry-publication'); button.disabled=true;
         try { const r = await store().request('publish', {method:'POST'}); notice(r.message, r.status !== 'submitted'); if(body.isConnected) await render('maintenance'); }
@@ -26,10 +58,7 @@ export function bindWorkflow({ store, data, apply, notice, isDirty, isBusy = () 
           body.querySelector('#maintenance-result').innerHTML = `<h3>未使用文件</h3><p class="hint">保留当前内容及最近 20 次历史引用。${e(r.note)}</p>${r.unused.length ? `<ul>${r.unused.map(p=>`<li>${e(p.path)} · ${Math.round(p.bytes/1024)} KB${p.unregistered?' · 未登记':''}</li>`).join('')}</ul>` : '<p>没有发现未使用文件。</p>'}`;
         } catch (error) { notice(error.message, true); }
       };
-      body.querySelector('#full-backup').onclick = async () => {
-        try { download(await store().request('backup'), 'gallery-backup-manifest.json'); notice('内容、历史与媒体清单已导出；照片文件请使用本机完整备份工具下载。'); }
-        catch (error) { notice(error.message, true); }
-      };
+      body.querySelector('#backup-guide').onclick = () => document.querySelector('[data-view="backup"]').click();
     } catch (error) { show(`<section class="panel"><p>${e(error.message)}</p></section>`); }
     return;
     }

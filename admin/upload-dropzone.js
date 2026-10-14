@@ -1,11 +1,9 @@
 import { escapeHTML as e } from "../app/shared.js";
 import { studioIcon } from "./ui.js";
-import { validateSourceFile } from "../app/media-policy.js";
 
 export function validateUploadBatch(files) {
   if (!files.length) throw new Error("请拖入照片文件；暂不支持文件夹。");
   if (files.length > 20) throw new Error("每批最多上传 20 张照片，请分批添加。");
-  for (const file of files) validateSourceFile(file);
 }
 
 export function uploadPanel({ open, categories, category, placement, message, results }) {
@@ -15,7 +13,7 @@ export function uploadPanel({ open, categories, category, placement, message, re
     <div id="upload-dropzone" class="upload-dropzone" role="region" aria-label="照片拖放区域">${studioIcon("upload")}<strong>把照片拖到这里</strong><span>支持多张照片一起拖入，或</span><button id="browse-upload" class="secondary">选择文件</button><small>JPG ≤ 100 MB · PNG / WebP ≤ 25 MB · 每批最多 20 张</small></div>
     <p class="hint">保存前等比例缩图：作品画廊最长边 3072 像素，顶部轮播 4096 像素。小图不放大，缩图后无损编码；原图不上传。原图支持最多 1.2 亿像素，最长边 30000 像素。</p>
     <p id="upload-status" class="upload-status" role="status" aria-live="polite">${e(message || "新照片默认隐藏，不会自动发布到网站。")}</p>
-    ${results.length ? `<div class="upload-results">${results.map(item => `<div><img src="${e(item.preview)}" alt=""><span>${e(item.name)}</span><small>已加入草稿</small></div>`).join("")}</div>` : ""}
+    ${results.length ? `<div class="upload-results">${results.map(item => `<div class="upload-result" data-status="${e(item.status || "done")}">${item.preview ? `<img src="${e(item.preview)}" alt="">` : `<div class="upload-placeholder" aria-hidden="true">${studioIcon(item.status === "failed" ? "close" : "upload")}</div>`}<span>${e(item.name)}</span><small>${item.status === "failed" ? e(item.error) : item.status === "processing" ? "正在处理…" : item.status === "pending" ? "等待处理" : "已加入草稿"}</small>${item.status === "failed" ? `<button class="secondary" data-retry-upload="${e(item.key)}">重试此照片</button>` : ""}</div>`).join("")}${results.some(item => item.status === "failed") ? '<div class="upload-retry"><button id="retry-failed-uploads" class="secondary">只重试失败照片</button><small>失败原图仅保留在本次页面；刷新后请重新添加失败文件。已处理照片可通过草稿恢复。</small></div>' : ""}</div>` : ""}
   </section>`;
 }
 

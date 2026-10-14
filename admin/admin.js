@@ -14,6 +14,9 @@ import { applySiteChrome } from "../app/chrome.js";
 import { renderCollectionEditor, renderSiteEditor, syncSiteForm, collectionTarget, moveCollection, setCollectionVisible, configurationError } from "./config-editor.js";
 import { orderedPhotos, moveVisible, setComposition, photoComposition } from "../app/sequence.js";
 import { draftKey, readDraft, writeDraft, deleteDraft, describeChanges } from "./drafts.js";
+import { uploadItems, processUploads } from "./upload-queue.js";
+import { applyPhotoBatch } from "./batch.js";
+import { createPublicationMonitor } from "./publication.js";
 import { bindWorkflow } from "./workflow.js";
 import { studioIcon as icon } from "./ui.js";
 import { uploadPanel, validateUploadBatch, bindUploadDropzone } from "./upload-dropzone.js";
@@ -54,6 +57,7 @@ function dirty() {
   $("#dirty-state").textContent = changed ? "有未保存更改" : "已保存";
   $("#dirty-state").dataset.dirty = String(changed);
   $("#save").disabled = !changed || busy;
+  publicationMonitor.draft(changed);
   schedulePreview();
   scheduleDraft();
 }
@@ -68,14 +72,16 @@ function card(photo, boundaries) {
   const categoryVisible = data.categories.find(category => category.id === photo.category)?.visible !== false;
   const composition = photoComposition(data, sequenceCollection(), photo);
   const flags = [photo.homeSelected && "精选", photo.featured && "轮播首图", composition.presentation === "solo" && "独立一行", composition.group && "已分组", (photo.alt === photo.title || /^[0-9 _-]+$/.test(photo.alt)) && "描述待完善"].filter(Boolean);
-  return `<article class="admin-card" data-card="${e(photo.id)}" data-selected="${selection.has(photo.id)}"><button class="card-image" data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><label class="composition-choice" title="选择照片编排"><input type="checkbox" data-select-photo="${e(photo.id)}" aria-label="选择 ${e(photo.title)}" ${selection.has(photo.id) ? "checked" : ""}><span class="sr-only">选择编排</span></label><div class="card-info"><div class="card-title" title="${e(photo.title)}">${e(photo.title)}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "轮播" : "画廊"}</span><span class="badge ${photo.published && categoryVisible ? "" : "draft"}">${!photo.published ? "已隐藏" : categoryVisible ? "展示中" : "分类隐藏"}</span></div>${flags.length ? '<div class="card-flags">'+flags.map(flag=>'<span>'+flag+'</span>').join('')+'</div>' : ''}</div><div class="card-actions"><button class="drag-handle" data-drag="${e(photo.id)}" aria-label="拖动排序 ${e(photo.title)}" title="拖动排序">${icon('drag')}</button><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" title="向前移动" ${photo.id === first ? "disabled" : ""}>${icon('up')}</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" title="向后移动" ${photo.id === last ? "disabled" : ""}>${icon('down')}</button><button data-toggle="${e(photo.id)}" aria-label="${photo.published ? '隐藏' : '展示'} ${e(photo.title)}" title="${photo.published ? '隐藏照片' : '展示照片'}">${icon(photo.published ? 'eye' : 'hidden')}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
+  return `<article class="admin-card" data-card="${e(photo.id)}" data-selected="${selection.has(photo.id)}"><button class="card-image" data-edit="${e(photo.id)}" aria-label="编辑 ${e(photo.title)}"><img src="${e(image(photo))}" alt="${e(photo.alt)}" loading="lazy"></button><label class="composition-choice" title="选择照片"><input type="checkbox" data-select-photo="${e(photo.id)}" aria-label="选择 ${e(photo.title)}" ${selection.has(photo.id) ? "checked" : ""}><span class="sr-only">选择照片</span></label><div class="card-info"><div class="card-title" title="${e(photo.title)}">${e(photo.title)}</div><div class="card-meta"><span>${e(categoryName(photo.category))} · ${photo.placement === "hero" ? "轮播" : "画廊"}</span><span class="badge ${photo.published && categoryVisible ? "" : "draft"}">${!photo.published ? "已隐藏" : categoryVisible ? "展示中" : "分类隐藏"}</span></div>${flags.length ? '<div class="card-flags">'+flags.map(flag=>'<span>'+flag+'</span>').join('')+'</div>' : ''}</div><div class="card-actions"><button class="drag-handle" data-drag="${e(photo.id)}" aria-label="拖动排序 ${e(photo.title)}" title="拖动排序">${icon('drag')}</button><button data-move="${e(photo.id)}" data-direction="-1" aria-label="向前移动 ${e(photo.title)}" title="向前移动" ${photo.id === first ? "disabled" : ""}>${icon('up')}</button><button data-move="${e(photo.id)}" data-direction="1" aria-label="向后移动 ${e(photo.title)}" title="向后移动" ${photo.id === last ? "disabled" : ""}>${icon('down')}</button><button data-toggle="${e(photo.id)}" aria-label="${photo.published ? '隐藏' : '展示'} ${e(photo.title)}" title="${photo.published ? '隐藏照片' : '展示照片'}">${icon(photo.published ? 'eye' : 'hidden')}</button><button data-edit="${e(photo.id)}">编辑</button></div></article>`;
 }
 function syncSelectionControls() {
   const actions = $(".composition-actions");
   if (!actions) return;
   const chosen = visiblePhotos().filter(photo => selection.has(photo.id));
   const count = chosen.length, galleryOnly = chosen.every(photo => photo.placement !== "hero");
-  actions.hidden = selection.size === 0;
+  actions.hidden = count === 0;
+  actions.querySelector(".layout-actions").hidden = !galleryOnly;
+  actions.querySelectorAll("[data-batch], #batch-category").forEach(control => control.disabled = count === 0);
   $("#selection-count").textContent = `已选 ${count} 张${galleryOnly ? '' : ' · 轮播照片不参与编排'}`;
   actions.querySelectorAll('[data-compose]').forEach(button => { button.disabled = button.dataset.compose !== 'clear' && (count === 0 || !galleryOnly); });
 }
@@ -104,7 +110,7 @@ function matchesArea(photo, area) {
 }
 function renderPhotos() {
   $("#editor").innerHTML =
-    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published && data.categories.some(category => category.id === p.category && category.visible !== false)).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><div class="library-search">${icon("search")}<input id="search" type="search" placeholder="搜索照片或描述…" aria-label="搜索照片" value="${e(search)}"></div><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>${icon("upload")}上传照片</button></div><div class="composition-tools"><span class="composition-scope">编排范围：${sequenceCollection() === "all" ? "精选集合（独立）" : sequenceCollection() ? e(categoryName(sequenceCollection())) + "（独立）" : "当前筛选的照片库"}</span><div class="composition-actions" hidden><span id="selection-count"></span><button data-compose="group">组合成组</button><button data-compose="solo">独立一行</button><button data-compose="auto">恢复自动排版</button><button data-compose="clear">取消选择</button></div></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">精选集合只显示已勾选“加入精选集合”的展示照片，题材分类页显示该分类全部展示照片。轮播照片不会出现在下方图库。上传后默认隐藏且不加入精选集合，拖动手柄或 ↑ ↓ 调整所在区域的顺序；打开“作品预览”即可比较桌面与手机效果。</p>`;
+    `<div class="stats"><div class="stat"><span>照片总数</span><strong>${data.photos.length}</strong></div><div class="stat"><span>正在展示</span><strong>${data.photos.filter((p) => p.published && data.categories.some(category => category.id === p.category && category.visible !== false)).length}</strong></div><div class="stat"><span>作品分类</span><strong>${data.categories.length}</strong></div></div><div class="library-tools"><div class="library-search">${icon("search")}<input id="search" type="search" placeholder="搜索照片或描述…" aria-label="搜索照片" value="${e(search)}"></div><select id="category-filter" aria-label="按分类筛选"><option value="all">全部分类</option>${data.categories.map((c) => `<option value="${e(c.id)}" ${filter === c.id ? "selected" : ""}>${e(c.label)}</option>`).join("")}</select><button class="primary" id="upload" ${data.categories.length ? "" : "disabled"}>${icon("upload")}上传照片</button></div><div class="composition-tools"><span class="composition-scope">编排范围：${sequenceCollection() === "all" ? "精选集合（独立）" : sequenceCollection() ? e(categoryName(sequenceCollection())) + "（独立）" : "当前筛选的照片库"}</span><button id="select-visible">选择当前结果</button><div class="composition-actions" hidden><div class="selection-heading"><span id="selection-count"></span><button data-compose="clear">取消选择</button></div><div class="batch-actions"><span class="batch-label">批量整理</span><select id="batch-category" aria-label="批量修改分类">${data.categories.map(c => `<option value="${e(c.id)}">${e(c.label)}</option>`).join("")}</select><button data-batch="category">改分类</button><button data-batch="show">显示</button><button data-batch="hide">隐藏</button><button data-batch="select">加入精选</button><button data-batch="unselect">移出精选</button></div><div class="layout-actions"><span class="batch-label">画廊编排</span><button data-compose="group">组合成组</button><button data-compose="solo">独立一行</button><button data-compose="auto">恢复自动排版</button></div></div></div><div class="admin-grid" id="photo-list"></div><p class="hint import-note">精选集合只显示已勾选“加入精选集合”的展示照片，题材分类页显示该分类全部展示照片。轮播照片不会出现在下方图库。上传后默认隐藏且不加入精选集合，拖动手柄或 ↑ ↓ 调整所在区域的顺序；打开“作品预览”即可比较桌面与手机效果。</p>`;
   $(".stats").insertAdjacentHTML(
     "afterend",
     `<div class="library-areas">${[
@@ -136,9 +142,9 @@ function render() {
     categories: "分类管理",
     settings: "网站内容",
     history: "修改记录",
-    maintenance: "运行维护",
+    maintenance: "运行维护", backup: "备份与恢复",
   }[view];
-  $("#view-description").textContent = {photos:"整理作品、选择精选，并安排展示顺序。",categories:"管理作品集合、导航顺序与默认入口。",settings:"更新个人资料、页面文字与品牌内容。",history:"浏览已保存版本，先预览，再恢复为草稿。",maintenance:"查看服务状态，管理发布与备份。"}[view];
+  $("#view-description").textContent = {photos:"整理作品、选择精选，并安排展示顺序。",categories:"管理作品集合、导航顺序与默认入口。",settings:"更新个人资料、页面文字与品牌内容。",history:"浏览已保存版本，先预览，再恢复为草稿。",maintenance:"查看服务状态，管理发布与备份。",backup:"备份网站内容与照片，并检查恢复步骤。"}[view];
   document.querySelectorAll("[data-view]").forEach((b) => {
     b.removeAttribute("aria-current");
     if (b.dataset.view === view) b.setAttribute("aria-current", "page");
@@ -149,6 +155,7 @@ function render() {
     settings: renderSettings,
     history: () => workflow.render("history"),
     maintenance: () => workflow.render("maintenance"),
+    backup: () => workflow.render("backup"),
   })[view]();
   dirty();
 }
@@ -158,6 +165,7 @@ async function connect(adapter) {
   revision = loaded.revision;
   base = JSON.stringify(data);
   store = adapter;
+  publicationMonitor.start(store, revision);
   uploadResults = []; uploadMessage = ""; uploadOpen = false;
   draftReady = false;
   $("#connection").textContent =
@@ -270,6 +278,20 @@ $("#editor").addEventListener("click", (event) => {
   if (busy || !data) return;
   const button = event.target.closest("button");
   if (!button) return;
+  if (button.id === "select-visible") {
+    visiblePhotos().forEach(photo => selection.add(photo.id)); renderCards(); return;
+  }
+  if (button.dataset.batch) {
+    const ids = visiblePhotos().filter(photo => selection.has(photo.id)).map(photo => photo.id);
+    const count = applyPhotoBatch(data, ids, button.dataset.batch, $("#batch-category").value);
+    selection.clear(); render();
+    notice(`已将 ${count} 张照片的批量编辑加入草稿，请预览后保存。`);
+    return;
+  }
+  if (button.dataset.retryUpload !== undefined || button.id === "retry-failed-uploads") {
+    const failed = uploadResults.filter(item => item.status === "failed" && (button.id === "retry-failed-uploads" || item.key === button.dataset.retryUpload));
+    runPhotoQueue(failed); return;
+  }
   if (button.dataset.compose) {
     const action = button.dataset.compose;
     const chosen = visiblePhotos().filter(p => selection.has(p.id));
@@ -457,34 +479,44 @@ async function addPhotoFiles(files) {
     if (!data.categories.some(item => item.id === category)) throw new Error("请先选择有效的作品分类。");
     validateUploadBatch(files);
   } catch (error) { uploadStatus(error.message, true); return; }
-  uploadResults = [];
-  $(".upload-results")?.remove();
+  const items = uploadItems(files, category, placement);
+  uploadResults.push(...items);
+  await runPhotoQueue(items);
+}
+async function runPhotoQueue(items) {
+  if (busy || !store || !data || !items.length) return;
+  // Retry keeps each file's original destination even when the form selection changes.
   setBusy(true);
-  let count = 0;
   try {
-    for (const file of files) {
-      uploadStatus("正在处理 " + (count + 1) + " / " + files.length + "：" + file.name);
-      progress({ stage: "prepare", completed: count, total: files.length });
-      const prepared = await preparePhoto(file, category, placement);
+    await processUploads(items, (file, category, placement) => {
+      if (!data.categories.some(c => c.id === category)) throw new Error("原分类已删除，请重新选择分类并添加此照片。");
+      return preparePhoto(file, category, placement);
+    }, prepared => {
       data.photos.push(prepared.photo);
       uploads.push(...prepared.uploads);
       previews.set(prepared.photo.id, prepared.preview);
-      uploadResults.push({id:prepared.photo.id, name:file.name, preview:prepared.preview});
-      count++;
-      progress({ stage: "prepare", completed: count, total: files.length });
-    }
-    uploadStatus("已添加 " + count + " 张照片到 " + categoryName(category) + "，默认隐藏。检查后点击“保存更改”。");
-    notice(uploadMessage);
-  } catch (error) {
-    uploadStatus("已添加 " + count + " 张；" + error.message + " 后续照片尚未处理。", true);
+      dirty();
+    }, item => {
+      const completed = items.filter(p => ["done", "failed"].includes(p.status)).length;
+      uploadStatus(`正在处理 ${completed} / ${items.length}：${item.name}`);
+      progress({stage:"prepare", completed, total:items.length});
+      renderUploadResults();
+    });
+    const failed = uploadResults.filter(item => item.status === "failed").length;
+    uploadStatus(`已加入草稿 ${uploadResults.filter(item => item.status === "done").length} 张${failed ? `；${failed} 张失败，可单独重试` : ""}。新照片默认隐藏，请检查后保存。`, failed > 0);
   } finally {
-    search = "";
-    filter = "all";
-    placementFilter = "all";
-    setBusy(false);
-    render();
-    $("#save-progress").hidden = true;
+    search = ""; filter = "all"; placementFilter = "all";
+    setBusy(false); render(); $("#save-progress").hidden = true;
   }
+}
+function renderUploadResults() {
+  const panel = $("#upload-panel");
+  if (!panel) return;
+  const replacement = document.createElement("div");
+  replacement.innerHTML = uploadPanel({open:uploadOpen, categories:data.categories, category:uploadCategory, placement:uploadPlacement, message:uploadMessage, results:uploadResults});
+  const results = replacement.querySelector(".upload-results");
+  panel.querySelector(".upload-results")?.remove();
+  if (results) panel.append(results);
 }
 bindUploadDropzone(document, {getZone:() => $("#upload-dropzone"), isBusy:() => busy, onFiles:addPhotoFiles, onError:message => uploadStatus(message, true)});
 $("#upload-input").onchange = async (event) => {
@@ -509,6 +541,7 @@ $("#save").onclick = async () => {
   )
     return;
   setBusy(true);
+  publicationMonitor.saving();
   notice("正在保存照片与内容…");
   try {
     const paths = contentImagePaths(data);
@@ -517,11 +550,12 @@ $("#save").onclick = async () => {
       throw new Error("这批照片较大，请分批保存（每次不超过 28 MB）。");
     const result = await store.save(data, revision, pending, progress);
     revision = result.revision;
+    publicationMonitor.start(store, revision, result.publication);
     clearTimeout(draftTimer);
     await deleteDraft(draftKey(store)).catch(() => {});
     base = JSON.stringify(data);
     uploads = [];
-    uploadResults = [];
+    uploadResults = uploadResults.filter(item => item.status === "failed");
     uploadMessage = "照片与内容已保存，可以继续添加下一批。";
     for (const preview of previews.values()) URL.revokeObjectURL(preview);
     previews.clear();
@@ -534,6 +568,7 @@ $("#save").onclick = async () => {
     );
     render();
   } catch (error) {
+    publicationMonitor.unconfirmed();
     notice(error.message, true);
   } finally {
     setBusy(false);
@@ -562,6 +597,7 @@ $("#disconnect").onclick = async () => {
     return;
   }
   closePreview();
+  publicationMonitor.stop();
   store?.disconnect();
   store = null;
   data = null;
@@ -685,6 +721,8 @@ window.addEventListener("message", event => {
   }
 });
 bindPhotoOrdering($("#editor"), { getData: () => data, isBusy: () => busy, onChange: render, getIds: visibleIds, getCollection: sequenceCollection });
+const publicationMonitor = createPublicationMonitor($("#publication-state"));
+window.addEventListener("pagehide", () => publicationMonitor.stop());
 const workflow = bindWorkflow({store: () => store, data: () => data, isBusy: () => busy, isDirty, notice, apply: value => {
   for (const url of previews.values()) URL.revokeObjectURL(url);
   previews.clear(); data = value; uploads = []; uploadResults = []; uploadMessage = ""; selection.clear(); view = "photos"; render();

@@ -28,6 +28,14 @@ export async function verifyBackup(directory) {
   }
   return manifest;
 }
+export async function writeBackupReceipt(directory, manifest) {
+  const bytes = await readFile(path.join(directory, 'manifest.json'));
+  const report = {format:'gallery-backup-check-v1',result:'verified',verifiedAt:new Date().toISOString(),
+    revision:manifest.revision,mediaCount:manifest.media.length,
+    mediaBytes:manifest.media.reduce((sum,item)=>sum+item.bytes,0),manifestDigest:digest(bytes)};
+  await writeFile(path.join(directory, 'backup-report.json'),JSON.stringify(report,null,2)+'\n');
+  return report;
+}
 export async function createBackup(manifest, directory, fetcher=fetch) {
   validateManifest(manifest);
   const root=path.resolve(directory), base=new URL(manifest.mediaBase);
@@ -64,12 +72,12 @@ export async function createBackup(manifest, directory, fetcher=fetch) {
   const quote = value => `'${String(value).replaceAll("'","''")}'`;
   const history = [...(copy.history || [])].reverse().map(item=>`INSERT INTO gallery_history(revision,document,saved_at) VALUES(${quote(item.revision)},${quote(JSON.stringify(item.data))},${quote(item.savedAt)});`).join('\n');
   await writeFile(path.join(root,'restore-content.sql'),seedSQL(copy.data,copy.media)+history+'\n',{flag:'wx'});
-  await verifyBackup(root);
+  await writeBackupReceipt(root, await verifyBackup(root));
   return copy;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
-    if(process.argv[2]==='--verify') {const result=await verifyBackup(process.argv[3]);console.log(`Verified ${result.media.length} media files and content.`);}
+    if(process.argv[2]==='--verify') {const result=await verifyBackup(process.argv[3]);await writeBackupReceipt(process.argv[3],result);console.log(`Verified ${result.media.length} media files and content.`);}
     else {
       if(!process.argv[2]||!process.argv[3])throw new Error('Usage: node tools/backup.mjs MANIFEST.json DIRECTORY | --verify DIRECTORY');
       const manifest=JSON.parse(await readFile(process.argv[2],'utf8'));

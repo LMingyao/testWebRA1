@@ -33,7 +33,7 @@
           ><span class="logo-title">Photography</span></span
         ></a
       >
-      <button id="sidebar-tools-toggle" aria-expanded="false" aria-controls="sidebar-tools history maintenance">更多 <span aria-hidden="true">⌄</span></button>
+      <button id="sidebar-tools-toggle" aria-expanded="false" aria-controls="sidebar-tools history maintenance backup">更多 <span aria-hidden="true">⌄</span></button>
       <nav aria-label="管理页面">
         <p class="nav-label">作品管理</p>
         <button data-view="photos" aria-current="page"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m3 15 5-5 6 6 3-3 4 4"/><circle cx="16" cy="8" r="1.5"/></svg>照片库</button>
@@ -42,6 +42,7 @@
         <p class="nav-label system">网站管理</p>
         <button id="history" data-view="history"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10a9 9 0 1 1 1 7M3 4v6h6M12 7v5l3 2"/></svg>修改记录</button>
         <button id="maintenance" data-view="maintenance"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 6 4 4M3 21l8-8M15 3a6 6 0 0 0-7 8l-5 5a3 3 0 0 0 5 5l5-5a6 6 0 0 0 8-7l-4 4-4-4 4-4Z"/></svg>运行维护</button>
+        <button id="backup" data-view="backup"><svg class="studio-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg>备份与恢复</button>
       </nav>
       <div class="sidebar-bottom" id="sidebar-tools" data-open="false">
         <a href="../index.html" target="_blank" rel="noopener">查看网站 ↗</a>
@@ -60,6 +61,7 @@
           <span id="dirty-state">已保存</span
           ><button id="preview-toggle" class="secondary" aria-expanded="false" aria-controls="draft-preview" disabled>作品预览</button
           ><button id="save" class="primary" disabled>保存更改</button>
+          <p id="publication-state" class="publication-state" role="status" aria-live="polite" hidden></p>
         </div>
       </header>
       <div id="draft-recovery" class="panel" hidden></div>

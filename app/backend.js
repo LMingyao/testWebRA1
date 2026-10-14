@@ -15,10 +15,10 @@ export async function backendConfig() {
   }
   return config;
 }
-export async function loadPublicContent() {
+export async function loadPublicContent({ rootRelative = false } = {}) {
   const config = await backendConfig();
   const response = await fetch(config.apiBase
-    ? `${config.apiBase.replace(/\/$/, "")}/api/content` : "content/gallery.json", { cache: "no-cache", signal: AbortSignal.timeout(15000) });
+    ? `${config.apiBase.replace(/\/$/, "")}/api/content` : rootRelative ? "/content/gallery.json" : "content/gallery.json", { cache: "no-cache", signal: AbortSignal.timeout(15000) });
   if (!response.ok) throw new Error("Collection unavailable");
   // Do not fall back to an old JSON snapshot when the cloud API fails: it could
   // republish a photograph that the owner has since hidden or removed.

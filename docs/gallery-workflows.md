@@ -54,7 +54,7 @@ The unused-file report protects current content and retained history references.
 
 ## Complete display-media backup
 
-Download the full backup manifest from the maintenance page, then run these commands from the project directory:
+Open the dedicated Backup and recovery page and download the full backup manifest, then run these commands from the project directory:
 
 ```powershell
 node tools/backup.mjs "gallery-backup-manifest.json" "backup-directory"
@@ -76,3 +76,24 @@ Keep a separate database export if an exact recovery of every operational table 
 ## Release checks
 
 Run `npm test`, `npm run build` and `npm run prepare:d1`. Apply `0003_publication.sql` to the existing production database before deploying the new Worker. Do not import a development seed into a nonempty production database. Publish frontend modules and deploy protected admin assets from the same source version. Check the cloud save, public feed and deployed static marker after release. Local fixtures and mocked Git commits validate behavior but do not establish production deployment success.
+
+
+## Per-file preparation and batch editing
+
+Dropped and browsed files share the same sequential preparation queue. Invalid or undecodable files receive individual failure results; subsequent files continue. Retry one file or all failed files without preparing successful items again. Retries preserve their original category and display role. Successful prepared media remain in the recoverable draft. Failed original files remain in page memory only; after refreshing, select those failed originals again.
+
+Use the photo checkboxes for composition or batch category, visibility and curated-selection edits. A batch affects only selected photographs in the current visible filter. It clears the selection after applying and becomes a draft; it never saves automatically or changes other photographs. Adding a hidden photograph to Selected work does not implicitly publish it.
+
+## Save and deployment feedback
+
+The save toolbar retains a separate publication line. Cloud content saving and static HTML/sharing deployment are different stages. A protected, lightweight status endpoint checks the deployed marker against the current D1 revision without probing repository permissions or photographs. The browser polls at most 20 times per connection/save and ignores superseded responses. A changed cloud revision requests reconciliation rather than silently declaring an old edit complete. Uncertain saves preserve drafts and require checking their outcome before retrying. Sharing services can retain cached cards even after the website deployment is complete.
+
+## Verified-backup reports
+
+After all files pass byte-count and SHA-256 checks, the complete-backup tool writes `backup-report.json`. Verification can generate a fresh report for an existing complete backup. Import that small report in the backup guide to record its verification date and file count. This is an owner-supplied local verification record in this browser, not a server inspection or a cross-device backup catalogue. Downloading a manifest alone never records completion. Keep the report with the complete backup directory; browser storage can be cleared independently of the backup files.
+
+## Contact actions and missing pages
+
+Website content includes optional email-action, copy-action and copied-confirmation labels. Existing documents fall back to the approved English labels. Labels flow through drafts, preview, D1 and generated pages. Copy feedback resets after 2.4 seconds; clipboard refusal reveals the address for manual copying.
+
+The generated `404.html` shares the existing brand and navigation, stays outside the sitemap and has a noindex directive. Root-relative resources and a root-relative content request support missing nested URLs without changing in-page anchors. Its Return to work link remains usable without JavaScript or the cloud content API. Production hosting must serve it with a real HTTP 404 status.

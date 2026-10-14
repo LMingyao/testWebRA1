@@ -22,7 +22,7 @@ export function setCollectionVisible(data, id, visible) {
   return true;
 }
 export function renderCollectionEditor(data) { return collectionEditorView(data); }
-export const siteTextFields = ["name", "tagline", "location", "email", "description", "aboutTitle", "about", "aboutImage", "shareImage", "brandName", "brandTitle", "workLabel", "aboutLabel", "contactLabel", "contactText", "contactLinkLabel", "gearLabel", "aboutImageAlt", "footerText"];
+export const siteTextFields = ["name", "tagline", "location", "email", "description", "aboutTitle", "about", "aboutImage", "shareImage", "brandName", "brandTitle", "workLabel", "aboutLabel", "contactLabel", "contactText", "emailActionLabel", "copyEmailLabel", "copiedEmailLabel", "contactLinkLabel", "gearLabel", "aboutImageAlt", "footerText"];
 export function renderSiteEditor(data, image) { return siteEditorView(data, image); }
 export function syncSiteForm(form, data) {
   const values = new FormData(form);

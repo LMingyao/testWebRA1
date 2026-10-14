@@ -81,6 +81,9 @@ test('complete backup verifies checksums and reconstructs ordered content and hi
     media:[...contentImagePaths(fixture)].map(path=>({path,bytes:bytes.length,digest:hash}))};
   await createBackup(manifest,directory,async()=>new Response(bytes));
   assert.deepEqual((await verifyBackup(directory)).data,fixture);
+  const receipt=JSON.parse(await readFile(path.join(directory,"backup-report.json"),"utf8"));
+  assert.equal(receipt.mediaCount,manifest.media.length); assert.equal(receipt.result,"verified");
+  assert.equal(receipt.manifestDigest,createHash("sha256").update(await readFile(path.join(directory,"manifest.json"))).digest("hex"));
   const db=new DatabaseSync(':memory:');t.after(()=>db.close());
   db.exec(await readFile(new URL('../cloudflare/migrations/0001_gallery.sql',import.meta.url),'utf8'));
   db.exec(await readFile(path.join(directory,'restore-content.sql'),'utf8'));

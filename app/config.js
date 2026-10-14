@@ -4,6 +4,7 @@ export function siteSettings(site) {
     brandName: "MINGYAO", brandTitle: site.tagline || "Photography",
     workLabel: "Work", aboutLabel: "About", contactLabel: "Contact",
     contactText: "Photography enquiries & collaborations",
+    emailActionLabel: "Email me", copyEmailLabel: "Copy email", copiedEmailLabel: "Copied",
     contactLinkLabel: "Get in touch", gearLabel: "Camera & lenses",
     aboutImageAlt: site.name, footerText: "All rights reserved.",
     showAbout: true, showContact: true,

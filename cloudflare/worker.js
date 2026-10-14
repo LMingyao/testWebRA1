@@ -2,7 +2,7 @@ import { validateContent, contentImagePaths } from "../app/shared.js";
 import { administrator, authRoute, logout } from "./auth.js";
 import { HTTPError, readLimited, registerMedia, registerMediaBatch } from "./media.js";
 import { publishedContent } from "../app/publishing.js";
-import { listHistory, historyEntry, backupManifest, mediaReport, health, publish } from "./maintenance.js";
+import { listHistory, historyEntry, backupManifest, mediaReport, health, publicationStatus, publish } from "./maintenance.js";
 
 const response = (status, body, headers = {}) => new Response(JSON.stringify(body), { status,
   headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store",
@@ -105,6 +105,7 @@ export function createWorker({ fetcher = fetch, authenticate = administrator } =
         if (entry) return response(200, await historyEntry(env, Number(entry[1])));
         if (url.pathname === "/api/admin/backup") return response(200, await backupManifest(env));
         if (url.pathname === "/api/admin/media-report") return response(200, await mediaReport(env, fetcher));
+        if (url.pathname === "/api/admin/publication") return response(200, await publicationStatus(env, fetcher));
         if (url.pathname === "/api/admin/health") return response(200, await health(env, fetcher));
       }
       if (url.pathname === "/api/admin/publish" && request.method === "POST") return response(200, await publishSafely(env, fetcher));

@@ -890,3 +890,7 @@ body[data-page="contact"] main {
 
 .photo-card.has-image-error img,.work-opening.has-image-error img { display:none; }
 .work-opening.has-image-error { min-height:160px; background:#fafafa; }
+
+body[data-page="not-found"] .not-found-page { max-width:640px; padding:clamp(64px,12vh,140px) 0; }
+.not-found-page h1 { font-size:clamp(32px,4vw,52px); font-weight:400; line-height:1.2; margin:18px 0 24px; }
+.not-found-page > p:not(.eyebrow) { color:var(--muted); line-height:1.8; margin-bottom:32px; }

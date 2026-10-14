@@ -63,7 +63,7 @@ test("D1 schema and seed preserve content, SQL quotes, media and ordering; resee
 });
 test("D1 denies unauthenticated admin and assets; public feed omits hidden works and limits CORS", async t => {
   const { request } = setup(t);
-  for (const path of ["/api/admin/session", "/api/admin/content", "/app/shared.js", "/admin/ui.js", "/admin/editor-views.js", "/admin/upload-dropzone.js", "/admin/image-worker.js", "/admin/webp-encoder.js", "/admin/vendor/webp/webp_enc.wasm", "/admin/admin.css"])
+  for (const path of ["/api/admin/session", "/api/admin/publication", "/api/admin/backup", "/api/admin/content", "/app/shared.js", "/admin/ui.js", "/admin/editor-views.js", "/admin/upload-dropzone.js", "/admin/image-worker.js", "/admin/webp-encoder.js", "/admin/vendor/webp/webp_enc.wasm", "/admin/admin.css"])
     assert.equal((await request(path, { auth: false })).status, 401);
   assert.equal((await request("/admin/", { auth: false })).headers.get("Location"), "/admin/login");
   assert.equal((await request("/admin/login", { auth: false })).status, 200);
@@ -127,18 +127,21 @@ test("successive admin saves change public navigation, entry, equipment and cont
   config.order = ["aviation", "all"];
   data.site.gear = ["Camera A", "Lens A"];
   data.site.email = "first@example.com";
+  data.site.emailActionLabel = "Send a note"; data.site.copyEmailLabel = "Copy address";
   const first = await request("/api/admin/content", { method: "PUT", data, revision });
   assert.equal(first.status, 200); revision = (await first.json()).revision;
   let feed = await (await request("/api/content", { auth: false })).json();
   assert.equal(defaultCollection(feed), "aviation");
   assert.deepEqual(collections(feed).map(item => item.label), ["Aviation", "Highlights"]);
   let main = { innerHTML: "" };
+  renderEditorial(main, feed, "contact"); assert.match(main.innerHTML, /Send a note/); assert.match(main.innerHTML, /Copy address/);
   renderEditorial(main, feed, "about");
   assert.equal((main.innerHTML.match(/<li>/g) || []).length, 2);
   config.default = "all";
   data.categories[0].visible = false;
   data.site.gear = ["Camera B"];
   data.site.email = "second@example.com";
+  data.site.emailActionLabel = "Write to me"; data.site.copyEmailLabel = "Copy email address";
   const second = await request("/api/admin/content", { method: "PUT", data, revision });
   assert.equal(second.status, 200);
   feed = await (await request("/api/content", { auth: false })).json();
@@ -149,6 +152,7 @@ test("successive admin saves change public navigation, entry, equipment and cont
   assert.equal((main.innerHTML.match(/<li>/g) || []).length, 1);
   renderEditorial(main, feed, "contact");
   assert.match(main.innerHTML, /mailto:second@example.com/);
+  assert.match(main.innerHTML, /Write to me/); assert.match(main.innerHTML, /Copy email address/);
   assert.equal((await request("/api/admin/content", { method: "PUT", data, revision: originalRevision })).status, 409);
   const reopened = await (await request("/api/admin/content")).json();
   assert.equal(reopened.data.photos.length, data.photos.length);
@@ -458,4 +462,15 @@ test('large lossless groups split into bounded requests without dropping a varia
   const uploads=[640,1280,2048,3072].map(size=>({path:`media/photo-11111111-1111-1111-1111-111111111111-${size}.webp`,base64:Buffer.alloc(4*1024*1024).toString('base64')}));
   await store.save(fixture,'current',uploads);
   assert.ok(batches.length>1); assert.deepEqual(batches.flat(),uploads);
+});
+
+
+test("lightweight publication polling is protected and does not probe upload/media permissions", async t => {
+  const {request,sqlite} = setup(t);
+  const current=sqlite.prepare('SELECT revision FROM gallery_content').get();
+  const result=await (await request('/api/admin/publication')).json();
+  assert.equal(result.revision,current.revision);assert.equal(result.publication.status,'pending');
+  assert.equal(result.upload,undefined); assert.equal(result.mediaPreview,undefined);
+  sqlite.prepare("INSERT INTO gallery_publication(id,revision,status,message) VALUES(1,?,'failed','Retry')").run(current.revision);
+  assert.equal((await (await request('/api/admin/publication')).json()).publication.status,'failed');
 });

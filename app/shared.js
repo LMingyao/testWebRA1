@@ -108,7 +108,7 @@ export function validateContent(data) {
   if (!(typeof gear === "string" && gear.length <= 12000) &&
       !(Array.isArray(gear) && gear.length <= 100 && gear.every(item => typeof item === "string" && item.trim() && item.length <= 200)))
     throw new Error("Equipment must be a list of up to 100 nonempty items (200 characters each).");
-  for (const key of ["brandName", "brandTitle", "workLabel", "aboutLabel", "contactLabel", "gearLabel", "contactLinkLabel"])
+  for (const key of ["brandName", "brandTitle", "workLabel", "aboutLabel", "contactLabel", "gearLabel", "contactLinkLabel", "emailActionLabel", "copyEmailLabel", "copiedEmailLabel"])
     if (data.site[key] !== undefined && (typeof data.site[key] !== "string" || !data.site[key].trim() || data.site[key].length > 80))
       throw new Error(`Use 1–80 characters for ${key}.`);
   for (const key of ["contactText", "aboutImageAlt", "footerText"])

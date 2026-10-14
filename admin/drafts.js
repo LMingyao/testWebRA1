@@ -22,7 +22,7 @@ export const readDraft = key => transaction('readonly', store => store.get(key))
 export const writeDraft = (key, value) => transaction('readwrite', store => store.put(structuredClone(value), key));
 export const deleteDraft = key => transaction('readwrite', store => store.delete(key));
 export function describeChanges(previous, next) {
-  const labels = {name:"摄影师名称",tagline:"品牌描述",location:"所在城市",email:"联系邮箱",description:"网站简介",aboutTitle:"简介标题",about:"个人介绍",aboutImage:"简介照片",gear:"摄影器材",socials:"社交链接",shareImage:"分享封面",brandName:"Logo 上行",brandTitle:"Logo 主文字",workLabel:"作品菜单",aboutLabel:"简介菜单",contactLabel:"联系菜单",contactText:"联系说明",contactLinkLabel:"联系链接",gearLabel:"器材标题",aboutImageAlt:"简介照片描述",footerText:"版权说明",showAbout:"简介导航显示",showContact:"联系导航显示"};
+  const labels = {name:"摄影师名称",tagline:"品牌描述",location:"所在城市",email:"联系邮箱",description:"网站简介",aboutTitle:"简介标题",about:"个人介绍",aboutImage:"简介照片",gear:"摄影器材",socials:"社交链接",shareImage:"分享封面",brandName:"Logo 上行",brandTitle:"Logo 主文字",workLabel:"作品菜单",aboutLabel:"简介菜单",contactLabel:"联系菜单",contactText:"联系说明",emailActionLabel:"发送邮件按钮",copyEmailLabel:"复制邮箱按钮",copiedEmailLabel:"复制成功提示",contactLinkLabel:"联系链接",gearLabel:"器材标题",aboutImageAlt:"简介照片描述",footerText:"版权说明",showAbout:"简介导航显示",showContact:"联系导航显示"};
   const lines = [];
   const oldSite = {...siteSettings(previous.site),gear:gearItems(previous.site.gear)};
   const newSite = {...siteSettings(next.site),gear:gearItems(next.site.gear)};

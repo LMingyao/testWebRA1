@@ -7,6 +7,13 @@ import { validateContent, safeImage, contentImagePaths } from "../app/shared.js"
 
 const revision = (buffer) =>
   createHash("sha256").update(buffer).digest("hex");
+async function notFound(req, res, root) {
+  try {
+    const bytes = await readFile(path.join(root, "404.html"));
+    res.writeHead(404, {"Content-Type":"text/html; charset=utf-8", "Cache-Control":"no-cache"});
+    res.end(req.method === "HEAD" ? undefined : bytes);
+  } catch { json(res, 404, {error:"Not found."}); }
+}
 const types = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -151,12 +158,12 @@ export function createServer(root) {
         requested.includes("..") ||
         requested.includes("\\") ||
         !(
-          /^(index|selected|ptr|about_me|contact|aviation|landscape|wildlife|motorsport|legacy|legacy-2022|legacy-2023|history)\.html$/.test(requested) ||
+          /^(404|index|selected|ptr|about_me|contact|aviation|landscape|wildlife|motorsport|legacy|legacy-2022|legacy-2023|history)\.html$/.test(requested) ||
           /^(robots\.txt|sitemap\.xml)$/.test(requested) ||
           /^(app|admin|assets|media|content)\/[a-zA-Z0-9_./-]+$/.test(requested)
         )
       ) {
-        json(res, 404, { error: "Not found." });
+        await notFound(req, res, root);
         return;
       }
       const resolved = await realpath(path.join(root, requested));
@@ -178,6 +185,7 @@ export function createServer(root) {
       });
       res.end(req.method === "HEAD" ? undefined : buffer);
     } catch (error) {
+      if (error.code === "ENOENT" && ["GET", "HEAD"].includes(req.method)) { await notFound(req, res, root); return; }
       json(res, error.code === "ENOENT" ? 404 : 400, {
         error: error.code === "ENOENT" ? "File not found." : error.message,
       });

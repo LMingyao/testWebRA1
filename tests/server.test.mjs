@@ -136,3 +136,19 @@ test("local admin persists edits, rejects stale saves and protects filesystem", 
     await rm(root, { recursive: true, force: true });
   }
 });
+
+
+test("missing pages serve a real branded 404 including nested paths without exposing private files", async t => {
+  const root=await mkdtemp(path.join(os.tmpdir(),'photo-404-'));t.after(()=>rm(root,{recursive:true,force:true}));
+  await writeFile(path.join(root,'404.html'),'<h1>Page not found.</h1><a href="/index.html">Return to work</a>');
+  await writeFile(path.join(root,'secret.txt'),'private contents');
+  const server=createServer(root);await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));t.after(()=>new Promise(resolve=>server.close(resolve)));
+  const origin=`http://127.0.0.1:${server.address().port}`;
+  for(const file of ['/missing.html','/nested/missing','/secret.txt','/app/missing.js']) {
+    const response=await fetch(origin+file);assert.equal(response.status,404);
+    assert.match(response.headers.get('Content-Type'),/text\/html/);
+    assert.match(await response.text(),/Return to work/);
+  }
+  assert.equal((await fetch(origin+'/api/missing')).headers.get('Content-Type'),'application/json');
+  assert.equal((await fetch(origin+'/nested/missing',{method:'HEAD'})).status,404);
+});

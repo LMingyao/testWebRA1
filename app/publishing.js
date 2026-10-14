@@ -22,7 +22,7 @@ export function publishedContent(data) {
 export function publicationEntries(data) {
   const entries = [['index.html','portfolio',defaultCollection(data)]];
   entries.push(['selected.html','portfolio','all']);
-  entries.push(['about_me.html','about','all'],['contact.html','contact','all']);
+  entries.push(['about_me.html','about','all'],['contact.html','contact','all'],['404.html','not-found','all']);
   for (const [id, file] of Object.entries(categoryPages)) entries.push([file,'portfolio',id]);
   for (const category of data.categories) if (!Object.hasOwn(categoryPages,category.id))
     entries.push([`collection-${category.id}.html`,'portfolio',category.id]);
@@ -30,6 +30,7 @@ export function publicationEntries(data) {
 }
 export function renderPublishedPage(template, content, page, category, {prerender = true, home = false} = {}) {
   const site = siteSettings(content.site), metadata = pageMetadata(content,page,category);
+  if (page === 'not-found') Object.assign(metadata, {title:`Page not found · ${site.name} ${site.brandTitle}`, description:'Return to the photography collection.', canonical:'https://mingyaophoto.com/404.html'});
   let html = template.replaceAll('{{page}}',page).replaceAll('{{title}}',e(metadata.title))
     .replaceAll('{{description}}',e(metadata.description)).replaceAll('{{canonical}}',e(metadata.canonical))
     .replaceAll('{{previousArrow}}',arrowIcon(-1)).replaceAll('{{nextArrow}}',arrowIcon(1));
@@ -46,7 +47,18 @@ export function renderPublishedPage(template, content, page, category, {prerende
   html=html.replaceAll('https://mingyaophoto.com/assets/social-card.png',e(metadata.image));
   if (prerender) html=html.replace('<div id="work-menu" hidden></div>',`<div id="work-menu" hidden>${collections(content).map(c=>`<a data-work="${e(c.id)}" href="${e(categoryURL(c.id,content))}"${page === 'portfolio' && c.id === category ? ' aria-current="page"' : ''}>${e(c.label)}</a>`).join('')}</div>`);
   let body;
-  if (page === 'about' || page === 'contact') body = editorialHTML(content,page);
+  if (page === 'not-found') {
+    body = '<section class="not-found-page"><p class="eyebrow">404</p><h1>Page not found.</h1><p>The page may have moved or no longer exists.</p><a class="text-link" href="index.html">Return to work <span aria-hidden="true">→</span></a></section>';
+    html = html.replace('<head>', '<head><meta name="robots" content="noindex,follow" />')
+      .replace('src="app/site.js"', 'src="app/not-found.js"')
+      .replace(/<div id="layout-controls"[^>]*><\/div>/, '')
+      .replace(/<dialog class="lightbox"[\s\S]*?<\/dialog>/, '')
+      .replace(/<noscript[\s\S]*?<\/noscript\s*>/, '')
+      .replace(/<div class="footer-links">[\s\S]*?<\/div>/, '');
+    // Root-relative assets and links also work for a missing nested URL.
+    html = html.replace(/(href|src)="(?!https?:|mailto:|#|\/)([^"{}]+)"/g, '$1="/$2"');
+  }
+  else if (page === 'about' || page === 'contact') body = editorialHTML(content,page);
   else if (!collections(content).some(c => c.id === category)) {
     body='<section class="error-state"><h1>This collection is no longer available.</h1><a href="index.html">Explore the current collection →</a></section>';
     html=html.replace('<head>','<head><meta name="robots" content="noindex,follow" />');
@@ -56,11 +68,12 @@ export function renderPublishedPage(template, content, page, category, {prerende
     body=`<section class="work-gallery" aria-label="${e(label)}"><h1 class="sr-only">${e(label)}</h1>${panoramas.length?`<div class="work-opening"><div class="opening-image">${photoImage(panoramas[0],{eager:true})}</div></div>`:''}<div class="photo-sheet static-sheet">${photos.map((p,i)=>`<figure class="photo-card">${photoImage(p,{eager:i<2&&!panoramas.length})}</figure>`).join('')}</div>${sequence.length?'':'<p class="empty">New photographs will be added soon.</p>'}</section>`;
     if (prerender) html=html.replace('<div id="layout-controls" class="collection-toolbar"></div>',`<div id="layout-controls" class="collection-toolbar"><p class="collection-label">${e(label)}</p></div>`);
   }
-  return html.replace(/<main id="main">[\s\S]*?<\/main>/,prerender ? `<main id="main" data-prerendered>${body}</main>` : '<main id="main"><p class="loading" role="status">Opening the collection…</p></main>');
+  const result = html.replace(/<main id="main">[\s\S]*?<\/main>/,(prerender || page === "not-found") ? `<main id="main" data-prerendered>${page === "not-found" ? body.replace('href="index.html"','href="/index.html"') : body}</main>` : '<main id="main"><p class="loading" role="status">Opening the collection…</p></main>');
+  return page === "not-found" ? result.replace(/[ \t]+$/gm, "") : result;
 }
 export function publicationFiles(template, data, revision, options = {}) {
   const entries=publicationEntries(data), visible=new Set(collections(data).map(c=>c.id));
-  const sitemap=entries.filter(([file,page,category])=>file==='index.html'||(page==='portfolio'?visible.has(category)&&!(file==='selected.html'&&defaultCollection(data)==='all'):siteSettings(data.site)[page==='about'?'showAbout':'showContact']));
+  const sitemap=entries.filter(([file,page,category])=>page!=='not-found'&&(file==='index.html'||(page==='portfolio'?visible.has(category)&&!(file==='selected.html'&&defaultCollection(data)==='all'):siteSettings(data.site)[page==='about'?'showAbout':'showContact'])));
   return [...entries.map(([path,page,category])=>({path,content:renderPublishedPage(template,data,page,category,{...options,home:path==='index.html'})})),
     {path:'sitemap.xml',content:`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemap.map(([file])=>`<url><loc>https://mingyaophoto.com/${e(file)}</loc></url>`).join('')}</urlset>\n`},
     {path:'content/publication.json',content:JSON.stringify({revision,publishedAt:new Date().toISOString(),pages:entries.map(([file])=>file)})+'\n'}];

@@ -16,6 +16,8 @@ test("public loader selects static or D1 data and never falls back to stale phot
   };
   await loadPublicContent();
   assert.equal(calls.at(-1), "content/gallery.json");
+  await loadPublicContent({rootRelative:true});
+  assert.equal(calls.at(-1), "/content/gallery.json");
   config = { apiBase: "https://studio.example.com/", adminURL: "https://studio.example.com/admin/" };
   await loadPublicContent();
   assert.equal(calls.at(-1), "https://studio.example.com/api/content");
