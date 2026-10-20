@@ -262,22 +262,6 @@
       "homeSelected": false
     },
     {
-      "id": "en-nsrt-2ehc",
-      "title": "Lines in motion",
-      "alt": "The rear of a white sports car photographed on a city street.",
-      "category": "motorsport",
-      "image": "assets/EN_NSRT-2EHC.jpg",
-      "thumbnail": "media/en-nsrt-2ehc-640.webp",
-      "display": "media/en-nsrt-2ehc-1280.webp",
-      "large": "media/en-nsrt-2ehc-1920.webp",
-      "width": 1440,
-      "height": 2160,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
       "id": "ts-fin103",
       "title": "After hours",
       "alt": "An Air Transat aircraft parked on an illuminated airport apron at night.",
@@ -336,22 +320,6 @@
       "large": "media/f22r-1920.webp",
       "width": 2160,
       "height": 1215,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "f1rk",
-      "title": "Flat out",
-      "alt": "A red Formula One car racing past a green and yellow trackside wall.",
-      "category": "motorsport",
-      "image": "assets/F1RK.jpg",
-      "thumbnail": "media/f1rk-640.webp",
-      "display": "media/f1rk-1280.webp",
-      "large": "media/f1rk-1920.webp",
-      "width": 2160,
-      "height": 1080,
       "published": true,
       "featured": false,
       "placement": "gallery",
@@ -883,8 +851,6 @@
         "aa-erj-plt",
         "sd515",
         "yqb-1",
-        "en-nsrt-2ehc",
-        "f1rk",
         "photo-7f3aff6e-4e46-485b-8096-f9b8687273c2",
         "photo-98dc9da7-6807-48d5-885b-aa746c3a8468",
         "photo-22d7522e-b1d3-4788-8db4-afc824b0b52d",
@@ -896,7 +862,14 @@
         "slr-ecpre",
         "photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4",
         "photo-e44cf18d-6152-43b1-bd98-5610151961c0",
-        "photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150"
+        "photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150",
+        "photo-08852004-8055-4aa0-a1e5-e41ec5af56b8",
+        "photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f",
+        "photo-8ed94bfa-3066-463a-bd79-ab0c545239b3",
+        "photo-59900e20-ba2f-4ac6-8c7b-aa067749086e",
+        "photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2",
+        "photo-14d4512f-205c-44c4-b48b-30c626304ada",
+        "photo-4b71659e-8357-40a3-ad81-962e42fdf1d6"
       ],
       "aviation": [
         "af1cvrr",
@@ -911,12 +884,10 @@
         "q400-excu-pt",
         "sd515",
         "yqb-1",
-        "en-nsrt-2ehc",
         "aa-erj-plt",
         "ts-fin103",
         "thunderbirdab",
         "81-0041-wm",
-        "f1rk",
         "f22r",
         "yyz-dt-x",
         "slr-ecpre",
@@ -929,14 +900,6 @@
     },
     "photoLayout": {
       "motorsport": {
-        "en-nsrt-2ehc": {
-          "presentation": "auto",
-          "group": "group-dbab4ced-f6e3-4058-af2a-5bd97a49155d"
-        },
-        "f1rk": {
-          "presentation": "auto",
-          "group": "group-dbab4ced-f6e3-4058-af2a-5bd97a49155d"
-        },
         "photo-7f3aff6e-4e46-485b-8096-f9b8687273c2": {
           "presentation": "auto",
           "group": "group-ee9d23ae-fc3c-422c-8517-c4f4f767936b"
