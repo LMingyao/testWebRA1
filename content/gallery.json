@@ -698,42 +698,44 @@
       "homeSelected": false
     },
     {
-      "id": "photo-4b71659e-8357-40a3-ad81-962e42fdf1d6",
-      "title": "BDR A23 1 6",
-      "alt": "BDR A23 1 6",
+      "id": "photo-59900e20-ba2f-4ac6-8c7b-aa067749086e",
+      "title": "1 1122",
+      "alt": "1 1122",
       "category": "wildlife",
       "placement": "gallery",
-      "image": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
-      "thumbnail": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-640.webp",
-      "display": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-1280.webp",
-      "large": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
-      "width": 8301,
-      "height": 6226,
+      "image": "media/photo-59900e20-ba2f-4ac6-8c7b-aa067749086e-3072.webp",
+      "thumbnail": "media/photo-59900e20-ba2f-4ac6-8c7b-aa067749086e-640.webp",
+      "display": "media/photo-59900e20-ba2f-4ac6-8c7b-aa067749086e-1280.webp",
+      "large": "media/photo-59900e20-ba2f-4ac6-8c7b-aa067749086e-3072.webp",
+      "width": 4704,
+      "height": 3528,
       "renditions": [
         {
-          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-640.webp",
+          "path": "media/photo-59900e20-ba2f-4ac6-8c7b-aa067749086e-640.webp",
           "width": 640,
           "height": 480
         },
         {
-          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-1280.webp",
+          "path": "media/photo-59900e20-ba2f-4ac6-8c7b-aa067749086e-1280.webp",
           "width": 1280,
           "height": 960
         },
         {
-          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-2048.webp",
+          "path": "media/photo-59900e20-ba2f-4ac6-8c7b-aa067749086e-2048.webp",
           "width": 2048,
           "height": 1536
         },
         {
-          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
+          "path": "media/photo-59900e20-ba2f-4ac6-8c7b-aa067749086e-3072.webp",
           "width": 3072,
           "height": 2304
         }
       ],
       "published": true,
       "featured": false,
-      "homeSelected": false
+      "homeSelected": false,
+      "presentation": "auto",
+      "group": ""
     },
     {
       "id": "photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2",
@@ -765,6 +767,84 @@
         },
         {
           "path": "media/photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2-3072.webp",
+          "width": 3072,
+          "height": 2304
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-14d4512f-205c-44c4-b48b-30c626304ada",
+      "title": "1 1123",
+      "alt": "1 1123",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-14d4512f-205c-44c4-b48b-30c626304ada-3072.webp",
+      "thumbnail": "media/photo-14d4512f-205c-44c4-b48b-30c626304ada-640.webp",
+      "display": "media/photo-14d4512f-205c-44c4-b48b-30c626304ada-1280.webp",
+      "large": "media/photo-14d4512f-205c-44c4-b48b-30c626304ada-3072.webp",
+      "width": 4259,
+      "height": 2839,
+      "renditions": [
+        {
+          "path": "media/photo-14d4512f-205c-44c4-b48b-30c626304ada-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-14d4512f-205c-44c4-b48b-30c626304ada-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-14d4512f-205c-44c4-b48b-30c626304ada-2048.webp",
+          "width": 2048,
+          "height": 1365
+        },
+        {
+          "path": "media/photo-14d4512f-205c-44c4-b48b-30c626304ada-3072.webp",
+          "width": 3072,
+          "height": 2048
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false,
+      "presentation": "auto",
+      "group": ""
+    },
+    {
+      "id": "photo-4b71659e-8357-40a3-ad81-962e42fdf1d6",
+      "title": "BDR A23 1 6",
+      "alt": "BDR A23 1 6",
+      "category": "wildlife",
+      "placement": "gallery",
+      "image": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
+      "thumbnail": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-640.webp",
+      "display": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-1280.webp",
+      "large": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
+      "width": 8301,
+      "height": 6226,
+      "renditions": [
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-640.webp",
+          "width": 640,
+          "height": 480
+        },
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-1280.webp",
+          "width": 1280,
+          "height": 960
+        },
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-2048.webp",
+          "width": 2048,
+          "height": 1536
+        },
+        {
+          "path": "media/photo-4b71659e-8357-40a3-ad81-962e42fdf1d6-3072.webp",
           "width": 3072,
           "height": 2304
         }
