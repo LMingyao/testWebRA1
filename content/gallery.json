@@ -64,6 +64,11 @@
       "id": "motorsport",
       "label": "Motorsport",
       "visible": true
+    },
+    {
+      "id": "street",
+      "label": "Street",
+      "visible": true
     }
   ],
   "photos": [
@@ -1273,7 +1278,8 @@
       "landscape",
       "portrait",
       "wildlife",
-      "motorsport"
+      "motorsport",
+      "street"
     ],
     "default": "all",
     "defaultView": "multi",
