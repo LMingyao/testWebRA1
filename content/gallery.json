@@ -68,7 +68,7 @@
     {
       "id": "street",
       "label": "Street",
-      "visible": true
+      "visible": false
     }
   ],
   "photos": [
