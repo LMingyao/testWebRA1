@@ -1265,6 +1265,44 @@
       "published": true,
       "featured": false,
       "homeSelected": false
+    },
+    {
+      "id": "photo-400b6b1a-d9ef-4912-b02c-fe4aca283022",
+      "title": "1 1140 (2)",
+      "alt": "1 1140 (2)",
+      "category": "portrait",
+      "placement": "gallery",
+      "image": "media/photo-400b6b1a-d9ef-4912-b02c-fe4aca283022-3072.webp",
+      "thumbnail": "media/photo-400b6b1a-d9ef-4912-b02c-fe4aca283022-640.webp",
+      "display": "media/photo-400b6b1a-d9ef-4912-b02c-fe4aca283022-1280.webp",
+      "large": "media/photo-400b6b1a-d9ef-4912-b02c-fe4aca283022-3072.webp",
+      "width": 3917,
+      "height": 5875,
+      "renditions": [
+        {
+          "path": "media/photo-400b6b1a-d9ef-4912-b02c-fe4aca283022-640.webp",
+          "width": 427,
+          "height": 640
+        },
+        {
+          "path": "media/photo-400b6b1a-d9ef-4912-b02c-fe4aca283022-1280.webp",
+          "width": 853,
+          "height": 1280
+        },
+        {
+          "path": "media/photo-400b6b1a-d9ef-4912-b02c-fe4aca283022-2048.webp",
+          "width": 1365,
+          "height": 2048
+        },
+        {
+          "path": "media/photo-400b6b1a-d9ef-4912-b02c-fe4aca283022-3072.webp",
+          "width": 2048,
+          "height": 3072
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
     }
   ],
   "collections": {
@@ -1353,6 +1391,51 @@
         "photo-f92a4761-1881-4242-9969-020d8d604221",
         "photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8",
         "photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2"
+      ],
+      "portrait": [
+        "af1cvrr",
+        "ac-x",
+        "qr-x",
+        "c-fvlx-snow-1-2",
+        "yvr-boat",
+        "nf736",
+        "oaci-9917",
+        "cmp",
+        "sd515",
+        "yqb-1",
+        "ts-fin103",
+        "81-0041-wm",
+        "f22r",
+        "yyz-dt-x",
+        "slr-ecpre",
+        "xfemgpsx",
+        "ptr-oct20-1x",
+        "photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4",
+        "photo-e44cf18d-6152-43b1-bd98-5610151961c0",
+        "photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150",
+        "photo-98dc9da7-6807-48d5-885b-aa746c3a8468",
+        "photo-7f3aff6e-4e46-485b-8096-f9b8687273c2",
+        "photo-22d7522e-b1d3-4788-8db4-afc824b0b52d",
+        "photo-08852004-8055-4aa0-a1e5-e41ec5af56b8",
+        "photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f",
+        "photo-8ed94bfa-3066-463a-bd79-ab0c545239b3",
+        "photo-59900e20-ba2f-4ac6-8c7b-aa067749086e",
+        "photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2",
+        "photo-14d4512f-205c-44c4-b48b-30c626304ada",
+        "photo-4b71659e-8357-40a3-ad81-962e42fdf1d6",
+        "photo-94868803-f08b-4689-920e-4318b07fba65",
+        "photo-dcacece0-4786-430f-9ea3-5b9d1a47892a",
+        "photo-f92a4761-1881-4242-9969-020d8d604221",
+        "photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8",
+        "photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2",
+        "photo-3327454e-7e8e-4fa7-9810-58769eb607cc",
+        "photo-400b6b1a-d9ef-4912-b02c-fe4aca283022",
+        "photo-82fc743b-a152-45e6-86a6-fe7a67c41120",
+        "photo-de3f6624-1e80-478a-a911-b7163975f14f",
+        "photo-3b8c5251-26cf-41dd-ad4b-9a18fe3156ff",
+        "photo-36ebb491-b6d8-4a11-a7e0-3a1f63f0ad33",
+        "photo-f9048ee1-fc2f-4db9-992c-3f8db2b0b261",
+        "photo-04bfe492-46ef-4b02-b272-e8e9122920d9"
       ]
     },
     "photoLayout": {
