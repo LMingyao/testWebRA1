@@ -198,38 +198,6 @@
       "homeSelected": false
     },
     {
-      "id": "q400-excu-pt",
-      "title": "On the apron",
-      "alt": "A regional turboprop aircraft and its propeller photographed from above.",
-      "category": "aviation",
-      "image": "assets/Q400_EXCU_PT.jpg",
-      "thumbnail": "media/q400-excu-pt-640.webp",
-      "display": "media/q400-excu-pt-1280.webp",
-      "large": "media/q400-excu-pt-1920.webp",
-      "width": 2160,
-      "height": 1600,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "aa-erj-plt",
-      "title": "Before the flight",
-      "alt": "The cockpit and nose of an American Eagle regional aircraft at the gate.",
-      "category": "aviation",
-      "image": "assets/AA_ERJ_PLT.jpg",
-      "thumbnail": "media/aa-erj-plt-640.webp",
-      "display": "media/aa-erj-plt-1280.webp",
-      "large": "media/aa-erj-plt-1920.webp",
-      "width": 2160,
-      "height": 1620,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
       "id": "sd515",
       "title": "City in motion",
       "alt": "A busy city street beneath a blue sky.",
@@ -272,22 +240,6 @@
       "large": "media/ts-fin103-1920.webp",
       "width": 2160,
       "height": 1440,
-      "published": true,
-      "featured": false,
-      "placement": "gallery",
-      "homeSelected": false
-    },
-    {
-      "id": "thunderbirdab",
-      "title": "Precision in flight",
-      "alt": "A Thunderbird jet performing a steep banking manoeuvre.",
-      "category": "aviation",
-      "image": "assets/ThunderBirdAB.jpg",
-      "thumbnail": "media/thunderbirdab-640.webp",
-      "display": "media/thunderbirdab-1280.webp",
-      "large": "media/thunderbirdab-1920.webp",
-      "width": 1440,
-      "height": 2160,
       "published": true,
       "featured": false,
       "placement": "gallery",
@@ -820,6 +772,234 @@
       "published": true,
       "featured": false,
       "homeSelected": false
+    },
+    {
+      "id": "photo-94868803-f08b-4689-920e-4318b07fba65",
+      "title": "1 1131",
+      "alt": "1 1131",
+      "category": "aviation",
+      "placement": "gallery",
+      "image": "media/photo-94868803-f08b-4689-920e-4318b07fba65-3072.webp",
+      "thumbnail": "media/photo-94868803-f08b-4689-920e-4318b07fba65-640.webp",
+      "display": "media/photo-94868803-f08b-4689-920e-4318b07fba65-1280.webp",
+      "large": "media/photo-94868803-f08b-4689-920e-4318b07fba65-3072.webp",
+      "width": 5042,
+      "height": 3361,
+      "renditions": [
+        {
+          "path": "media/photo-94868803-f08b-4689-920e-4318b07fba65-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-94868803-f08b-4689-920e-4318b07fba65-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-94868803-f08b-4689-920e-4318b07fba65-2048.webp",
+          "width": 2048,
+          "height": 1365
+        },
+        {
+          "path": "media/photo-94868803-f08b-4689-920e-4318b07fba65-3072.webp",
+          "width": 3072,
+          "height": 2048
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-dcacece0-4786-430f-9ea3-5b9d1a47892a",
+      "title": "1 1130",
+      "alt": "1 1130",
+      "category": "aviation",
+      "placement": "gallery",
+      "image": "media/photo-dcacece0-4786-430f-9ea3-5b9d1a47892a-3072.webp",
+      "thumbnail": "media/photo-dcacece0-4786-430f-9ea3-5b9d1a47892a-640.webp",
+      "display": "media/photo-dcacece0-4786-430f-9ea3-5b9d1a47892a-1280.webp",
+      "large": "media/photo-dcacece0-4786-430f-9ea3-5b9d1a47892a-3072.webp",
+      "width": 6240,
+      "height": 4160,
+      "renditions": [
+        {
+          "path": "media/photo-dcacece0-4786-430f-9ea3-5b9d1a47892a-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-dcacece0-4786-430f-9ea3-5b9d1a47892a-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-dcacece0-4786-430f-9ea3-5b9d1a47892a-2048.webp",
+          "width": 2048,
+          "height": 1365
+        },
+        {
+          "path": "media/photo-dcacece0-4786-430f-9ea3-5b9d1a47892a-3072.webp",
+          "width": 3072,
+          "height": 2048
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-f92a4761-1881-4242-9969-020d8d604221",
+      "title": "1 1128",
+      "alt": "1 1128",
+      "category": "aviation",
+      "placement": "gallery",
+      "image": "media/photo-f92a4761-1881-4242-9969-020d8d604221-3072.webp",
+      "thumbnail": "media/photo-f92a4761-1881-4242-9969-020d8d604221-640.webp",
+      "display": "media/photo-f92a4761-1881-4242-9969-020d8d604221-1280.webp",
+      "large": "media/photo-f92a4761-1881-4242-9969-020d8d604221-3072.webp",
+      "width": 6161,
+      "height": 4107,
+      "renditions": [
+        {
+          "path": "media/photo-f92a4761-1881-4242-9969-020d8d604221-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-f92a4761-1881-4242-9969-020d8d604221-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-f92a4761-1881-4242-9969-020d8d604221-2048.webp",
+          "width": 2048,
+          "height": 1365
+        },
+        {
+          "path": "media/photo-f92a4761-1881-4242-9969-020d8d604221-3072.webp",
+          "width": 3072,
+          "height": 2048
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8",
+      "title": "1 1127",
+      "alt": "1 1127",
+      "category": "aviation",
+      "placement": "gallery",
+      "image": "media/photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8-3072.webp",
+      "thumbnail": "media/photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8-640.webp",
+      "display": "media/photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8-1280.webp",
+      "large": "media/photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8-3072.webp",
+      "width": 4725,
+      "height": 3780,
+      "renditions": [
+        {
+          "path": "media/photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8-640.webp",
+          "width": 640,
+          "height": 512
+        },
+        {
+          "path": "media/photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8-1280.webp",
+          "width": 1280,
+          "height": 1024
+        },
+        {
+          "path": "media/photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8-2048.webp",
+          "width": 2048,
+          "height": 1638
+        },
+        {
+          "path": "media/photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8-3072.webp",
+          "width": 3072,
+          "height": 2458
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2",
+      "title": "1 1125",
+      "alt": "1 1125",
+      "category": "aviation",
+      "placement": "gallery",
+      "image": "media/photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2-3072.webp",
+      "thumbnail": "media/photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2-640.webp",
+      "display": "media/photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2-1280.webp",
+      "large": "media/photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2-3072.webp",
+      "width": 2533,
+      "height": 3377,
+      "renditions": [
+        {
+          "path": "media/photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2-640.webp",
+          "width": 480,
+          "height": 640
+        },
+        {
+          "path": "media/photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2-1280.webp",
+          "width": 960,
+          "height": 1280
+        },
+        {
+          "path": "media/photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2-2048.webp",
+          "width": 1536,
+          "height": 2048
+        },
+        {
+          "path": "media/photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2-3072.webp",
+          "width": 2304,
+          "height": 3072
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
+    },
+    {
+      "id": "photo-3327454e-7e8e-4fa7-9810-58769eb607cc",
+      "title": "1 1126 拷贝",
+      "alt": "1 1126 拷贝",
+      "category": "aviation",
+      "placement": "gallery",
+      "image": "media/photo-3327454e-7e8e-4fa7-9810-58769eb607cc-3072.webp",
+      "thumbnail": "media/photo-3327454e-7e8e-4fa7-9810-58769eb607cc-640.webp",
+      "display": "media/photo-3327454e-7e8e-4fa7-9810-58769eb607cc-1280.webp",
+      "large": "media/photo-3327454e-7e8e-4fa7-9810-58769eb607cc-3072.webp",
+      "width": 2160,
+      "height": 1440,
+      "renditions": [
+        {
+          "path": "media/photo-3327454e-7e8e-4fa7-9810-58769eb607cc-640.webp",
+          "width": 640,
+          "height": 427
+        },
+        {
+          "path": "media/photo-3327454e-7e8e-4fa7-9810-58769eb607cc-1280.webp",
+          "width": 1280,
+          "height": 853
+        },
+        {
+          "path": "media/photo-3327454e-7e8e-4fa7-9810-58769eb607cc-2048.webp",
+          "width": 2048,
+          "height": 1365
+        },
+        {
+          "path": "media/photo-3327454e-7e8e-4fa7-9810-58769eb607cc-3072.webp",
+          "width": 2160,
+          "height": 1440
+        }
+      ],
+      "published": true,
+      "featured": false,
+      "homeSelected": false
     }
   ],
   "collections": {
@@ -847,15 +1027,12 @@
         "nf736",
         "oaci-9917",
         "cmp",
-        "q400-excu-pt",
-        "aa-erj-plt",
         "sd515",
         "yqb-1",
         "photo-7f3aff6e-4e46-485b-8096-f9b8687273c2",
         "photo-98dc9da7-6807-48d5-885b-aa746c3a8468",
         "photo-22d7522e-b1d3-4788-8db4-afc824b0b52d",
         "ts-fin103",
-        "thunderbirdab",
         "81-0041-wm",
         "f22r",
         "yyz-dt-x",
@@ -881,21 +1058,31 @@
         "oaci-9917",
         "cmp",
         "photo-40ae5fac-76d8-478c-ae7a-ebe3394b8150",
-        "q400-excu-pt",
         "sd515",
         "yqb-1",
-        "aa-erj-plt",
         "ts-fin103",
-        "thunderbirdab",
+        "photo-3327454e-7e8e-4fa7-9810-58769eb607cc",
         "81-0041-wm",
-        "f22r",
         "yyz-dt-x",
         "slr-ecpre",
         "photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4",
         "photo-e44cf18d-6152-43b1-bd98-5610151961c0",
+        "f22r",
         "photo-98dc9da7-6807-48d5-885b-aa746c3a8468",
         "photo-7f3aff6e-4e46-485b-8096-f9b8687273c2",
-        "photo-22d7522e-b1d3-4788-8db4-afc824b0b52d"
+        "photo-22d7522e-b1d3-4788-8db4-afc824b0b52d",
+        "photo-08852004-8055-4aa0-a1e5-e41ec5af56b8",
+        "photo-c9f1482f-dd5c-4f4a-9ea4-1696fb06348f",
+        "photo-8ed94bfa-3066-463a-bd79-ab0c545239b3",
+        "photo-59900e20-ba2f-4ac6-8c7b-aa067749086e",
+        "photo-00e1ce85-ee7f-4372-ae8f-74ba81b77ac2",
+        "photo-14d4512f-205c-44c4-b48b-30c626304ada",
+        "photo-4b71659e-8357-40a3-ad81-962e42fdf1d6",
+        "photo-94868803-f08b-4689-920e-4318b07fba65",
+        "photo-dcacece0-4786-430f-9ea3-5b9d1a47892a",
+        "photo-f92a4761-1881-4242-9969-020d8d604221",
+        "photo-242c7267-7a9e-4f8a-8539-341f8f3ee3e8",
+        "photo-91455eff-1d8c-469b-a068-ef3d0d3eb5d2"
       ]
     },
     "photoLayout": {
@@ -914,10 +1101,6 @@
         }
       },
       "aviation": {
-        "thunderbirdab": {
-          "presentation": "auto",
-          "group": "group-a6651011-1c9f-4d35-9b13-848c00eb0630"
-        },
         "81-0041-wm": {
           "presentation": "auto",
           "group": "group-a6651011-1c9f-4d35-9b13-848c00eb0630"
