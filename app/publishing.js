@@ -29,6 +29,7 @@ export function publicationEntries(data) {
   return entries;
 }
 export function renderPublishedPage(template, content, page, category, {prerender = true, home = false} = {}) {
+  template = template.replace(/\r\n/g, "\n");
   if (page === "contact") return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=about_me.html#contact"><link rel="canonical" href="https://mingyaophoto.com/about_me.html"><title>Contact · Mingyao Photography</title></head><body><a href="about_me.html#contact">Contact Mingyao</a></body></html>';
   const site = siteSettings(content.site), metadata = pageMetadata(content,page,category);
   if (page === 'not-found') Object.assign(metadata, {title:`Page not found · ${site.name} ${site.brandTitle}`, description:'Return to the photography collection.', canonical:'https://mingyaophoto.com/404.html'});
