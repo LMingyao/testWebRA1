@@ -1,5 +1,5 @@
-import { escapeHTML as e, currentYear } from "./shared.js";
-import { siteSettings } from "./config.js";
+import { escapeHTML as e, currentYear } from "./shared.js?v=20261116";
+import { siteSettings } from "./config.js?v=20261116";
 
 export function applySiteChrome(content) {
   const site = siteSettings(content.site);

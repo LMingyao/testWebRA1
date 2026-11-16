@@ -1,5 +1,5 @@
-import { escapeHTML as e } from "./shared.js";
-import { siteSettings, gearItems } from "./config.js";
+import { escapeHTML as e } from "./shared.js?v=20261116";
+import { siteSettings, gearItems } from "./config.js?v=20261116";
 
 export function renderEditorial(main, content, page) {
   main.innerHTML = editorialHTML(content, page);

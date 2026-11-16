@@ -1,5 +1,5 @@
-import { createPhotoPreloader } from "./images.js";
-import { createPhotoStage } from "./photo-stage.js";
+import { createPhotoPreloader } from "./images.js?v=20261116";
+import { createPhotoStage } from "./photo-stage.js?v=20261116";
 
 export function onSwipe(element, callback, signal) {
   let gesture;

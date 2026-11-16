@@ -1,9 +1,9 @@
-import { escapeHTML as e, workPhotos, currentYear } from './shared.js';
-import { collections, defaultCollection, siteSettings } from './config.js';
-import { pageMetadata, categoryPages, categoryURL } from './metadata.js';
-import { arrowIcon } from './icons.js';
-import { photoImage } from './images.js';
-import { editorialHTML } from './editorial.js';
+import { escapeHTML as e, workPhotos, currentYear } from './shared.js?v=20261116';
+import { collections, defaultCollection, siteSettings } from './config.js?v=20261116';
+import { pageMetadata, categoryPages, categoryURL } from './metadata.js?v=20261116';
+import { arrowIcon } from './icons.js?v=20261116';
+import { photoImage } from './images.js?v=20261116';
+import { editorialHTML } from './editorial.js?v=20261116';
 export function publishedContent(data) {
   const content = structuredClone(data);
   content.photos = content.photos.filter(p => p.published && content.categories.some(c => c.id === p.category && c.visible !== false));
@@ -51,7 +51,7 @@ export function renderPublishedPage(template, content, page, category, {prerende
   if (page === 'not-found') {
     body = '<section class="not-found-page"><p class="eyebrow">404</p><h1>Page not found.</h1><p>The page may have moved or no longer exists.</p><a class="text-link" href="index.html">Return to work <span aria-hidden="true">→</span></a></section>';
     html = html.replace('<head>', '<head><meta name="robots" content="noindex,follow" />')
-      .replace('src="app/site.js"', 'src="app/not-found.js"')
+      .replace('src="app/site.js?v=20261116"', 'src="app/not-found.js"')
       .replace(/<div id="layout-controls"[^>]*><\/div>/, '')
       .replace(/<dialog class="lightbox"[\s\S]*?<\/dialog>/, '')
       .replace(/<noscript[\s\S]*?<\/noscript\s*>/, '')

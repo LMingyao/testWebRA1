@@ -1,4 +1,4 @@
-import { photoImage, fittedPhotoWidth } from "./images.js";
+import { photoImage, fittedPhotoWidth } from "./images.js?v=20261116";
 
 // Single view and the dialog share loading, retry and fitted image sizing.
 export function createPhotoStage(stage, host) {

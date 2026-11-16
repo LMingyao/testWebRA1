@@ -1,5 +1,5 @@
-import { collections } from "./config.js";
-import { orderedPhotos, photoComposition } from "./sequence.js";
+import { collections } from "./config.js?v=20261116";
+import { orderedPhotos, photoComposition } from "./sequence.js?v=20261116";
 export const escapeHTML = (value) =>
   String(value ?? "").replace(
     /[&<>"']/g,

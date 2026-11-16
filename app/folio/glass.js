@@ -1,7 +1,7 @@
-import {createLiquidGlass} from './liquid-glass.js';
-import {arrowIcon} from '../icons.js';
-import {createSceneInk} from './scene-ink.js';
-import {createPortfolioLenses} from './portfolio-lenses.js';
+import {createLiquidGlass} from './liquid-glass.js?v=20261116';
+import {arrowIcon} from '../icons.js?v=20261116';
+import {createSceneInk} from './scene-ink.js?v=20261116';
+import {createPortfolioLenses} from './portfolio-lenses.js?v=20261116';
 
 const root = document.documentElement;
 const folio = root.dataset.edition === 'folio';

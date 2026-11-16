@@ -1,10 +1,10 @@
-import { escapeHTML as e, validateContent } from "./shared.js";
-import { collections, resolveCollection, siteSettings } from "./config.js";
-import { applySiteChrome } from "./chrome.js";
-import { loadPublicContent, contentForDisplay } from "./backend.js";
-import { createNavigation } from "./navigation.js";
-import { renderEditorial } from "./editorial.js";
-import { categoryURL, categoryFromURL, pageMetadata, applyMetadata } from "./metadata.js";
+import { escapeHTML as e, validateContent } from "./shared.js?v=20261116";
+import { collections, resolveCollection, siteSettings } from "./config.js?v=20261116";
+import { applySiteChrome } from "./chrome.js?v=20261116";
+import { loadPublicContent, contentForDisplay } from "./backend.js?v=20261116";
+import { createNavigation } from "./navigation.js?v=20261116";
+import { renderEditorial } from "./editorial.js?v=20261116";
+import { categoryURL, categoryFromURL, pageMetadata, applyMetadata } from "./metadata.js?v=20261116";
 
 const main = document.querySelector("main");
 const page = document.body.dataset.page;
@@ -27,7 +27,7 @@ try {
     )
     .join("");
   const renderGallery = isWork
-    ? (await import("./gallery.js")).createGallery(
+    ? (await import("./gallery.js?v=20261116")).createGallery(
         main, document.querySelector("#layout-controls"), content,
       )
     : undefined;

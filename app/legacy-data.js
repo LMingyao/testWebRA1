@@ -1,5 +1,5 @@
-import { workPhotos } from './shared.js';
-import { collections, resolveCollection } from './config.js';
+import { workPhotos } from './shared.js?v=20261116';
+import { collections, resolveCollection } from './config.js?v=20261116';
 
 export function legacyCollection(content, requested) {
   const category = requested === '*' ? '*' : resolveCollection(content, requested);

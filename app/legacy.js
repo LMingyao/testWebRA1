@@ -1,10 +1,10 @@
-import { escapeHTML as e, validateContent, currentYear } from './shared.js';
-import { loadPublicContent, contentForDisplay } from './backend.js';
-import { siteSettings } from './config.js';
-import { photoImage } from './images.js';
-import { createPhotoViewer, onSwipe } from './viewer.js';
-import { legacyCollection, legacyURL, legacyMosaic, legacyAlbum } from './legacy-data.js';
-import { bindImageRecovery } from './image-recovery.js';
+import { escapeHTML as e, validateContent, currentYear } from './shared.js?v=20261116';
+import { loadPublicContent, contentForDisplay } from './backend.js?v=20261116';
+import { siteSettings } from './config.js?v=20261116';
+import { photoImage } from './images.js?v=20261116';
+import { createPhotoViewer, onSwipe } from './viewer.js?v=20261116';
+import { legacyCollection, legacyURL, legacyMosaic, legacyAlbum } from './legacy-data.js?v=20261116';
+import { bindImageRecovery } from './image-recovery.js?v=20261116';
 
 const main = document.querySelector('main');
 const era = document.body.dataset.era;

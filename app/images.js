@@ -1,4 +1,4 @@
-import { escapeHTML as e } from "./shared.js";
+import { escapeHTML as e } from "./shared.js?v=20261116";
 
 export function createPhotoPreloader() {
   const images = [new Image(), new Image()];

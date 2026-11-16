@@ -1,9 +1,9 @@
-import { createNavigation } from "./navigation.js";
-import { loadPublicContent, contentForDisplay } from "./backend.js";
-import { applySiteChrome } from "./chrome.js";
-import { validateContent, escapeHTML as e } from "./shared.js";
-import { collections } from "./config.js";
-import { categoryURL } from "./metadata.js";
+import { createNavigation } from "./navigation.js?v=20261116";
+import { loadPublicContent, contentForDisplay } from "./backend.js?v=20261116";
+import { applySiteChrome } from "./chrome.js?v=20261116";
+import { validateContent, escapeHTML as e } from "./shared.js?v=20261116";
+import { collections } from "./config.js?v=20261116";
+import { categoryURL } from "./metadata.js?v=20261116";
 
 createNavigation();
 try {

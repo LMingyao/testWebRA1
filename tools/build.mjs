@@ -31,7 +31,7 @@ const preview = template.replaceAll("{{page}}", "portfolio").replaceAll("{{title
   .replaceAll("{{description}}", "Private draft preview").replaceAll("{{canonical}}", "")
   .replaceAll("{{previousArrow}}", arrowIcon(-1)).replaceAll("{{nextArrow}}", arrowIcon(1))
   .replace('<head>', '<head><base href="../" /><meta name="robots" content="noindex,nofollow" />')
-  .replace('src="app/site.js"', 'src="admin/preview.js"')
+  .replace('src="app/site.js?v=20261116"', 'src="admin/preview.js"')
   .replace(/<a class="legacy-link"[^>]*>Legacy views<\/a>/, '');
 await writeFile(path.join(root, "admin/preview.html"), preview);
 console.log(

@@ -1,12 +1,12 @@
-import { escapeHTML as e, workPhotos } from "./shared.js";
-import { photoRows } from "./layout.js";
-import { photoImage, createPhotoPreloader } from "./images.js";
-import { createPhotoViewer, onSwipe } from "./viewer.js";
-import { arrowIcon } from "./icons.js";
-import { createPhotoStage } from "./photo-stage.js";
-import { bindImageRecovery } from "./image-recovery.js";
-import { collections } from "./config.js";
-import { photographScrollY } from './reading-position.js';
+import { escapeHTML as e, workPhotos } from "./shared.js?v=20261116";
+import { photoRows } from "./layout.js?v=20261116";
+import { photoImage, createPhotoPreloader } from "./images.js?v=20261116";
+import { createPhotoViewer, onSwipe } from "./viewer.js?v=20261116";
+import { arrowIcon } from "./icons.js?v=20261116";
+import { createPhotoStage } from "./photo-stage.js?v=20261116";
+import { bindImageRecovery } from "./image-recovery.js?v=20261116";
+import { collections } from "./config.js?v=20261116";
+import { photographScrollY } from './reading-position.js?v=20261116';
 
 export function createGallery(main, controls, content) {
   let layoutObserver, layoutResize, singleFrame, selectedPhotoId, viewerChanged, viewerClosed, viewMode = content.collections?.defaultView || "multi";

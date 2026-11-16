@@ -1,4 +1,4 @@
-import { collections, defaultCollection, siteSettings } from "./config.js";
+import { collections, defaultCollection, siteSettings } from "./config.js?v=20261116";
 export const categoryPages = {
   aviation: "aviation.html", landscape: "landscape.html", portrait: "ptr.html",
   wildlife: "wildlife.html", motorsport: "motorsport.html",
