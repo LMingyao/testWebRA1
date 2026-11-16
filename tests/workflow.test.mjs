@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 import { fixture } from './fixture.mjs';
 import { orderedPhotos, moveVisible, reorderVisible, setComposition } from '../app/sequence.js';
 import { validateContent, workPhotos, contentImagePaths } from '../app/shared.js';
-import { publishedContent, publicationFiles } from '../app/publishing.js';
+import { publishedContent, publicationFiles, renderPublishedPage } from '../app/publishing.js';
 import { createBackup, verifyBackup } from '../tools/backup.mjs';
 import { seedSQL } from '../tools/prepare-d1.mjs';
 
@@ -91,4 +91,14 @@ test('complete backup verifies checksums and reconstructs ordered content and hi
   assert.equal(JSON.parse(db.prepare('SELECT document FROM gallery_history').get().document).site.email,'old@example.com');
   await writeFile(path.join(directory,'assets/one.jpg'),'tampered');
   await assert.rejects(()=>verifyBackup(directory),/checksum/);
+});
+
+
+test('cloud and local publication produce identical pages from CRLF and LF shells', async () => {
+  const raw=await readFile(new URL('../tools/page.html',import.meta.url),'utf8');
+  const lf=raw.replace(/\r\n/g,'\n');
+  const crlf=lf.replace(/\n/g,'\r\n');
+  for(const page of ['portfolio','about','contact','not-found']) {
+    assert.equal(renderPublishedPage(crlf,fixture,page,'all'),renderPublishedPage(lf,fixture,page,'all'));
+  }
 });
