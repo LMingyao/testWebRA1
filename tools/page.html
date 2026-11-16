@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-edition="folio" data-material="glass">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -29,6 +29,12 @@
     <link rel="stylesheet" href="app/design.css" />
     <link rel="stylesheet" href="app/site.css" />
     <link rel="stylesheet" href="app/wordmark.css" />
+    <link rel="stylesheet" href="app/folio/liquid-glass.css" />
+    <link rel="stylesheet" href="app/folio/glass.css" />
+    <link rel="stylesheet" href="app/folio/folio.css" />
+    <link rel="stylesheet" href="app/folio/white-glass.css" />
+    <link rel="stylesheet" href="app/folio/mobile-editorial.css" />
+    <script type="module" src="app/folio/glass.js"></script>
     <script type="module" src="app/site.js"></script>
   </head>
   <body data-page="{{page}}">
@@ -38,10 +44,10 @@
         ><span class="logo-wordmark" aria-hidden="true"
           ><span class="logo-name">MINGYAO</span
           ><span class="logo-title">Photography</span></span
-        ></a
+        ><img class="glass-brand-mark" src="assets/branding/photography.svg" alt="" aria-hidden="true" width="167" height="45"></a
       >
       <button
-        class="menu-toggle"
+        class="menu-toggle" data-show-collections
         aria-label="Toggle navigation"
         aria-controls="navigation"
         aria-expanded="false"
@@ -59,8 +65,7 @@
           </button>
           <div id="work-menu" hidden></div>
         </div>
-        <a href="about_me.html" data-nav="about">ABOUT</a
-        ><a href="contact.html" data-nav="contact">CONTACT</a>
+        <a href="about_me.html" data-nav="about">ABOUT</a>
       </nav>
     </header>
     <div id="layout-controls" class="collection-toolbar"></div>
@@ -70,7 +75,7 @@
     <footer class="site-footer">
       <a class="footer-name" href="index.html">Mingyao Li</a>
       <div id="social-links"></div>
-      <small id="copyright"></small
+      <small><a id="copyright" href="https://mingyao.li/"></a></small
       ><div class="footer-links"><a class="legacy-link" href="legacy.html">Legacy views</a><a class="back-top" href="#">Back to top ↑</a></div>
     </footer>
     <dialog class="lightbox" aria-label="Photograph viewer">

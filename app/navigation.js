@@ -3,6 +3,8 @@ const menu = document.querySelector(".menu-toggle"),
   nav = document.querySelector("#navigation");
 const workToggle = document.querySelector(".work-toggle"),
   workMenu = document.querySelector("#work-menu");
+const compact = matchMedia("(max-width: 900px)");
+const directCollections = () => compact.matches && menu.hasAttribute("data-show-collections");
 function setMenu(open) {
   menu.setAttribute("aria-expanded", String(open));
   nav.classList.toggle("is-open", open);
@@ -16,6 +18,7 @@ function setWorkMenu(open) {
 menu.onclick = () => {
   const open = menu.getAttribute("aria-expanded") !== "true";
   setMenu(open);
+  if (open && directCollections()) setWorkMenu(true);
   if (!open) setWorkMenu(false);
 };
 workToggle.onclick = () => setWorkMenu(workMenu.hidden);
@@ -43,7 +46,7 @@ document.querySelector(".site-header").addEventListener("focusout", event => {
   if (!event.currentTarget.contains(event.relatedTarget)) setMenu(false);
 });
 document.addEventListener("click", (event) => {
-  if (!event.target.closest(".work-navigation")) setWorkMenu(false);
+  if (!event.target.closest(".work-navigation") && !(directCollections() && menu.contains(event.target))) setWorkMenu(false);
   if (!event.target.closest(".site-header")) setMenu(false);
 });
 document.addEventListener("keydown", (event) => {
@@ -56,9 +59,10 @@ document.addEventListener("keydown", (event) => {
     menu.focus();
   }
 });
-matchMedia("(max-width: 900px)").addEventListener("change", () => {
+compact.addEventListener("change", () => {
   setMenu(false);
   setWorkMenu(false);
 });
-return { setMenu, setWorkMenu, workToggle, workMenu };
+return { setMenu, setWorkMenu, workToggle, workMenu,
+  focusWorkTrigger: () => (compact.matches ? menu : workToggle).focus({preventScroll:true}) };
 }

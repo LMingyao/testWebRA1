@@ -64,7 +64,7 @@ test("Contact labels survive two edits through rendering/publication; copy feedb
   for (const [send,copy] of [["Send a note","Copy address"],["Write to me","Copy email address"]]) {
     Object.assign(data.site,{emailActionLabel:send,copyEmailLabel:copy,copiedEmailLabel:"Address copied"}); validateContent(data);
     assert.match(editorialHTML(data,"contact"),new RegExp(send));
-    const page=publicationFiles(template,publishedContent(data),send).find(item=>item.path==='contact.html');
+    const page=publicationFiles(template,publishedContent(data),send).find(item=>item.path==='about_me.html');
     assert.match(page.content,new RegExp(copy));
   }
   const button={dataset:{email:fixture.site.email},isConnected:true}, fallback={hidden:true}, clock=timers();

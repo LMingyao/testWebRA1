@@ -1,0 +1,37 @@
+/* On white paper the glass edge is visible through the reflected dark
+   surroundings and its contact shadow. Keep both out of the flat face. */
+@media (not (prefers-reduced-transparency: reduce)) and (forced-colors: none) {
+  html[data-edition=folio][data-material=glass] {
+    --lens-shadow:
+      0 .6px 1px rgb(30 43 50 / 16%),
+      .4px 3px 4px -2.5px rgb(37 49 56 / 24%),
+      1px 6px 12px -7px rgb(45 57 64 / 16%);
+  }
+
+  html[data-edition=folio][data-material=glass]
+    :is(#navigation, #work-menu, .collection-toolbar, .menu-toggle).lg-surface:not([data-lg-quality=opaque]) > .lg-rim {
+    box-shadow:
+      inset .6px .8px 1px rgb(255 255 255 / 95%),
+      inset -.8px -1.4px 1.6px -.5px rgb(33 50 61 / 32%),
+      inset -1.2px -3.2px 3px -2px rgb(102 125 139 / 19%);
+  }
+
+  html[data-edition=folio][data-material=glass]
+    :is(#navigation, #work-menu, .collection-toolbar, .menu-toggle).lg-surface:not([data-lg-quality=opaque]) > .lg-rim::before {
+    padding: 1.35px;
+    opacity: 1;
+    background: conic-gradient(from var(--reflection-turn, 35deg),
+      rgb(71 88 99 / 19%) 0deg,
+      transparent 24deg,
+      rgb(255 255 255 / 94%) 62deg,
+      transparent 84deg,
+      rgb(50 65 74 / 30%) 123deg,
+      transparent 155deg,
+      rgb(255 255 255 / 96%) 191deg,
+      rgb(124 148 159 / 18%) 222deg,
+      transparent 246deg,
+      rgb(48 64 77 / 29%) 287deg,
+      transparent 315deg,
+      rgb(71 88 99 / 19%) 360deg);
+  }
+}

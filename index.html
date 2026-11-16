@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-edition="folio" data-material="glass">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -29,6 +29,12 @@
     <link rel="stylesheet" href="app/design.css" />
     <link rel="stylesheet" href="app/site.css" />
     <link rel="stylesheet" href="app/wordmark.css" />
+    <link rel="stylesheet" href="app/folio/liquid-glass.css" />
+    <link rel="stylesheet" href="app/folio/glass.css" />
+    <link rel="stylesheet" href="app/folio/folio.css" />
+    <link rel="stylesheet" href="app/folio/white-glass.css" />
+    <link rel="stylesheet" href="app/folio/mobile-editorial.css" />
+    <script type="module" src="app/folio/glass.js"></script>
     <script type="module" src="app/site.js"></script>
   </head>
   <body data-page="portfolio">
@@ -38,10 +44,10 @@
         ><span class="logo-wordmark" aria-hidden="true"
           ><span class="logo-name">MINGYAO</span
           ><span class="logo-title">Photography</span></span
-        ></a
+        ><img class="glass-brand-mark" src="assets/branding/photography.svg" alt="" aria-hidden="true" width="167" height="45"></a
       >
       <button
-        class="menu-toggle"
+        class="menu-toggle" data-show-collections
         aria-label="Toggle navigation"
         aria-controls="navigation"
         aria-expanded="false"
@@ -59,16 +65,15 @@
           </button>
           <div id="work-menu" hidden><a data-work="all" href="index.html" aria-current="page">Selected work</a><a data-work="aviation" href="aviation.html">Aviation</a><a data-work="landscape" href="landscape.html">Landscapes</a><a data-work="portrait" href="ptr.html">Portraits</a><a data-work="wildlife" href="wildlife.html">Wildlife</a><a data-work="motorsport" href="motorsport.html">Motorsport</a></div>
         </div>
-        <a href="about_me.html" data-nav="about">About</a
-        ><a href="contact.html" data-nav="contact">Contact</a>
+        <a href="about_me.html" data-nav="about">About</a>
       </nav>
     </header>
     <div id="layout-controls" class="collection-toolbar"><p class="collection-label">Selected work</p></div>
-    <main id="main" data-prerendered><section class="work-gallery" aria-label="Selected work"><h1 class="sr-only">Selected work</h1><div class="work-opening"><div class="opening-image"><img src="media/af1cvrr-1280.webp" srcset="media/af1cvrr-640.webp 640w, media/af1cvrr-1280.webp 1280w, media/af1cvrr-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="3900" height="1300" alt="Air Force One climbing against a clear blue sky." loading="eager" decoding="async" fetchpriority="high"></div></div><div class="photo-sheet static-sheet"><figure class="photo-card"><img src="media/c-fvlx-snow-1-2-1280.webp" srcset="media/c-fvlx-snow-1-2-640.webp 640w, media/c-fvlx-snow-1-2-1280.webp 1280w, media/c-fvlx-snow-1-2-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="2160" height="1080" alt="An Air Canada aircraft on a snowy apron with drifting snow behind it." loading="lazy" decoding="async" ></figure><figure class="photo-card"><img src="media/yvr-boat-1280.webp" srcset="media/yvr-boat-640.webp 640w, media/yvr-boat-1280.webp 1280w, media/yvr-boat-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="2160" height="1440" alt="A row of waterfront boathouses reflected in still water." loading="lazy" decoding="async" ></figure><figure class="photo-card"><img src="media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-1280.webp" srcset="media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-640.webp 640w, media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-1280.webp 1280w, media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="3840" height="2560" alt="57347" loading="lazy" decoding="async" ></figure><figure class="photo-card"><img src="media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-1280.webp" srcset="media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-640.webp 640w, media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-1280.webp 1280w, media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="3926" height="2944" alt="BDR M26 1 7" loading="lazy" decoding="async" ></figure></div></section></main>
+    <main id="main" data-prerendered><section class="work-gallery" aria-label="Selected work"><h1 class="sr-only">Selected work</h1><div class="work-opening"><div class="opening-image"><img crossorigin="anonymous" src="media/af1cvrr-1280.webp" srcset="media/af1cvrr-640.webp 640w, media/af1cvrr-1280.webp 1280w, media/af1cvrr-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="3900" height="1300" alt="Air Force One climbing against a clear blue sky." loading="eager" decoding="async" fetchpriority="high"></div></div><div class="photo-sheet static-sheet"><figure class="photo-card"><img crossorigin="anonymous" src="media/c-fvlx-snow-1-2-1280.webp" srcset="media/c-fvlx-snow-1-2-640.webp 640w, media/c-fvlx-snow-1-2-1280.webp 1280w, media/c-fvlx-snow-1-2-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="2160" height="1080" alt="An Air Canada aircraft on a snowy apron with drifting snow behind it." loading="lazy" decoding="async" ></figure><figure class="photo-card"><img crossorigin="anonymous" src="media/yvr-boat-1280.webp" srcset="media/yvr-boat-640.webp 640w, media/yvr-boat-1280.webp 1280w, media/yvr-boat-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="2160" height="1440" alt="A row of waterfront boathouses reflected in still water." loading="lazy" decoding="async" ></figure><figure class="photo-card"><img crossorigin="anonymous" src="media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-1280.webp" srcset="media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-640.webp 640w, media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-1280.webp 1280w, media/photo-39a11e26-7e0d-42f5-b438-189b2b9a26b4-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="3840" height="2560" alt="57347" loading="lazy" decoding="async" ></figure><figure class="photo-card"><img crossorigin="anonymous" src="media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-1280.webp" srcset="media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-640.webp 640w, media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-1280.webp 1280w, media/photo-e44cf18d-6152-43b1-bd98-5610151961c0-1920.webp 1920w" sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 80px), min(1320px, calc(100vw - 112px))" width="3926" height="2944" alt="BDR M26 1 7" loading="lazy" decoding="async" ></figure></div></section></main>
     <footer class="site-footer">
       <a class="footer-name" href="index.html">Mingyao Li</a>
       <div id="social-links"><a class="social-primary" href="https://instagram.com/myl_yul" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a class="social-primary" href="https://www.jetphotos.com/photographer/240672" target="_blank" rel="noopener noreferrer">JetPhotos ↗</a><a class="social-secondary" href="https://www.facebook.com/profile.php?id=100028061147610" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a class="social-secondary" href="https://twitter.com/Mingyao_Li_" target="_blank" rel="noopener noreferrer">X ↗</a></div>
-      <small id="copyright">© 2026 Mingyao Li. All rights reserved.</small
+      <small><a id="copyright" href="https://mingyao.li/">© 2026 Mingyao Li. All rights reserved.</a></small
       ><div class="footer-links"><a class="legacy-link" href="legacy.html">Legacy views</a><a class="back-top" href="#">Back to top ↑</a></div>
     </footer>
     <dialog class="lightbox" aria-label="Photograph viewer">

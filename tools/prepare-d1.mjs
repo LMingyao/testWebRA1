@@ -42,6 +42,7 @@ export async function prepareD1(root) {
     "admin/login.css", "app/password.js", "app/api-response.js", "admin/preview.html", "admin/preview.js", "admin/preview-data.js", "admin/ordering.js",
     "app/gallery.js", "app/reading-position.js", "app/image-recovery.js", "app/layout.js", "app/images.js", "app/viewer.js", "app/photo-stage.js",
     "app/icons.js", "app/editorial.js", "app/site.css", "app/navigation.js", "app/metadata.js", "app/config.js", "app/chrome.js"];
+  files.push("assets/branding/photography.svg", "app/folio/folio.css", "app/folio/glass.css", "app/folio/glass.js", "app/folio/liquid-glass.css", "app/folio/liquid-glass.js", "app/folio/mobile-editorial.css", "app/folio/portfolio-lenses.js", "app/folio/scene-ink.js", "app/folio/white-glass.css");
   for (const file of files) {
     const target = path.join(destination, "assets", file);
     await mkdir(path.dirname(target), { recursive: true });

@@ -40,12 +40,12 @@ test('successive snapshots contain current text, visible links, real photos and 
   const page=file=>files.find(f=>f.path===file).content;
   assert.match(page('index.html'),/Travel/);
   assert.match(page('selected.html'),/<img /);
-  assert.match(page('contact.html'),/first@example.com/);
+  assert.match(page('about_me.html'),/first@example.com/);
   assert.match(page('sitemap.xml'),/collection-travel.html/);
-  assert.match(page('contact.html'),/og:image" content="https:\/\/mingyaophoto.com\/assets\/one.jpg/);
+  assert.match(page('about_me.html'),/og:image" content="https:\/\/mingyaophoto.com\/assets\/one.jpg/);
   data.site.email='second@example.com';data.categories[1].visible=false;data.collections.default='all';data.photos[0].published=false;
   files=publicationFiles(template,publishedContent(data),'two');
-  assert.match(page('contact.html'),/second@example.com/);
+  assert.match(page('about_me.html'),/second@example.com/);
   assert.doesNotMatch(page('sitemap.xml'),/collection-travel.html/);
   assert.match(page('collection-travel.html'),/noindex/);
   assert.doesNotMatch(page('index.html'),/alt="A plane in flight"/);

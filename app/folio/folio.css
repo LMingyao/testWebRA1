@@ -1,0 +1,289 @@
+/* Only the local photographic edition loads this sheet. */
+html[data-edition=folio][data-material=glass] {
+  --paper:#fff;
+  --inner:max(54px, calc((100% - 1440px)/2));
+  --folio-top:22px;
+  --lens-shadow:0 .5px 1px #23374625, 0 3px 8px -5px #1a31403b;
+  scrollbar-width:none;scrollbar-gutter:auto;
+  background:var(--paper);
+}
+html[data-edition=folio][data-material=glass]::-webkit-scrollbar {display:none;width:0;height:0}
+html[data-edition=folio][data-material=glass] body {padding:0;background:var(--paper)}
+html[data-edition=folio] .site-footer #copyright {display:inline-block;text-underline-offset:.25em}
+html[data-edition=folio] .site-footer #copyright:is(:hover,:focus-visible) {text-decoration:underline}
+html[data-edition=folio] :is(.work-opening,.single-stage,.viewer-stage) {touch-action:pan-y pinch-zoom}
+html[data-edition=folio][data-material=glass] .site-header {
+  position:relative;inset:auto;transform:none;width:auto;margin:0 var(--inner);
+  padding:0;min-height:98px;border:0;box-shadow:none;background:transparent;
+}
+html[data-edition=folio][data-material=glass] .brand {padding:0}
+html[data-edition=folio][data-material=glass] .brand .glass-brand-mark {width:158px}
+html[data-edition=folio][data-material=glass] :is(.work-opening,.single-stage) {width:100%;margin:0}
+html[data-edition=folio][data-material=glass] .work-opening {margin-bottom:clamp(22px,2.2vw,36px)}
+html[data-edition=folio][data-material=glass] .single-stage {height:max(300px,calc(100svh - 186px))}
+html[data-edition=folio][data-material=glass] .photo-sheet {margin:0;row-gap:clamp(18px,2.2vw,38px)}
+/* The original row planner writes its preferred width inline. Fill the page's
+   shared frame and keep the calculated column ratios and photo proportions. */
+html[data-edition=folio][data-material=glass] .photo-row {width:100%!important;gap:clamp(18px,2.2vw,38px)}
+html[data-edition=folio][data-material=glass] :is(.opening-image,.opening-image img,.photo-card img,.single-image img) {border-radius:0}
+html[data-edition=folio][data-material=glass] .gallery-header-actions {
+  position:fixed;inset:var(--folio-top) var(--inner) auto auto;
+  display:flex;align-items:center;gap:12px;
+}
+html[data-edition=folio][data-material=glass] #navigation {
+  position:fixed;inset:var(--folio-top) var(--inner) auto auto;gap:0;
+  padding:4px;border-radius:32px;box-shadow:var(--lens-shadow);--lg-fill:#ffffff06;
+}
+html[data-edition=folio][data-material=glass] #navigation > a,
+html[data-edition=folio][data-material=glass] .work-toggle {
+  padding-inline:19px;border-radius:24px;font-weight:400;
+}
+html[data-edition=folio][data-material=glass] .glass-nav-lens {
+  top:4px;border-radius:25px;background:transparent;
+  box-shadow:inset 0 .7px 1px #ffffff85,inset 0 -.6px 1px #4d596125;
+}
+html[data-edition=folio][data-material=glass] :is(.work-toggle.is-current,nav>a[aria-current=page]):after {display:none}
+html[data-edition=folio][data-material=glass] #work-menu {
+  top:calc(100% + 10px);border-radius:19px;
+  box-shadow:0 .7px 1px #20354227,0 6px 14px -10px #192e3957;
+  animation-name:folio-menu-open;
+}
+@keyframes folio-menu-open {from {opacity:0} to {opacity:1}}
+html[data-edition=folio][data-material=glass] .collection-toolbar {
+  position:relative;inset:auto;transform:none;max-width:none;padding:4px;gap:0;min-height:52px;
+  border-radius:30px;--lg-fill:#ffffff06;box-shadow:var(--lens-shadow);
+}
+html[data-edition=folio][data-material=glass] :is(.single-stage,.viewer-stage) {
+  container-type:size;align-items:center;
+}
+html[data-edition=folio][data-material=glass] :is(.single-image,.viewer-image,.single-controls,.viewer-navigation) {
+  width:min(100%,calc(100cqh * var(--photo-aspect,2)));
+}
+html[data-edition=folio][data-material=glass] :is(.single-image,.viewer-image) {
+  height:min(100%,calc(100cqw / var(--photo-aspect,2)));
+}
+html[data-edition=folio][data-material=glass] :is(.viewer-image,.viewer-navigation) {max-width:1600px}
+html[data-edition=folio][data-material=glass] .viewer-footer:empty {display:none}
+html[data-edition=folio][data-material=glass] :is(.opening-controls,.single-controls,.viewer-navigation) {
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
+  display:flex;align-items:center;justify-content:space-between;padding:0 clamp(8px,1.5vw,20px);margin:0;
+  pointer-events:none;opacity:0;transition:opacity .18s ease-out;
+}
+html[data-edition=folio][data-material=glass] .opening-controls {width:100%}
+html[data-edition=folio][data-material=glass] .viewer-footer:not(:has(.viewer-navigation)) {display:none}
+html[data-edition=folio][data-material=glass] :is(.opening-controls,.single-controls,.viewer-navigation)>button {
+  position:relative;display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;
+  --lg-fill:#ffffff09;box-shadow:0 1px 2px #16212b22,0 4px 12px -7px #0914215c;pointer-events:none;
+}
+html[data-edition=folio][data-material=glass] :is(.opening-controls,.single-controls,.viewer-navigation) .arrow-icon {
+  width:19px;height:19px;stroke-width:1.55;
+  filter:drop-shadow(0 .5px .55px var(--arrow-halo,#ffffff80));
+}
+html[data-edition=folio][data-material=glass] button[data-scene-ink=light] {--arrow-halo:#05080eaa}
+html[data-edition=folio][data-material=glass] :is(.opening-controls,.single-controls,.viewer-navigation)>button:focus-visible {
+  outline:2px solid currentColor;outline-offset:3px;
+}
+@media(hover:hover) and (pointer:fine){
+  html[data-edition=folio][data-material=glass] :is(.work-opening:hover,.single-stage:has(.single-image:hover,button:hover),.viewer-stage:has(.viewer-image:hover,button:hover)) > :is(.opening-controls,.single-controls,.viewer-navigation) {
+    opacity:1;transition-duration:.12s;
+    & > button:enabled {pointer-events:auto}
+  }
+}
+html[data-edition=folio][data-material=glass] :is(.work-opening,.single-stage,.viewer-stage):has(:focus-visible) > :is(.opening-controls,.single-controls,.viewer-navigation) {
+  opacity:1;
+  & > button:enabled {pointer-events:auto}
+}
+html[data-edition=folio][data-material=glass] :is(.single-controls,.viewer-navigation):not(:has(button:enabled)) {display:none}
+@media(prefers-reduced-motion:reduce){
+  html[data-edition=folio][data-material=glass] :is(.opening-controls,.single-controls,.viewer-navigation) {transition:none}
+}
+html[data-edition=folio][data-material=glass] .collection-label {display:none}
+html[data-edition=folio][data-material=glass] .view-controls button {
+  width:44px;padding:0;display:grid;place-items:center;border-radius:22px;
+}
+html[data-edition=folio][data-material=glass] .view-controls button:after {
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:16px;height:12px;box-sizing:border-box;border:1.25px solid currentColor;border-radius:2px;
+}
+html[data-edition=folio][data-material=glass] .view-controls [data-view=multi]:after {
+  width:14px;height:14px;border:1.25px solid currentColor;
+  background:linear-gradient(currentColor,currentColor) center/1px 100% no-repeat,
+             linear-gradient(currentColor,currentColor) center/100% 1px no-repeat;
+}
+html[data-edition=folio][data-material=glass] .glass-view-lens {
+  border-radius:22px;background:transparent;box-shadow:inset 0 .8px 1px #fffb,inset 0 -.7px 1px #273c4835;
+}
+html[data-edition=folio][data-material=glass] .lg-surface > .lg-rim {
+  box-shadow:inset .4px .6px .8px #ffffff80,inset -.4px -.65px .8px #2235412a;
+}
+@property --reflection-turn {
+  syntax:"<angle>";inherits:true;initial-value:35deg;
+}
+html[data-edition=folio][data-material=glass] :is([data-lg=lens],[data-lg=sheet])>.lg-rim:before {
+  z-index:1;padding:1px;opacity:.96;
+  background:conic-gradient(from var(--reflection-turn,35deg),transparent 30deg,#ffffff22 51deg,#fffffff5 61deg,#ffffffa0 66deg,transparent 88deg 207deg,#ffffff32 229deg,#ffffffbf 242deg,transparent 267deg);
+}
+@media(prefers-reduced-motion:no-preference){
+  html[data-edition=folio][data-material=glass] :is([data-lg=lens],[data-lg=sheet]) {transition:--reflection-turn .14s ease-out}
+}
+@media (not (prefers-reduced-transparency:reduce)) and (forced-colors:none) {
+  /* Include the menu IDs: their base rules otherwise reapply a white fill
+     and a second displacement filter after the sampled rim is painted. */
+  html[data-edition=folio][data-material=glass] :is(#work-menu,#navigation,.lg-surface):not([data-lg-quality=opaque])>.lg-optics {
+    background:transparent;
+  }
+  html[data-edition=folio][data-material=glass] :is(#work-menu,#navigation,.lg-surface):not([data-lg-quality=opaque]):has(>.lg-rim[data-painted])>.lg-optics {
+    -webkit-backdrop-filter:none;backdrop-filter:none;
+  }
+  html[data-edition=folio][data-material=glass] :is(#work-menu,#navigation)[data-lg=sheet][data-text-below]:not([data-lg-quality=opaque])>.lg-optics {
+    -webkit-mask:var(--type-mask);mask:var(--type-mask);
+    -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  }
+  html[data-edition=folio][data-material=glass] #work-menu a:is(:hover,[aria-current=page]),
+  html[data-edition=folio][data-material=glass] #navigation>a:hover,
+  html[data-edition=folio][data-material=glass] .work-toggle:hover {background:transparent}
+}
+html[data-edition=folio][data-material=glass] [data-lg=lens]>.lg-rim:after {
+  z-index:2;opacity:.78;padding:1.25px;
+  background:radial-gradient(ellipse 46px 30px at var(--light-x,18%) var(--light-y,0%),#fff 3%,#fff0 100%);
+}
+html[data-edition=folio][data-material=glass] [data-lg=lens]:active>.lg-rim:after {padding:2px}
+/* A travelling reflection on the curved rail. Its mask cuts out the entire
+   flat face, including while the pointer is directly over a navigation label. */
+html[data-edition=folio][data-material=glass] #navigation[data-lg=lens]>.lg-rim:after {
+  --light-spot:var(--nav-light-x,24%);
+  --return-spot:calc(78% - var(--nav-light-x,24%) * .48);
+  padding:3.5px;
+  opacity:calc(.48 + var(--nav-light-power,0) * .52);
+  background:
+    radial-gradient(ellipse 34px 3px at var(--light-spot) 1px,#fff 4%,#ffffffed 32%,transparent),
+    radial-gradient(ellipse 74px 7px at var(--light-spot) 0%,#f5fbffb0,transparent 92%),
+    radial-gradient(ellipse 47px 4px at var(--return-spot) 100%,#ffffffd0,transparent 95%),
+    radial-gradient(ellipse 34px 27px at var(--light-spot) var(--nav-light-y,9px),#ffffffa3,transparent);
+}
+html[data-edition=folio][data-material=glass] #navigation[data-lg=lens]>.lg-rim:before {
+  padding:1.4px;
+  background:conic-gradient(from var(--reflection-turn,35deg),transparent 18deg,#ffffff38 48deg,#fff 67deg,transparent 103deg 185deg,#1e334528 204deg,#fff 231deg,transparent 266deg);
+}
+@media(prefers-reduced-motion:no-preference){
+  html[data-edition=folio][data-material=glass] [data-lg=lens]>.lg-rim {
+    transition:scale .32s cubic-bezier(.2,1.52,.45,1);
+    transform-origin:var(--light-x,50%) var(--light-y,50%);
+  }
+  html[data-edition=folio][data-material=glass] [data-lg=lens]:active>.lg-rim {scale:.984 .965;transition-duration:80ms}
+}
+.photo-lens-edge {display:none;position:absolute;inset:0;width:100%;height:100%;border-radius:inherit;pointer-events:none}
+.lg-rim[data-painted]>.photo-lens-edge {display:block}
+html[data-edition=folio][data-material=glass] [data-lg=lens]:has(>.lg-rim[data-painted])>.lg-optics {
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+@media(min-width:901px){
+  html[data-edition=folio][data-material=glass] .gallery-header-actions #navigation {position:relative;inset:auto}
+}
+@media(max-width:900px){
+  html[data-edition=folio][data-material=glass] {--inner:32px}
+  html[data-edition=folio][data-material=glass] #navigation {
+    top:calc(var(--folio-top) + 54px);width:min(17.5rem,calc(100% - 2 * var(--inner)));padding:7px;border-radius:22px;
+  }
+  html[data-edition=folio][data-material=glass] #navigation :is(.work-toggle,[data-nav]) {
+    width:100%;padding:10px 16px;justify-content:space-between;text-align:start;font-size:13px;
+  }
+  html[data-edition=folio][data-material=glass] #navigation .work-toggle {background:transparent}
+  html[data-edition=folio][data-material=glass] #navigation [data-nav][aria-current=page]:after {
+    display:block;left:16px;bottom:6px;width:16px;height:1px;
+  }
+  html[data-edition=folio][data-material=glass] #navigation [data-mixed-ink][data-scene-ink=dark] {
+    text-shadow:0 0 2px #fffc,0 1px 2px #fffa;
+  }
+  html[data-edition=folio][data-material=glass] #navigation [data-mixed-ink][data-scene-ink=light] {
+    text-shadow:0 0 2px #10151ed9,0 1px 2px #10151ebd;
+  }
+  /* On short screens only the collection list scrolls; About and the menu
+     trigger remain reachable and the lens stays anchored to its controls. */
+  html[data-edition=folio][data-material=glass] #work-menu {
+    padding:1px 0 3px;gap:0 4px;max-height:calc(100dvh - var(--folio-top) - 172px - env(safe-area-inset-bottom,0px));
+    overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;box-shadow:none;border-radius:0;
+  }
+  html[data-edition=folio][data-material=glass] #work-menu a {
+    display:flex;align-items:center;padding:8px 16px;min-height:44px;line-height:1.4;
+  }
+  html[data-edition=folio][data-material=glass] .menu-toggle {
+    position:fixed;inset:calc(var(--folio-top) + 1px) var(--inner) auto auto;border-radius:22px;--lg-fill:#ffffff08;box-shadow:var(--lens-shadow);
+  }
+  html[data-edition=folio][data-material=glass] .menu-icon {width:18px}
+  html[data-edition=folio][data-material=glass] .menu-icon:before,
+  html[data-edition=folio][data-material=glass] .menu-icon:after {background:currentColor}
+  html[data-edition=folio][data-material=glass] .gallery-header-actions .menu-toggle {position:relative;inset:auto}
+  html[data-edition=folio][data-material=glass] .gallery-header-actions {gap:8px}
+  html[data-edition=folio][data-material=glass] .collection-toolbar {padding:1px;min-height:46px}
+}
+@media(max-width:900px) and (prefers-reduced-motion:reduce) {
+  html[data-edition=folio] .menu-icon::before,html[data-edition=folio] .menu-icon::after {transition:none}
+}
+@media(max-width:700px){
+  html[data-edition=folio][data-material=glass] {--inner:18px;--folio-top:16px}
+  html[data-edition=folio][data-material=glass] .site-header {min-height:80px}
+  html[data-edition=folio][data-material=glass] .brand .glass-brand-mark {width:143px}
+  html[data-edition=folio][data-material=glass] .photo-sheet {row-gap:22px}
+  html[data-edition=folio][data-material=glass] .photo-row {gap:12px}
+}
+@media(max-width:350px){
+  html[data-edition=folio][data-material=glass] {--inner:12px}
+  html[data-edition=folio][data-material=glass] .brand .glass-brand-mark {width:116px}
+}
+@media(prefers-reduced-transparency:reduce),(forced-colors:active){
+  .lg-rim[data-painted]>.photo-lens-edge {display:none}
+}
+html[data-edition=folio][data-material=glass] :is(main,.site-footer) {
+  width:calc(100% - 2 * var(--inner));
+}
+html[data-edition=folio][data-material=glass] .site-footer::before {
+  background:var(--brand-gradient);
+}
+html[data-edition=folio][data-material=glass] body[data-page=about] .editorial {
+  padding:40px 0 clamp(64px,7vw,104px);
+}
+html[data-edition=folio][data-material=glass] body[data-page=about] .about-grid {
+  grid-template-columns:minmax(0,1.25fr) minmax(0,.8fr);
+  gap:clamp(48px,8vw,128px);margin-top:24px;align-items:center;
+}
+html[data-edition=folio][data-material=glass] body[data-page=about] .about-photo {
+  display:block;max-height:none;align-self:start;
+}
+html[data-edition=folio][data-material=glass] body[data-page=about] .about-copy {
+  width:100%;max-width:38ch;justify-self:end;
+}
+html[data-edition=folio][data-material=glass] .about-copy>.eyebrow {
+  margin-bottom:16px;font-size:10px;letter-spacing:.13em;
+}
+html[data-edition=folio][data-material=glass] .about-copy .body-copy {
+  font-size:clamp(16px,1.35vw,18px);line-height:1.85;color:#484848;
+}
+html[data-edition=folio][data-material=glass] .about-copy .contact-page {
+  margin:36px 0 0;padding-top:26px;border-top:1px solid #e9e9e9;
+  scroll-margin-top:100px;
+}
+html[data-edition=folio][data-material=glass] .about-copy .contact-purpose {
+  font-size:11px;line-height:1.7;color:#666;
+}
+html[data-edition=folio][data-material=glass] .about-copy .contact-actions {
+  margin-top:10px;display:flex;flex-direction:row;align-items:center;gap:8px 28px;
+}
+html[data-edition=folio][data-material=glass] .about-copy .email-link {
+  font-size:22px;font-weight:400;gap:22px;max-width:100%;
+}
+html[data-edition=folio][data-material=glass] .about-copy .email-link>span:first-child {min-width:0}
+html[data-edition=folio][data-material=glass] .about-copy .copy-email {
+  font-size:11px;text-decoration-color:#ddd;
+}
+@media(min-width:701px) and (max-width:1000px){
+  html[data-edition=folio][data-material=glass] body[data-page=about] .about-grid {
+    grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:40px;
+  }
+}
+@media(max-width:700px){
+  html[data-edition=folio][data-material=glass] body[data-page=about] .editorial {padding:28px 0 48px}
+  html[data-edition=folio][data-material=glass] body[data-page=about] .about-grid {grid-template-columns:minmax(0,1fr);gap:36px;margin-top:24px}
+  html[data-edition=folio][data-material=glass] body[data-page=about] .about-copy {grid-row:1;max-width:none}
+  html[data-edition=folio][data-material=glass] .about-copy .body-copy {max-width:36ch}
+  html[data-edition=folio][data-material=glass] .about-copy .contact-page {margin-top:24px;padding-top:20px}
+}

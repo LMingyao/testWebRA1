@@ -29,6 +29,7 @@ export function publicationEntries(data) {
   return entries;
 }
 export function renderPublishedPage(template, content, page, category, {prerender = true, home = false} = {}) {
+  if (page === "contact") return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=about_me.html#contact"><link rel="canonical" href="https://mingyaophoto.com/about_me.html"><title>Contact · Mingyao Photography</title></head><body><a href="about_me.html#contact">Contact Mingyao</a></body></html>';
   const site = siteSettings(content.site), metadata = pageMetadata(content,page,category);
   if (page === 'not-found') Object.assign(metadata, {title:`Page not found · ${site.name} ${site.brandTitle}`, description:'Return to the photography collection.', canonical:'https://mingyaophoto.com/404.html'});
   let html = template.replaceAll('{{page}}',page).replaceAll('{{title}}',e(metadata.title))
@@ -41,7 +42,7 @@ export function renderPublishedPage(template, content, page, category, {prerende
     .replace('data-nav="about">ABOUT',`data-nav="about"${site.showAbout?'':' hidden'}>${e(site.aboutLabel)}`)
     .replace('data-nav="contact">CONTACT',`data-nav="contact"${site.showContact?'':' hidden'}>${e(site.contactLabel)}`)
     .replace('<a class="footer-name" href="index.html">Mingyao Li</a>',`<a class="footer-name" href="index.html">${e(site.name)}</a>`)
-    .replace('<small id="copyright"></small',`<small id="copyright">© ${currentYear()} ${e(site.name)}${site.footerText?`. ${e(site.footerText)}`:''}</small`)
+    .replace('<a id="copyright" href="https://mingyao.li/"></a>',`<a id="copyright" href="https://mingyao.li/">© ${currentYear()} ${e(site.name)}${site.footerText?`. ${e(site.footerText)}`:''}</a>`)
     .replace('<div id="social-links"></div>',`<div id="social-links">${site.socials.map((s,i)=>`<a class="social-${i<2?'primary':'secondary'}" href="${e(s.url)}" target="_blank" rel="noopener noreferrer">${e(s.label)} ↗</a>`).join('')}</div>`)
     .replaceAll('mailto:MingyaoLee520@gmail.com',`mailto:${e(site.email)}`);
   html=html.replaceAll('https://mingyaophoto.com/assets/social-card.png',e(metadata.image));
@@ -73,7 +74,7 @@ export function renderPublishedPage(template, content, page, category, {prerende
 }
 export function publicationFiles(template, data, revision, options = {}) {
   const entries=publicationEntries(data), visible=new Set(collections(data).map(c=>c.id));
-  const sitemap=entries.filter(([file,page,category])=>page!=='not-found'&&(file==='index.html'||(page==='portfolio'?visible.has(category)&&!(file==='selected.html'&&defaultCollection(data)==='all'):siteSettings(data.site)[page==='about'?'showAbout':'showContact'])));
+  const sitemap=entries.filter(([file,page,category])=>page!=='not-found'&&page!=='contact'&&(file==='index.html'||(page==='portfolio'?visible.has(category)&&!(file==='selected.html'&&defaultCollection(data)==='all'):siteSettings(data.site)[page==='about'?'showAbout':'showContact'])));
   return [...entries.map(([path,page,category])=>({path,content:renderPublishedPage(template,data,page,category,{...options,home:path==='index.html'})})),
     {path:'sitemap.xml',content:`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemap.map(([file])=>`<url><loc>https://mingyaophoto.com/${e(file)}</loc></url>`).join('')}</urlset>\n`},
     {path:'content/publication.json',content:JSON.stringify({revision,publishedAt:new Date().toISOString(),pages:entries.map(([file])=>file)})+'\n'}];

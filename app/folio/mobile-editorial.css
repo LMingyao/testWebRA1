@@ -1,0 +1,69 @@
+@media (max-width: 700px) {
+  html[data-edition=folio][data-material=glass] body[data-page=about] .editorial {
+    padding-block: clamp(22px, 6vw, 36px) clamp(40px, 8vw, 56px);
+  }
+
+  /* A short page label and location share a caption line. A configured
+     display title keeps its own heading above the existing mobile grid. */
+  html[data-edition=folio][data-material=glass] .editorial:has(.editorial-heading > .sr-only) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "heading location"
+      "bio     bio"
+      "gear    gear"
+      "contact contact"
+      "photo   photo";
+    align-items: baseline;
+
+    & :is(.about-grid, .about-copy) { display: contents; }
+    & .editorial-heading { grid-area: heading; }
+    & .about-copy > .eyebrow {
+      grid-area: location;
+      margin: 0;
+      text-align: end;
+    }
+    & .body-copy { grid-area: bio; margin-block-start: 16px; }
+    & .gear { grid-area: gear; }
+    & .contact-page, & .about-copy > .text-link { grid-area: contact; }
+    & .about-photo { grid-area: photo; margin-block-start: clamp(24px, 7vw, 40px); }
+  }
+
+  html[data-edition=folio][data-material=glass] .editorial :is(.editorial-heading, .about-copy) > .eyebrow {
+    font-size: 11px;
+    line-height: 1.55;
+    letter-spacing: .10em;
+  }
+
+  html[data-edition=folio][data-material=glass] .about-copy .body-copy {
+    max-inline-size: 43ch;
+    font-size: clamp(16px, 4.2vw, 18px);
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  html[data-edition=folio][data-material=glass] .about-copy .contact-page {
+    max-width: none;
+    margin-block-start: clamp(22px, 6vw, 32px);
+    padding-block-start: 15px;
+  }
+
+  html[data-edition=folio][data-material=glass] .about-copy .contact-purpose {
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  html[data-edition=folio][data-material=glass] .about-copy .contact-actions {
+    justify-content: space-between;
+    column-gap: 18px;
+    margin-top: 3px;
+  }
+
+  html[data-edition=folio][data-material=glass] .about-copy .email-link {
+    min-height: 48px;
+    padding-block: 6px;
+    font-size: 21px;
+    gap: 12px;
+  }
+  html[data-edition=folio][data-material=glass] .about-copy .copy-email { font-size: 12px; }
+}

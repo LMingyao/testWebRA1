@@ -92,3 +92,7 @@ GitHub 存储模式使用仓库令牌，本机管理不需要令牌。D1 模式�
 前台入口包含各自的标题、描述、canonical、Open Graph 和 Twitter 分享信息；五个既有分类使用独立 HTML 地址，旧 query 分类链接仍可用，新分类回退 query 地址。分享封面是 1200 × 630 品牌图，源设计保存在 tools/social-card.html。sitemap.xml 和 robots.txt 由构建生成。GitHub Pages 的爬虫初始信息来自构建时的静态内容，D1 更新会在浏览器运行时同步元数据；若要让不运行 JavaScript 的爬虫立即读到新文案，需同步静态内容并重新构建，不应重新导入 D1 种子。
 
 相关平台文档：[GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)、[Git database API](https://docs.github.com/en/rest/git)、[细粒度访问令牌](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)。
+
+## Liquid glass edition
+
+The current Photography edition uses clear, photo-sampled edge refraction, aligned photo frames and compact navigation. About and contact are combined, with Email me and Copy email actions. See [edition and validation](docs/folio-edition.md). The template and shared renderer preserve this presentation on later content saves.

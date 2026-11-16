@@ -377,7 +377,7 @@ test("publication records partial failure, retries current content and never sen
   data.site.email='third@example.com';data.photos[0].published=false;
   sqlite.prepare('UPDATE gallery_content SET document=?,revision=? WHERE revision=?').run(JSON.stringify(data),'updated',current.revision);
   assert.equal((await (await request()).json()).status,'submitted');
-  assert.match(git.files.get('contact.html').bytes.toString(),/third@example.com/);
+  assert.match(git.files.get('about_me.html').bytes.toString(),/third@example.com/);
   assert.doesNotMatch(git.files.get('index.html').bytes.toString(),/alt="A plane in flight"/);
 });
 

@@ -28,3 +28,29 @@ test("only completed horizontal single-finger gestures advance the photograph", 
   touch("touchend", 200, 105, 0);
   assert.deepEqual(directions, [1, -1]);
 });
+
+test("short phone swipes consume the tap, while taps and vertical starts remain native", () => {
+  const target = new EventTarget();
+  Object.defineProperty(target, "clientWidth", { value: 320 });
+  const directions = [];
+  onSwipe(target, direction => directions.push(direction));
+  function send(type, x, y) {
+    const point = { identifier: 7, clientX: x, clientY: y };
+    const event = new Event(type, { cancelable: true });
+    Object.defineProperties(event, {
+      touches: { value: type === "touchend" ? [] : [point] },
+      changedTouches: { value: [point] },
+    });
+    target.dispatchEvent(event);
+    return event.defaultPrevented;
+  }
+  send("touchstart", 180, 80);
+  send("touchmove", 161, 81);
+  assert.equal(send("touchend", 133, 82), true);
+  send("touchstart", 180, 80);
+  assert.equal(send("touchend", 182, 81), false);
+  send("touchstart", 180, 80);
+  send("touchmove", 177, 99);
+  assert.equal(send("touchend", 265, 107), false);
+  assert.deepEqual(directions, [1]);
+});

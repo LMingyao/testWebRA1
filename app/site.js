@@ -9,7 +9,7 @@ import { categoryURL, categoryFromURL, pageMetadata, applyMetadata } from "./met
 const main = document.querySelector("main");
 const page = document.body.dataset.page;
 const isWork = ["portfolio", "portrait"].includes(page);
-const { setMenu, setWorkMenu, workToggle, workMenu } = createNavigation();
+const { setMenu, setWorkMenu, workToggle, workMenu, focusWorkTrigger } = createNavigation();
 
 try {
   const source = validateContent(await loadPublicContent());
@@ -78,7 +78,7 @@ try {
       showWork(link.dataset.work);
       setWorkMenu(false);
       setMenu(false);
-      workToggle.focus();
+      focusWorkTrigger();
       window.scrollTo({ top: 0, behavior: "instant" });
     };
     window.addEventListener("popstate", () => showWork(selectedCategory()));

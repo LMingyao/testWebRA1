@@ -48,5 +48,5 @@ export function photoImage(photo, {
   const srcset = candidates.length
     ? `srcset="${candidates.map(candidate => `${e(candidate.file)} ${candidate.width}w`).join(", ")}" sizes="${e(sizes)}"`
     : "";
-  return `<img src="${e(photo.display || photo.image)}" ${srcset} width="${photo.width}" height="${photo.height}" alt="${e(photo.alt)}" loading="${eager ? "eager" : "lazy"}" decoding="async" ${eager ? 'fetchpriority="high"' : ""}>`;
+  return `<img crossorigin="anonymous" src="${e(photo.display || photo.image)}" ${srcset} width="${photo.width}" height="${photo.height}" alt="${e(photo.alt)}" loading="${eager ? "eager" : "lazy"}" decoding="async" ${eager ? 'fetchpriority="high"' : ""}>`;
 }
