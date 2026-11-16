@@ -79,7 +79,7 @@ test("Contact labels survive two edits through rendering/publication; copy feedb
 test("404 retains a usable root-relative shell on nested URLs, is noindex and absent from sitemap", async () => {
   const template=await readFile(new URL('../tools/page.html',import.meta.url),'utf8');
   const files=publicationFiles(template,fixture,'test',{prerender:false}), page=files.find(f=>f.path==='404.html').content;
-  assert.doesNotMatch(page,/<base /);assert.match(page,/href="\/app\/wordmark.css"/);
+  assert.doesNotMatch(page,/<base /);assert.match(page,/href="\/app\/wordmark.css\?v=20261116"/);
   assert.match(page,/src="\/app\/not-found.js"/);assert.match(page,/href="\/index.html">Return to work/);
   assert.match(page,/noindex,follow/);assert.match(page,/Page not found/);
   assert.doesNotMatch(page,/github\.com|<dialog|legacy-link|back-top/);
